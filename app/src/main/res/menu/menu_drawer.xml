@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/homeListFragment"
+            android:icon="@drawable/ic_home"
+            android:title="@string/inicio" />
+
+        <!--en ID incluir el nombre de la clase del fragment-->
+        <item
+            android:id="@+id/busqueda"
+            android:icon="@drawable/ic_search"
+            android:title="@string/busqueda" />
+
+        <item
+            android:id="@+id/booksReadListFragment"
+            android:icon="@drawable/ic_menu_book"
+            android:title="@string/libros_leidos" />
+
+        <item
+            android:id="@+id/subscription"
+            android:icon="@drawable/ic_subscription"
+            android:title="@string/suscripcion" />
+
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/ic_profile"
+            android:title="@string/perfil" />
+
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/cerrar_sesion" />
+    </group>
+</menu>

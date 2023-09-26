@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AlejandriaApp</string>
+    <string name="drawer_layout_behavior">androidx.drawerlayout.widget.DrawerLayout$DrawerLayoutCompat</string>
+    <string name="inicio">Inicio</string>
+    <string name="libros_leidos">Libros leídos</string>
+    <string name="menu">Menu</string>
+    <string name="busqueda">Búsqueda</string>
+    <string name="suscripcion">Suscripción</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="perfil">Perfil</string>
+</resources>
