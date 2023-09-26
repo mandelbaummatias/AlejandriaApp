@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorAlejandriaTeal" format="color" />
+    <attr name="colorOnAlejandriaTeal" format="color" />
+    <attr name="colorAlejandriaTealContainer" format="color" />
+    <attr name="colorOnAlejandriaTealContainer" format="color" />
+    <attr name="harmonizeAlejandriaTeal" format="boolean" />
+</resources>
