@@ -11,7 +11,7 @@
 
         <!--en ID incluir el nombre de la clase del fragment-->
         <item
-            android:id="@+id/busqueda"
+            android:id="@+id/searchFragment"
             android:icon="@drawable/ic_search"
             android:title="@string/busqueda" />
 

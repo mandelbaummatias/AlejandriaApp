@@ -8,6 +8,28 @@
         android:layout_margin="@dimen/normal_margin"
         tools:context=".ui.home.HomeListFragment">
 
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="257dp"
+            android:layout_height="40dp"
+            android:text="Button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="257dp"
+            android:layout_height="40dp"
+            android:text="Button dos"
+            android:visibility="gone"
+            android:background="@color/common_google_signin_btn_text_dark_focused"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

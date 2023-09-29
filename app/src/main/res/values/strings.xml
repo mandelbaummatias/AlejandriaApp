@@ -8,4 +8,5 @@
     <string name="suscripcion">Suscripción</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
     <string name="perfil">Perfil</string>
+    <string name="search_hint">Buscá por libro o autor...</string>
 </resources>
