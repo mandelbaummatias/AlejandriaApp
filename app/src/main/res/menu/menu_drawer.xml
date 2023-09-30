@@ -21,7 +21,7 @@
             android:title="@string/libros_leidos" />
 
         <item
-            android:id="@+id/subscription"
+            android:id="@+id/subscriptionListFragment"
             android:icon="@drawable/ic_subscription"
             android:title="@string/suscripcion" />
 
