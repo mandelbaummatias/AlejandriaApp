@@ -8,22 +8,26 @@
         android:id="@+id/homeListFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.home.HomeListFragment"
         android:label="@string/inicio"
-        tools:layout="@layout/fragment_home_list">
-        <action
-            android:id="@+id/action_homeListFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_home_list" />
     <fragment
         android:id="@+id/booksReadListFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.booksread.BooksReadListFragment"
         android:label="@string/libros_leidos"
-        tools:layout="@layout/fragment_books_read_list"/>
+        tools:layout="@layout/fragment_books_read_list" />
+
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.search.SearchFragment"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_booksReadListFragment"
             app:destination="@id/booksReadListFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/subscriptionListFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListFragment"
+        android:label="@string/suscripcion"
+        tools:layout="@layout/fragment_subscription_list" />
+
 </navigation>
