@@ -8,7 +8,11 @@
         android:id="@+id/homeListFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.home.HomeListFragment"
         android:label="@string/inicio"
-        tools:layout="@layout/fragment_home_list" />
+        tools:layout="@layout/fragment_home_list" >
+        <action
+            android:id="@+id/action_homeListFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/booksReadListFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.booksread.BooksReadListFragment"
