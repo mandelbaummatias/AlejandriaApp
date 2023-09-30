@@ -1,11 +1,25 @@
 <resources>
     <string name="app_name">AlejandriaApp</string>
     <string name="drawer_layout_behavior">androidx.drawerlayout.widget.DrawerLayout$DrawerLayoutCompat</string>
-    <string name="inicio">Inicio</string>
-    <string name="libros_leidos">Libros leídos</string>
+
+    <!-- Navigation strings -->
     <string name="menu">Menu</string>
+    <string name="inicio">Inicio</string>
     <string name="busqueda">Búsqueda</string>
+    <string name="libros_leidos">Libros leídos</string>
     <string name="suscripcion">Suscripción</string>
-    <string name="cerrar_sesion">Cerrar sesión</string>
     <string name="perfil">Perfil</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+
+    <!-- Subscription strings -->
+    <string name="plansTitle">Planes</string>
+    <string name="subscribeBtn">Suscribirme</string>
+    <string name="soonBtn">Proximamente</string>
+    <string name="basicPlanTitle">Plan básico</string>
+    <string name="basicPlanPrice">$500,00 / mes</string>
+    <string name="basicPlanFeatures">- Reservar un libro al mes\n- Participar del club de lectura</string>
+    <string name="advancedPlanTitle">Plan avanzado</string>
+    <string name="advancedPlanPrice">TBD</string>
+    <string name="advancedPlanFeatures">- Beneficios del plan básico\n- TBD</string>
+
 </resources>
