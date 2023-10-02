@@ -52,6 +52,7 @@ class HomeListFragment : Fragment() {
 
                 val menuItem = menu.findItem(R.id.search)
                 val searchView = menuItem.actionView as SearchView
+                searchView.queryHint = getString(R.string.search_hint)
 
                 searchView.setOnSearchClickListener {
                     Log.d(TAG, "Click en search!")
