@@ -23,4 +23,9 @@
     <string name="advancedPlanPrice">TBD</string>
     <string name="advancedPlanFeatures">- Beneficios del plan básico\n- TBD</string>
 
+    <string name="bookListTitle">Libros</string>
+    <string name="availableBooks">Libros disponibles</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
