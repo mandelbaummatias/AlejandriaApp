@@ -1,3 +1,5 @@
+package com.matiasmandelbaum.alejandriaapp.ui.booklist
+
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
