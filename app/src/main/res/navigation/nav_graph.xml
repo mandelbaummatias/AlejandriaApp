@@ -28,6 +28,20 @@
         <action
             android:id="@+id/action_searchFragment_to_booksReadListFragment"
             app:destination="@id/booksReadListFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_searchResultListFragment"
+            app:destination="@id/searchResultListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchResultListFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.searchresult.SearchResultListFragment"
+        android:label="SearchResultListFragment" >
+
+        <argument
+            android:name="titulo"
+            app:argType="string" />
+
     </fragment>
 
     <fragment
@@ -35,6 +49,7 @@
         android:name="com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListFragment"
         android:label="@string/suscripcion"
         tools:layout="@layout/fragment_subscription_list" />
+
 
     <fragment
         android:id="@+id/bookListFragment"

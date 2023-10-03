@@ -84,6 +84,16 @@ class SearchFragment : Fragment() {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         Log.d(TAG, "onQueryTextSubmit submit! (false")
                         //findNavController().navigate(R.id.action_searchFragment_to_booksReadListFragment)
+                        val action = query?.let {
+                            SearchFragmentDirections.actionSearchFragmentToSearchResultListFragment(
+                                it
+                            )
+                        }
+
+                        action?.let {
+                            findNavController().navigate(action)
+                        }
+
                         //Esto lo pueden descomentar para probar la navegación del search a un fragment
                         return false
                     }

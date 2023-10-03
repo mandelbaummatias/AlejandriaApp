@@ -27,5 +27,9 @@
     <string name="availableBooks">Libros disponibles</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--GBooks Config-->
+    <string name="google_books_api_base_url">https://www.googleapis.com/books/v1/volumes/</string>
+    <string name="google_books_api_key"></string>
+    <string name="titulo">titulo</string>
 
 </resources>
