@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class BookNetwork(
+data class BookFirestore(
     val autor: String = "",
     val titulo: String = "",
     val cantidad: Int = 0,
