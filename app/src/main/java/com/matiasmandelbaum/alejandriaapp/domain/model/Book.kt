@@ -5,7 +5,8 @@ import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.Imag
 data class Book(
     val autor: String,
     val titulo: String,
+    val isbn: String,
     val descripcion: String?,
     val valoracion: Double?,
-    val imageLinks: ImageLinks
+    val imageLinks: ImageLinks?
 )

@@ -1,7 +1,7 @@
 package com.matiasmandelbaum.alejandriaapp.di
 
 import com.matiasmandelbaum.alejandriaapp.core.googlebooks.GoogleBooksConfig
-import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.client.GoogleBooksApiClient
+import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.GoogleBooksApiClient
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
