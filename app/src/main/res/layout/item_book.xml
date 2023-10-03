@@ -21,7 +21,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp">
+            android:layout_height="120dp">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -61,7 +61,7 @@
                 android:id="@+id/bookCalification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="123dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="94dp"
                 tools:text="Calificación: xx"
                 app:layout_constraintStart_toStartOf="parent"

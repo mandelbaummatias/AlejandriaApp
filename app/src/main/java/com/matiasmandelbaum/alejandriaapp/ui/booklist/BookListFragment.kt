@@ -29,7 +29,7 @@ class BookListFragment : Fragment() {
 
         v = inflater.inflate(R.layout.fragment_book_list, container, false)
 
-        bookRecycler = v.findViewById(R.id.booksRecycler)
+        bookRecycler = v.findViewById(R.id.recyclerView)
         linearLayoutManager = LinearLayoutManager(context)
         bookRecycler.layoutManager = linearLayoutManager
         bookListAdapter = BookListAdapter(books) // Asegúrate de crear el adaptador adecuado

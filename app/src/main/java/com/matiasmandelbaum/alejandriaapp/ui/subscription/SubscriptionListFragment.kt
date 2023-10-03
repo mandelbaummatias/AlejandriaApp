@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSubscriptionListBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +27,7 @@ class SubscriptionListFragment : Fragment() {
         val basicPlanSubscribeButton = binding.root.findViewById<Button>(R.id.basicPlanSubscribeBtn)
 
         basicPlanSubscribeButton.setOnClickListener {
+            findNavController().navigate(R.id.action_availableBooksFragment_to_bookListFragment)
             Toast.makeText(context, "TO-DO: Integración con MP.", Toast.LENGTH_SHORT).show()
         }
 

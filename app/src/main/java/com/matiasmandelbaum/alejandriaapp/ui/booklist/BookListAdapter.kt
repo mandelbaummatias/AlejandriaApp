@@ -1,10 +1,11 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booklist
 
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.matiasmandelbaum.alejandriaapp.R
-import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookHolder
+
 class BookListAdapter (private val booksList: MutableList<Book>) : RecyclerView.Adapter<BookHolder>() {
     override fun getItemCount() = booksList.size
 
