@@ -42,9 +42,9 @@ class HomeListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-       // binding = FragmentHomeListBinding.inflate(inflater, container, false)
-
-        v = inflater.inflate(R.layout.fragment_home_list, container, false)
+        binding = FragmentHomeListBinding.inflate(inflater, container, false)
+       // binding.recyclerView.layoutManager = LinearLayoutManager(context)
+      //  v = inflater.inflate(R.layout.fragment_home_list, container, false)
 
         bookRecycler = v.findViewById(R.id.recyclerView)
         linearLayoutManager = LinearLayoutManager(context)
