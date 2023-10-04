@@ -1,6 +1,7 @@
 package com.matiasmandelbaum.alejandriaapp.di
 
-import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.repository.BooksRepositoryImpl
+
+import com.matiasmandelbaum.alejandriaapp.data.repository.BooksRepositoryImpl
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import dagger.Binds
 import dagger.Module
