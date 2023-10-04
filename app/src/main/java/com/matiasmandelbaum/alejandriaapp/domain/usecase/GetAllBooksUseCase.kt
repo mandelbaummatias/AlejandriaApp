@@ -5,8 +5,8 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.Book
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import javax.inject.Inject
 
-class GetBooksByTitleUseCase @Inject constructor(private val booksRepository: BooksRepository) {
-    suspend operator fun invoke(title: String): Result<List<Book>> {
-        return booksRepository.getBooksByTitle(title)
+class GetAllBooksUseCase @Inject constructor(private val booksRepository: BooksRepository) {
+    suspend operator fun invoke(): Result<List<Book>> {
+        return booksRepository.getAllBooks()
     }
 }

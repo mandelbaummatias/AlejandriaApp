@@ -16,6 +16,11 @@
             android:title="@string/busqueda" />
 
         <item
+            android:id="@+id/availableBooksFragment"
+            android:icon="@drawable/ic_menu_book"
+            android:title="@string/availableBooks" />
+
+        <item
             android:id="@+id/booksReadListFragment"
             android:icon="@drawable/ic_menu_book"
             android:title="@string/libros_leidos" />
