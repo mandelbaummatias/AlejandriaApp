@@ -41,13 +41,13 @@ class BookListAdapter : ListAdapter<Book, BookHolder>(
     companion object {
         private val DiffCallback = object : DiffUtil.ItemCallback<Book>() {
             override fun areItemsTheSame(oldBook: Book, newBook: Book): Boolean {
-                Log.d(TAG, "areItemsTheSame")
+                Log.d(TAG, "areItemsTheSame?")
                 return oldBook === newBook
                 // return oldBook.itemId == newBook.itemId
             }
 
             override fun areContentsTheSame(oldBook: Book, newBook: Book): Boolean {
-                Log.d(TAG, "areContentsTheSame")
+                Log.d(TAG, "areContentsTheSame?")
                 return oldBook.titulo == newBook.titulo
             }
 
