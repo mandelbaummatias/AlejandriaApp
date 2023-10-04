@@ -32,7 +32,7 @@ class BookListFragment : Fragment() {
         bookRecycler = v.findViewById(R.id.recyclerView)
         linearLayoutManager = LinearLayoutManager(context)
         bookRecycler.layoutManager = linearLayoutManager
-        bookListAdapter = BookListAdapter(books) // Asegúrate de crear el adaptador adecuado
+        //bookListAdapter = BookListAdapter(books) // Asegúrate de crear el adaptador adecuado
         bookRecycler.adapter = bookListAdapter
 
         return v

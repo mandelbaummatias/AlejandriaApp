@@ -12,11 +12,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.matiasmandelbaum.alejandriaapp.R
+import com.matiasmandelbaum.alejandriaapp.common.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentHomeListBinding
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.Book
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListAdapter
@@ -27,13 +28,9 @@ private const val TAG = "HomeListFragment"
 
 @AndroidEntryPoint
 class HomeListFragment : Fragment() {
-
-    lateinit var v : View
-    lateinit var bookRecycler : RecyclerView
-    var books : MutableList<Book> = ArrayList()
-
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var bookListAdapter: BookListAdapter
+    var books: MutableList<Book> = ArrayList()
+    private val viewModel: HomeViewModel by viewModels()
+    private lateinit var bookListAdapter : BookListAdapter
 
     private lateinit var binding: FragmentHomeListBinding
 
@@ -43,36 +40,50 @@ class HomeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeListBinding.inflate(inflater, container, false)
-       // binding.recyclerView.layoutManager = LinearLayoutManager(context)
-      //  v = inflater.inflate(R.layout.fragment_home_list, container, false)
-
-        bookRecycler = v.findViewById(R.id.recyclerView)
-        linearLayoutManager = LinearLayoutManager(context)
-        bookRecycler.layoutManager = linearLayoutManager
-        bookListAdapter = BookListAdapter(books) // Asegúrate de crear el adaptador adecuado
-        bookRecycler.adapter = bookListAdapter
-
-        return v
-
-       // binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
-        //viewModel.getItemsList()
-        //  fabViewModel.setFabVisibility(true)
-
-      //  return binding.root
+        bookListAdapter = BookListAdapter()
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(this.context)
+            adapter = bookListAdapter
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getAllBooks()
         setupMenu()
 
-        for (i in 1 .. 200) {
+        for (i in 1..200) {
             books.add(Book("Harry Potter y la Piedra Filosofal", "J.K. Rowling", 5.0f, "urlFalsa"))
             books.add(Book("Adan y Eva", "Mark Twain", 3.2f, "urlFalsa"))
-            books.add(Book("El extraño caso del Dr. Jekyll y Mr. Hyde", "Robert Louis Stevenson", 4.2f, "urlFalsa"))
+            books.add(
+                Book(
+                    "El extraño caso del Dr. Jekyll y Mr. Hyde",
+                    "Robert Louis Stevenson",
+                    4.2f,
+                    "urlFalsa"
+                )
+            )
             books.add(Book("Los Ojos del Perro Siberiano", "Antonio Santa Ana", 3.7f, "urlFalsa"))
         }
         // Notificar al adaptador que los datos han cambiado
-        bookListAdapter.notifyDataSetChanged()
+        //binding.recyclerView.adapter?.notifyDataSetChanged()
+
+        viewModel.bookListState.observe(viewLifecycleOwner) {
+            when (it) {
+                is Result.Success ->{
+                    handleLoading(false)
+                    bookListAdapter.submitList(it.data)
+                    Log.d(TAG, " mi data ${it.data.size}")
+                }
+                is Result.Loading -> handleLoading(true)
+                is Result.Error -> handleLoading(false)
+                else -> {
+
+                }
+            }
+        }
     }
 
     private fun setupMenu() {
@@ -100,6 +111,16 @@ class HomeListFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED).also {
             Log.d(TAG, "Attached to resume lifecycle state")
+        }
+    }
+
+    private fun handleLoading(isLoading: Boolean) {
+        with(binding) {
+            if (isLoading) {
+                progressBarHome.visibility = View.VISIBLE
+            } else {
+                progressBarHome.visibility = View.GONE
+            }
         }
     }
 }
