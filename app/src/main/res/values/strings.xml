@@ -30,6 +30,6 @@
     <!--GBooks Config-->
     <string name="google_books_api_base_url">https://www.googleapis.com/books/v1/volumes/</string>
     <string name="google_books_api_key"></string>
-    <string name="titulo">titulo</string>
+    <string name="titulo">Últimas novedades</string>
 
 </resources>

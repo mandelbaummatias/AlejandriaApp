@@ -32,7 +32,6 @@ class BookListFragment : Fragment() {
         bookRecycler = v.findViewById(R.id.recyclerView)
         linearLayoutManager = LinearLayoutManager(context)
         bookRecycler.layoutManager = linearLayoutManager
-        //bookListAdapter = BookListAdapter(books) // Asegúrate de crear el adaptador adecuado
         bookRecycler.adapter = bookListAdapter
 
         return v
@@ -47,7 +46,7 @@ class BookListFragment : Fragment() {
             books.add(Book("El extraño caso del Dr. Jekyll y Mr. Hyde", "Robert Louis Stevenson", 4.2f, "urlFalsa"))
             books.add(Book("Los Ojos del Perro Siberiano", "Antonio Santa Ana", 3.7f, "urlFalsa"))
         }
-        // Notificar al adaptador que los datos han cambiado
+        // Notificar al adaptador
         bookListAdapter.notifyDataSetChanged()
     }
 }

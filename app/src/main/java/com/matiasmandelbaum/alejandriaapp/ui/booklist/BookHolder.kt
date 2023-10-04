@@ -1,8 +1,11 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booklist
 
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -23,12 +26,13 @@ private const val TAG = "BookHolder"
 class BookHolder(private val item: ItemBookBinding) : RecyclerView.ViewHolder(item.root) {
 
     fun bind(book : Book) {
-        val rating = book.valoracion
+        val rating = book.valoracion?.toFloat() ?: 0.0f
         item.bookNameTextView.text = book.titulo
         item.publisherNameTextView.text = book.autor
-        item.ratingTextView.text = rating?.let{
-            "Valoración: ${it}"
-        }
+
+
+        item.barraPuntaje.rating = rating;
+
         item.bookSmallThumbnail.load("${book.imageLinks?.smallThumbnail}")
 //        item.bookNameTextView.text = book.titulo
 //        //authorTextView.text = book.autor
