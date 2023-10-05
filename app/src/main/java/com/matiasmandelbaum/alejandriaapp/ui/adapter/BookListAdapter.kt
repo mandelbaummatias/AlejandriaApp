@@ -33,12 +33,7 @@ class BookListAdapter(val clickListener: BookListener) : ListAdapter<Book, BookL
             item.book = book
             item.clickListener = clickListener
 
-//        item.bookNameTextView.text = book.titulo
-//        //authorTextView.text = book.autor
-//        //  ratingTextView.text = book.valoracion?.toString()
-//        // coverImageView.load(book.imageLinks?.smallThumbnail)
-//        // coverImageView.load(book.imageLinks?.smallThumbnail)
-//        item.bookSmallThumbnail.load(book.imageLinks?.smallThumbnail)
+
             Log.d(TAG, "${book.imageLinks?.smallThumbnail}")
 
         }
