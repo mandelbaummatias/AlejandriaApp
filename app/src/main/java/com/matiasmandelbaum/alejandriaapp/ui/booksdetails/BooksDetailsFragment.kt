@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.ImageLinks
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentBooksDetailsBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.Book
@@ -17,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class BooksDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentBooksDetailsBinding
+    private val viewModel: BooksDetailViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,15 +26,26 @@ class BooksDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBooksDetailsBinding.inflate(inflater, container, false)
+        viewModel.onCreate()
+        // val book = getBookDetails()
 
-        val book = getBookDetails()
+        val rating = viewModel.book.valoracion
 
-        binding.bookIsbn.text = "ISBN ${book.isbn}"
-        binding.bookTitle.text = book.titulo
-        binding.bookAuthor.text = book.autor
-        Picasso.get().load(book.imageLinks?.smallThumbnail).into(binding.bookCover);
-        binding.bookCalification.text = "${book.valoracion}"
-        binding.bookSynopsis.text = book.descripcion
+        binding.bookIsbn.text = viewModel.book.titulo
+        binding.bookTitle.text = viewModel.book.titulo
+        binding.bookAuthor.text = viewModel.book.autor
+        Picasso.get().load(viewModel.book.imageLinks?.smallThumbnail).into(binding.bookCover);
+        binding.bookCalification.text = rating?.let{
+            "Valoración: $it"
+        }
+        binding.bookSynopsis.text = viewModel.book.descripcion
+
+//        binding.bookIsbn.text = "ISBN ${book.isbn}"
+//        binding.bookTitle.text = book.titulo
+//        binding.bookAuthor.text = book.autor
+//        Picasso.get().load(book.imageLinks?.smallThumbnail).into(binding.bookCover);
+//        binding.bookCalification.text = "${book.valoracion}"
+//        binding.bookSynopsis.text = book.descripcion
 
         binding.bookReserveBtn.setOnClickListener {
             //TODO: Reservar libro
