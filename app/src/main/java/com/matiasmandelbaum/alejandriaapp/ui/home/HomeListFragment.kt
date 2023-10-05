@@ -21,6 +21,7 @@ import com.matiasmandelbaum.alejandriaapp.common.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentHomeListBinding
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.Book
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListAdapter
+import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListener
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -30,7 +31,7 @@ private const val TAG = "HomeListFragment"
 class HomeListFragment : Fragment() {
     var books: MutableList<Book> = ArrayList()
     private val viewModel: HomeViewModel by viewModels()
-    private lateinit var bookListAdapter : BookListAdapter
+    private lateinit var bookListAdapter: BookListAdapter
 
     private lateinit var binding: FragmentHomeListBinding
 
@@ -40,12 +41,23 @@ class HomeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeListBinding.inflate(inflater, container, false)
-        bookListAdapter = BookListAdapter()
+        // bookListAdapter =
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(this.context)
-            adapter = bookListAdapter
+        binding.recyclerView.adapter = BookListAdapter(BookListener {
+            Log.d(TAG, "click")
+            findNavController().navigate(
+                HomeListFragmentDirections.actionHomeListFragmentToBookDetailsFragment(
+                    it
+                )
+            )
+//             //   R.id.action_homeListFragment_to_bookDetailsFragment
+//            )
         }
+        )
+        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
+
+
+
         return binding.root
     }
 
@@ -54,29 +66,15 @@ class HomeListFragment : Fragment() {
         viewModel.getAllBooks()
         setupMenu()
 
-        for (i in 1..200) {
-            books.add(Book("Harry Potter y la Piedra Filosofal", "J.K. Rowling", 5.0f, "urlFalsa"))
-            books.add(Book("Adan y Eva", "Mark Twain", 3.2f, "urlFalsa"))
-            books.add(
-                Book(
-                    "El extraño caso del Dr. Jekyll y Mr. Hyde",
-                    "Robert Louis Stevenson",
-                    4.2f,
-                    "urlFalsa"
-                )
-            )
-            books.add(Book("Los Ojos del Perro Siberiano", "Antonio Santa Ana", 3.7f, "urlFalsa"))
-        }
-        // Notificar al adaptador que los datos han cambiado
-        //binding.recyclerView.adapter?.notifyDataSetChanged()
-
         viewModel.bookListState.observe(viewLifecycleOwner) {
             when (it) {
-                is Result.Success ->{
+                is Result.Success -> {
                     handleLoading(false)
-                    bookListAdapter.submitList(it.data)
+                    val adapter = binding.recyclerView.adapter as BookListAdapter
+                    adapter.submitList(it.data)
                     Log.d(TAG, " mi data ${it.data.size}")
                 }
+
                 is Result.Loading -> handleLoading(true)
                 is Result.Error -> handleLoading(false)
                 else -> {
@@ -102,6 +100,8 @@ class HomeListFragment : Fragment() {
                 searchView.setOnSearchClickListener {
                     Log.d(TAG, "Click en search!")
                     findNavController().navigate(R.id.action_homeListFragment_to_searchFragment)
+
+
                 }
             }
 
