@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeListFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeListFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
     </fragment>
 
     <fragment
@@ -24,7 +27,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.search.SearchFragment"
-        tools:layout="@layout/fragment_search">
+        tools:layout="Búsqueda">
         <action
             android:id="@+id/action_searchFragment_to_booksReadListFragment"
             app:destination="@id/booksReadListFragment" />
@@ -36,11 +39,17 @@
     <fragment
         android:id="@+id/searchResultListFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.searchresult.SearchResultListFragment"
-        android:label="SearchResultListFragment" >
+        android:label="Resultado" >
 
         <argument
             android:name="titulo"
             app:argType="string" />
+        <action
+            android:id="@+id/action_searchResultListFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+        <action
+            android:id="@+id/action_searchResultListFragment_to_bookDetailsFragment2"
+            app:destination="@id/bookDetailsFragment" />
 
     </fragment>
 
@@ -54,7 +63,14 @@
         android:id="@+id/bookDetailsFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.booksdetails.BooksDetailsFragment"
         android:label="Detalles"
-        tools:layout="@layout/fragment_books_details" />
+        tools:layout="@layout/fragment_books_details">
+
+        <argument
+            android:name="book"
+            app:argType="com.matiasmandelbaum.alejandriaapp.domain.model.Book" />
+
+
+    </fragment>
 
 
     <fragment
