@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:padding="30dp">
+
+    <TextView
+        android:id="@+id/textViewTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Crear cuenta"
+        android:textColor="@color/md_theme_light_primary"
+        android:textSize="32dp"
+        android:layout_gravity="left"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Nombre -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutNombre"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Nombre">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Ingrese su nombre" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Apellido -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutApellido"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Apellido">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextApellido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Ingrese su apellido" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Fecha de Nacimiento -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutFechaNacimiento"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Fecha de Nacimiento">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextFechaNacimiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Ingrese su fecha de nacimiento" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Email -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutEmail"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Email">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Ingrese su dirección de correo electrónico" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Contraseña -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutContraseña"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Contraseña">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextContraseña"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Ingrese su contraseña" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Repetir Contraseña -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutRepetirContraseña"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Repetir Contraseña">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextRepetirContraseña"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Repita su contraseña" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Botón de Registro -->
+    <Button
+        android:id="@+id/btnRegistro"
+        android:layout_width="match_parent"
+        android:textSize="20dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:text="Registrarse" />
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <!-- Botón de Ingreso -->
+        <TextView
+            android:id="@+id/textViewLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ya tengo una cuenta"
+            android:textColor="@color/md_theme_light_primary"
+            android:textSize="16dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>
+
