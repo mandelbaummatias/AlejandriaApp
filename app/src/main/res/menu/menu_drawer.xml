@@ -39,10 +39,5 @@
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout"
             android:title="@string/cerrar_sesion" />
-
-        <item
-            android:id="@+id/bookDetailsFragment"
-            android:icon="@drawable/ic_menu_book"
-            android:title="(PH - Detalles Libro)" />
     </group>
 </menu>

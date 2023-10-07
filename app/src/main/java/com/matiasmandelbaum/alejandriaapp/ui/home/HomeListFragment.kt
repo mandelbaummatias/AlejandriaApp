@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentHomeListBinding
-import com.matiasmandelbaum.alejandriaapp.ui.booklist.Book
+import com.matiasmandelbaum.alejandriaapp.domain.model.Book
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListAdapter
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListener
 import dagger.hilt.android.AndroidEntryPoint
