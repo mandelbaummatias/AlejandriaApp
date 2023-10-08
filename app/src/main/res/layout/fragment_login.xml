@@ -8,7 +8,7 @@
 
     <!-- Titulo -->
     <TextView
-        android:id="@+id/textViewTitulo"
+        android:id="@+id/textViewTituloCrearCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Crear cuenta"
@@ -20,14 +20,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="0dp" />
 
-    <!-- Campo de entrada para el nombre -->
+    <!-- nombre -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutNombre"
+        android:id="@+id/textInputNombre"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Nombre"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitulo"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTituloCrearCuenta"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="2dp">
@@ -41,14 +41,14 @@
             android:contentDescription="Ingrese su nombre" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Campo de entrada para el apellido -->
+    <!-- apellido -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutApellido"
+        android:id="@+id/textInputApellido"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Apellido"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutNombre"
+        app:layout_constraintTop_toBottomOf="@+id/textInputNombre"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="2dp">
@@ -64,12 +64,12 @@
 
     <!-- fecha de nacimiento -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutFechaNacimiento"
+        android:id="@+id/textInputFechaNacimiento"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Fecha de Nacimiento"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutApellido"
+        app:layout_constraintTop_toBottomOf="@+id/textInputApellido"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="2dp">
@@ -85,15 +85,15 @@
 
     <!-- correo electrónico -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutEmail"
+        android:id="@+id/textInputEmail"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Correo electrónico"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutFechaNacimiento"
+        android:hint="Email"
+        app:layout_constraintTop_toBottomOf="@+id/textInputFechaNacimiento"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="2dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEmail"
@@ -111,7 +111,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Contraseña"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail"
+        app:layout_constraintTop_toBottomOf="@+id/textInputEmail"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="2dp">
@@ -127,7 +127,7 @@
 
     <!-- repetir la contraseña -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutRepetirContraseña"
+        android:id="@+id/textInputRepetirContraseña"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -156,21 +156,22 @@
         android:text="Registrarse"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutRepetirContraseña" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputRepetirContraseña" />
 
     <!-- "Ya tengo una cuenta" -->
     <TextView
-        android:id="@+id/textViewLogin"
+        android:id="@+id/textViewIngreso"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ya tengo una cuenta"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16sp"
         android:layout_marginBottom="16dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
