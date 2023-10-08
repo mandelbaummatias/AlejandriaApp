@@ -6,6 +6,7 @@
     android:layout_marginTop="-20dp"
     android:layout_height="match_parent">
 
+    <!-- Titulo -->
     <TextView
         android:id="@+id/textViewTituloIniciosesion"
         android:layout_width="wrap_content"
