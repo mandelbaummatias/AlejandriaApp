@@ -1,9 +1,12 @@
-package com.matiasmandelbaum.alejandriaapp.data.signin
+package com.matiasmandelbaum.alejandriaapp.data.signin.remote
 
 import com.google.firebase.auth.AuthResult
+import com.matiasmandelbaum.alejandriaapp.data.signin.remote.FirebaseClient
+import com.matiasmandelbaum.alejandriaapp.data.signin.response.LoginResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 

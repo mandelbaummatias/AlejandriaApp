@@ -110,6 +110,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.1.2")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-storage-ktx:20.2.1")
+    implementation ("com.google.firebase:firebase-analytics-ktx")
+    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation ("com.google.firebase:firebase-firestore-ktx")
 
     // Picasso
     implementation("com.squareup.picasso:picasso:2.71828")

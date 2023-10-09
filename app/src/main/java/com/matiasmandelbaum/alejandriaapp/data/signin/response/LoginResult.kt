@@ -1,4 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.data.signin.response
 
-class LoginResult {
+sealed class LoginResult {
+    object Error : LoginResult()
+    data class Success(val verified: Boolean) : LoginResult()
 }
