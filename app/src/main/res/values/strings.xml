@@ -42,7 +42,7 @@
     <string name="signin_form_password">Contraseña</string>
     <string name="signin_form_repeat_password">Repetir contraseña</string>
     <string name="signin_error_mail">El email no es válido</string>
-    <string name="signin_error_date">La fecha no puede estar vacia</string>
+    <string name="signin_error_date">La fecha no es valida</string>
     <string name="signin_error_nickname">Debe contener al menos 6 caracteres</string>
     <string name="signin_error_realname">Debe contener al menos 6 caracteres</string>
     <string name="signin_error_password">Las 2 contraseñas debes ser iguales</string>

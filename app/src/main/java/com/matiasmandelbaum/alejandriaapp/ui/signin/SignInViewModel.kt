@@ -78,15 +78,50 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
         Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty()
 
     private fun isValidOrEmptyPassword(password: String, passwordConfirmation: String): Boolean =
+
         (password.length >= MIN_PASSWORD_LENGTH && password == passwordConfirmation) || password.isEmpty() || passwordConfirmation.isEmpty()
 
-    private fun isValidName(name: String): Boolean =
-        name.length >= MIN_PASSWORD_LENGTH || name.isEmpty()
-
-    private fun isValidDate(date: String): Boolean {
-        return date.isNotEmpty() && isUserAtLeast18YearsOld(date)
+    private fun isValidName(name: String): Boolean {
+        Log.d(TAG, " mi name al principio $name")
+        return name.length >= MIN_PASSWORD_LENGTH || name.isEmpty()
     }
 
+
+     fun isValidDate(date: String): Boolean {
+        Log.d(TAG, "mi date al principio isValid -> $date")
+     //   return date.isNotEmpty()
+
+        return date.length >= 10 || date.isEmpty() //isValidDate(date)||
+    }
+
+//     fun isValidDate(date: String?): Boolean {
+//        Log.d(TAG, "mi date al principio isValid -> $date")
+//        if (date != null) {
+//            if (date.isEmpty()) {
+//                Log.d(TAG, "date es empty todavia")
+//                return true
+//            }
+//        } else {
+//            Log.d(TAG, "date es null. return false")
+//            return false
+//        }
+//
+//
+//
+//        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+//
+//        try {
+//            Log.d(TAG, "mi string before parse $date")
+//            val parsedDate = LocalDate.parse(date, formatter)
+//            // Check if the parsed date matches the original date string
+//            val formattedDate = parsedDate.format(formatter)
+//            Log.d(TAG, "formatted date $formattedDate")
+//            return date == formattedDate
+//        } catch (e: DateTimeParseException) {
+//            Log.d(TAG, "error en parse $e")
+//            return false
+//        }
+//    }
     private fun isUserAtLeast18YearsOld(date: String): Boolean {
         Log.d(TAG, "isUserAtLeast...(date: $date)")
         val dateFormats = listOf(

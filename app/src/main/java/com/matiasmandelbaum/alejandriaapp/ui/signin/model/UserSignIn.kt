@@ -12,5 +12,5 @@ data class UserSignIn(
 ) {
     fun isNotEmpty() =
         name.isNotEmpty() && lastName.isNotEmpty() && email.isNotEmpty()
-                && birthDate.isNotEmpty() && password.isNotEmpty() && passwordConfirmation.isNotEmpty()
+             && password.isNotEmpty() && passwordConfirmation.isNotEmpty()  && birthDate.isNotEmpty()
 }
