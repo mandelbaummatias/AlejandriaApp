@@ -27,5 +27,3 @@ class GoogleBooksService @Inject constructor(private val googleBooksApiClient: G
         }
     }
 }
-
-
