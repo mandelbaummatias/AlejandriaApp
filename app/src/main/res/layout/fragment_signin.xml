@@ -1,4 +1,4 @@
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -83,8 +83,8 @@
                 android:layout_height="wrap_content"
                 android:textColorHighlight="@color/md_theme_dark_error"
                 android:textColorHint="@color/md_theme_dark_error"
-                android:inputType="none"
-                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="date"
                 android:singleLine="true"
                 android:importantForAccessibility="yes"
                 android:contentDescription="Ingrese su fecha de nacimiento" />

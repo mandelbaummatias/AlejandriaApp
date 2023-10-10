@@ -89,12 +89,14 @@ class SignInFragment : Fragment() {
 
     private fun initListeners() {
         binding.editTextNombre.apply {
+            //   Log.d(TAG, "editNombre focus methods")
             loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
             setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
             onTextChanged { onFieldChanged() }
         }
 
         binding.editTextApellido.apply {
+            //   Log.d(TAG, "editApellido focus methods")
             loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
             setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
             onTextChanged { onFieldChanged() }
@@ -112,7 +114,8 @@ class SignInFragment : Fragment() {
             onTextChanged { onFieldChanged() }
         }
 
-        binding.editTextFechaNacimiento.apply{
+        binding.editTextFechaNacimiento.apply {
+
             loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
             setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
             onTextChanged { onFieldChanged() }
@@ -169,7 +172,7 @@ class SignInFragment : Fragment() {
             binding.textInputLayoutEmail.error =
                 if (viewState.isValidEmail) null else getString(R.string.signin_error_mail)
             binding.textInputLayoutFechaNacimiento.error =
-                if(viewState.isValidDate) null else getString(R.string.signin_error_date)
+                if (viewState.isValidDate) null else getString(R.string.signin_error_date)
             binding.textInputLayoutContrasenia.error =
                 if (viewState.isValidPassword) null else getString(R.string.signin_error_password)
             binding.textInputLayoutRepetirContrasenia.error =
@@ -247,25 +250,28 @@ class SignInFragment : Fragment() {
 
         datePicker.addOnNegativeButtonClickListener {
             Log.d(TAG, "en negative viendo hasSelectedDate: $hasSelectedDate")
-          //  datePicker.selection?.let {
-          //      it.let {
-                    if(hasSelectedDate){
-                        binding.editTextFechaNacimiento.text = Editable.Factory.getInstance().newEditable(
-                            finalSelectedDate
-                        )
-                    } else{
-                        Log.d(TAG, "doesn't have selected date")
-                        binding.editTextFechaNacimiento.text = Editable.Factory.getInstance().newEditable("")
-                    }
-
-                }
+            //  datePicker.selection?.let {
+            //      it.let {
+            if (hasSelectedDate) {
+                binding.editTextFechaNacimiento.text = Editable.Factory.getInstance().newEditable(
+                    finalSelectedDate
+                )
+            } else {
+                Log.d(TAG, "doesn't have selected date")
+                binding.editTextFechaNacimiento.text =
+                    Editable.Factory.getInstance().newEditable(" ")
+       //        Log.d(TAG, "pasandole null en negative?")
+                //viewModel.isValidDate(null)
             }
 
-        fun showDatePicker() {
-            Log.d(TAG, "showDatePicker()")
-            datePicker.show(parentFragmentManager, "datePicker")
         }
     }
+
+    fun showDatePicker() {
+        Log.d(TAG, "showDatePicker()")
+        datePicker.show(parentFragmentManager, "datePicker")
+    }
+}
 
 
 
