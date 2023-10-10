@@ -54,5 +54,6 @@
     <string name="registro_exitoso">Registro exitoso!</string>
     <string name="error_en_registro">Error en registro</string>
     <string name="selecciona_fecha_de_nacimiento">Selecciona fecha de nacimiento</string>
+    <string name="la_cuenta_de_email_ya_existe">La cuenta de email ya existe!</string>
 
 </resources>
