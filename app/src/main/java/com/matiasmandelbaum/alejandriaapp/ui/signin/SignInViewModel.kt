@@ -27,6 +27,7 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
 
     private companion object {
         const val MIN_PASSWORD_LENGTH = 6
+        const val MIN_DATE_LENGTH = 10
     }
 
     private val _navigateToLogin = MutableLiveData<Event<Boolean>>()
@@ -91,7 +92,7 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
         Log.d(TAG, "mi date al principio isValid -> $date")
      //   return date.isNotEmpty()
 
-        return date.length >= 10 || date.isEmpty() //isValidDate(date)||
+        return isUserAtLeast18YearsOld(date) && date.length >= MIN_DATE_LENGTH || date.isEmpty() //isValidDate(date)||
     }
 
 //     fun isValidDate(date: String?): Boolean {

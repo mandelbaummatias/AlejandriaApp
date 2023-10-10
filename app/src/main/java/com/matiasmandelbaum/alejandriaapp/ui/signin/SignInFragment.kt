@@ -21,10 +21,14 @@ import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.matiasmandelbaum.alejandriaapp.R
+import com.matiasmandelbaum.alejandriaapp.common.dialog.DialogFragmentLauncher
+import com.matiasmandelbaum.alejandriaapp.common.dialog.ErrorDialog
 import com.matiasmandelbaum.alejandriaapp.common.ex.dismissKeyboard
 import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
+import com.matiasmandelbaum.alejandriaapp.common.ex.show
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSigninBinding
 import com.matiasmandelbaum.alejandriaapp.ui.home.HomeListFragmentDirections
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
@@ -37,6 +41,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
 
 private const val TAG = "SignUpFragment"
@@ -48,6 +53,9 @@ class SignInFragment : Fragment() {
     private lateinit var datePicker: MaterialDatePicker<Long>
 
     private val viewModel: SignInViewModel by viewModels()
+
+    @Inject
+    lateinit var dialogLauncher: DialogFragmentLauncher
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -160,7 +168,26 @@ class SignInFragment : Fragment() {
                 findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToHomeListFragment())
             }
         }
+
+        viewModel.showErrorDialog.observe(viewLifecycleOwner) { showError ->
+            if (showError) {
+                // Show a Snackbar with the error message
+                val snackbar = Snackbar.make(requireView(),
+                    getString(R.string.la_cuenta_de_email_ya_existe), Snackbar.LENGTH_LONG)
+                snackbar.show()
+            }
+        }
     }
+
+//    private fun showErrorDialog() {
+//        ErrorDialog.create(
+//            title = getString(R.string.signin_error_dialog_title),
+//            description = getString(R.string.signin_error_dialog_body),
+//            positiveAction = ErrorDialog.Action(getString(R.string.signin_error_dialog_positive_action)) {
+//                it.dismiss()
+//            }
+//        ).show(dialogLauncher, requireActivity())
+//    }
 
     private fun updateUI(viewState: SignInViewState) {
         with(binding) {
