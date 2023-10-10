@@ -191,7 +191,7 @@ class SignInFragment : Fragment() {
 
     private fun updateUI(viewState: SignInViewState) {
         with(binding) {
-            pbLoading.isVisible = viewState.isLoading
+            //pbLoading.isVisible = viewState.isLoading
             binding.textInputLayoutNombre.error =
                 if (viewState.isValidName) null else getString(R.string.signin_error_realname)
             binding.textInputLayoutApellido.error =
