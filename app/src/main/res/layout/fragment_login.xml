@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="top"
-    android:orientation="vertical"
-    android:padding="30dp">
+    android:padding="30dp"
+    android:layout_marginTop="-20dp"
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewTitulo"
+        android:id="@+id/textViewTituloIniciosesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Iniciar sesión"
+        android:text="Iniciar Sesión"
         android:textColor="@color/md_theme_light_primary"
         android:textSize="32dp"
         android:layout_gravity="left"
-        android:layout_marginBottom="16dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="0dp" />
 
     <!-- Email -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutEmail"
+        android:id="@+id/textInputEmail"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Email">
+        android:hint="Email"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTituloIniciosesion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="2dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEmail"
@@ -36,15 +42,18 @@
 
     <!-- Contraseña -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutContrasenia"
+        android:id="@+id/textInputLayoutContraseña"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Contraseña">
+        android:hint="Contraseña"
+        app:layout_constraintTop_toBottomOf="@+id/textInputEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="2dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextContrasenia"
+            android:id="@+id/editTextContraseña"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
@@ -54,49 +63,44 @@
 
     <!-- Botón de Registro -->
     <Button
-        android:id="@+id/btnRegistro"
-        android:layout_width="match_parent"
-        android:textSize="20dp"
+        android:id="@+id/btnIngreso"
+        android:layout_width="0dp"
+        android:textSize="20sp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        android:text="Ingresar" />
+        android:text="Ingresar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutContraseña" />
 
+    <!-- "Recuperar Contraseña" -->
     <TextView
         android:id="@+id/textViewRecuperarCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Recuperar contraseña"
-        android:textColor="@color/md_theme_light_primary"
-        android:textSize="16dp"
-        android:layout_gravity="center"
+        android:textSize="16sp"
         android:layout_marginBottom="16dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/btnIngreso"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- "No tengo una cuenta" -->
+    <TextView
+        android:id="@+id/textViewRegistro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No tengo una cuenta"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        android:padding="30dp">
-
-
-        <!-- Botón de Ingreso -->
-        <TextView
-            android:id="@+id/textViewLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No tengo una cuenta"
-            android:textColor="@color/md_theme_light_primary"
-            android:textSize="16dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
