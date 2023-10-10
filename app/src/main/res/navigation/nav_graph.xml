@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/homeListFragment">
+    app:startDestination="@id/signInFragment">
 
     <fragment
         android:id="@+id/homeListFragment"
@@ -83,5 +83,13 @@
     <action
         android:id="@+id/action_availableBooksFragment_to_bookListFragment"
         app:destination="@id/bookListFragment" />
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.signin.SignInFragment"
+        android:label="Registro" >
+        <action
+            android:id="@+id/action_signInFragment_to_homeListFragment"
+            app:destination="@id/homeListFragment" />
+    </fragment>
 
 </navigation>
