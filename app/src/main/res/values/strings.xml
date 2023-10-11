@@ -2,6 +2,8 @@
     <string name="app_name">AlejandriaApp</string>
     <string name="drawer_layout_behavior">androidx.drawerlayout.widget.DrawerLayout$DrawerLayoutCompat</string>
 
+    <string name="globalAccept">Aceptar</string>
+
     <!-- Navigation strings -->
     <string name="menu">Menu</string>
     <string name="inicio">Inicio</string>
@@ -34,5 +36,37 @@
     <string name="google_books_api_base_url">https://www.googleapis.com/books/v1/volumes/</string>
     <string name="google_books_api_key"></string>
     <string name="titulo">Últimas novedades</string>
+
+    <!--User profile-->
+    <string name="personalInfo">Información personal</string>
+    <string name="domicilio">Domicilio</string>
+
+    <string name="realName">Nombre(s):</string>
+    <string name="surname">Apellido(s):</string>
+    <string name="email">Email:</string>
+
+    <string name="country">País:</string>
+    <string name="city">Ciudad:</string>
+    <string name="pc">Código Postal:</string>
+    <string name="address">Dirección:</string>
+
+    <string name="userPfpText">Foto de perfil del usuario</string>
+
+    <string name="settingsButtonInfo">Botón que lleva a la vista de ajustes de usuario</string>
+
+    <string name="UPMainSettingsHeader">Ajustes de usuario</string>
+    <string name="UPMSEmailSettings">Cambio de correo electrónico</string>
+    <string name="UPMSPwSettings">Cambio de contraseña</string>
+
+    <string name="emailSettingsTitle">Cambio de correo electrónico</string>
+    <string name="newEmail">Nuevo correo electrónico</string>
+    <string name="newEmailConfirmation">Confirme nuevo correo electrónico</string>
+    <string name="newEmailPwConfirmation">Contraseña</string>
+
+    <string name="pwSettingsTitle">Cambio de contraseña</string>
+    <string name="newPw">Nueva contraseña</string>
+    <string name="newPwConfirmation">Confirme nueva contraseña</string>
+
+
 
 </resources>
