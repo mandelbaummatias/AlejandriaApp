@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.signin
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,20 +15,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.dialog.DialogFragmentLauncher
-import com.matiasmandelbaum.alejandriaapp.common.dialog.ErrorDialog
 import com.matiasmandelbaum.alejandriaapp.common.ex.dismissKeyboard
 import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
-import com.matiasmandelbaum.alejandriaapp.common.ex.show
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSigninBinding
-import com.matiasmandelbaum.alejandriaapp.ui.home.HomeListFragmentDirections
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -173,7 +166,7 @@ class SignInFragment : Fragment() {
             if (showError) {
                 // Show a Snackbar with the error message
                 val snackbar = Snackbar.make(requireView(),
-                    getString(R.string.la_cuenta_de_email_ya_existe), Snackbar.LENGTH_LONG)
+                    getString(R.string.error_signin), Snackbar.LENGTH_LONG)
                 snackbar.show()
             }
         }
