@@ -16,8 +16,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.Result
+import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
+import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager.addAuthStateListener
+import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager.removeAuthStateListener
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentHomeListBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.Book
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListAdapter
@@ -59,6 +63,45 @@ class HomeListFragment : Fragment() {
 
 
         return binding.root
+    }
+
+//    private val authManager = AuthManager.instance // Use the AuthManager instance
+//
+//    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+//        val user = auth.currentUser
+//        if (user != null) {
+//        Log.d(TAG,"Mi user logueado ${user.uid}")
+//        } else {
+//            Log.d(TAG, "user is null")
+//        }
+//    }
+
+ //   private val authManager = AuthManager.instance // Use the AuthManager instance
+
+    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+        val user = auth.currentUser
+        if (user != null) {
+            Log.d(TAG,"Mi user logueado ${user.uid}")
+        } else {
+            Log.d(TAG, "user is null")
+        }
+    }
+
+    override fun onResume() {
+        Log.d(TAG, "onResume()")
+        super.onResume()
+    }
+
+    override fun onStart() {
+        super.onStart()
+     //   authManager.addAuthStateListener(authStateListener)
+        addAuthStateListener(authStateListener)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        removeAuthStateListener(authStateListener)
+      //  authManager.removeAuthStateListener(authStateListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

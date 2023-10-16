@@ -24,9 +24,9 @@ class LoginViewModel @Inject constructor(val loginUseCase: LoginUseCase) : ViewM
         const val MIN_PASSWORD_LENGTH = 6
     }
 
-    private val _navigateToDetails = MutableLiveData<Event<Boolean>>()
-    val navigateToDetails: LiveData<Event<Boolean>>
-        get() = _navigateToDetails
+    private val _navigateToHome = MutableLiveData<Event<Boolean>>()
+    val navigateToHome: LiveData<Event<Boolean>>
+        get() = _navigateToHome
 
     private val _navigateToForgotPassword = MutableLiveData<Event<Boolean>>()
     val navigateToForgotPassword: LiveData<Event<Boolean>>
@@ -68,11 +68,12 @@ class LoginViewModel @Inject constructor(val loginUseCase: LoginUseCase) : ViewM
                 }
                 is LoginResult.Success -> {
                     Log.d(TAG, "LoginResult.Success")
-                    if (result.verified) { //debería eliminar esta parte
-                        _navigateToDetails.value = Event(true)
-                    } else {
-                        _navigateToVerifyAccount.value = Event(true)
-                    }
+                    _navigateToHome.value = Event(true)
+//                    if (result.verified) { //debería eliminar esta parte
+//                        _navigateToDetails.value = Event(true)
+//                    } else {
+//                        _navigateToVerifyAccount.value = Event(true)
+//                    }
                 }
             }
             _viewState.value = LoginViewState(isLoading = false)

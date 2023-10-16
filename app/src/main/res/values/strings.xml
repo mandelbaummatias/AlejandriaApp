@@ -72,5 +72,9 @@
     <string name="login_error_dialog_negative_action">Cancelar</string>
     <string name="login_error_dialog_positive_action">Reintentar</string>
     <string name="error_login">El usuario o la contraseña son incorrectos</string>
+    <string name="confirmacion">¿Está seguro de que desea cerrar sesión?</string>
+    <string name="titulo_logout">¿Desea cerrar sesión?</string>
+    <string name="si">Sí</string>
+    <string name="no">No</string>
 
 </resources>

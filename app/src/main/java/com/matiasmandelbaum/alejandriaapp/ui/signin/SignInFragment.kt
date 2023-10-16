@@ -132,6 +132,10 @@ class SignInFragment : Fragment() {
             showDatePicker()
         }
 
+        binding.textViewLogin.setOnClickListener {
+            viewModel.onLoginSelected()
+        }
+
 
         with(binding) {
             btnRegistro.setOnClickListener {
@@ -153,23 +157,44 @@ class SignInFragment : Fragment() {
     private fun initObservers() {
         viewModel.navigateToHome.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.registro_exitoso),
-                    Toast.LENGTH_SHORT
-                ).show()
-                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToHomeListFragment())
+                goToHome()
+                showSignInSucessful()
             }
         }
 
         viewModel.showErrorDialog.observe(viewLifecycleOwner) { showError ->
             if (showError) {
-                // Show a Snackbar with the error message
-                val snackbar = Snackbar.make(requireView(),
-                    getString(R.string.error_signin), Snackbar.LENGTH_LONG)
-                snackbar.show()
+                showEmailAlreadyRegistered()
             }
         }
+
+        viewModel.navigateToLogin.observe(viewLifecycleOwner){
+            it.getContentIfNotHandled()?.let {
+                goToLogin()
+            }
+        }
+    }
+
+    private fun showSignInSucessful(){
+        val snackbar = Snackbar.make(requireView(),
+            getString(R.string.registro_exitoso), Snackbar.LENGTH_SHORT)
+        snackbar.show()
+    }
+
+    private fun showEmailAlreadyRegistered(){
+        val snackbar = Snackbar.make(requireView(),
+            getString(R.string.error_signin), Snackbar.LENGTH_LONG)
+        snackbar.show()
+    }
+
+    private fun goToLogin(){
+        val action = SignInFragmentDirections.actionSignInFragmentToLoginFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun goToHome(){
+        val action = SignInFragmentDirections.actionSignInFragmentToHomeListFragment()
+        findNavController().navigate(action)
     }
 
 //    private fun showErrorDialog() {
