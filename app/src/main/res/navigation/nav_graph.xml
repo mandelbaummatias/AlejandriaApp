@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/homeListFragment">
 
     <fragment
         android:id="@+id/homeListFragment"
@@ -90,12 +90,38 @@
         <action
             android:id="@+id/action_signInFragment_to_homeListFragment"
             app:destination="@id/homeListFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.login.LoginFragment"
         android:label="Login" >
+        <action
+            android:id="@+id/action_loginFragment_to_homeListFragment"
+            app:destination="@id/homeListFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/passwordRecoveryFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.passwordrecovery.PasswordRecoveryFragment"
+        android:label="PasswordRecoveryFragment" >
+        <action
+            android:id="@+id/action_passwordRecoveryFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </dialog>
 
+    <dialog
+        android:id="@+id/signOutDialogFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.signout.SignOutDialogFragment"
+        android:label="SignoutDialogFragment" >
+        <action
+            android:id="@+id/action_signOutDialogFragment_pop2"
+            app:popUpTo="@id/signOutDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
 </navigation>

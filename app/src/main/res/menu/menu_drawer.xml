@@ -31,7 +31,7 @@
             android:title="@string/suscripcion" />
 
         <item
-            android:id="@+id/profile"
+            android:id="@+id/loginFragment"
             android:icon="@drawable/ic_profile"
             android:title="@string/perfil" />
 
