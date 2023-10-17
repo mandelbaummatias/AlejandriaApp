@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/homeListFragment">
+    app:startDestination="@id/userProfileFragment">
 
     <fragment
         android:id="@+id/homeListFragment"
@@ -124,4 +124,8 @@
             app:popUpTo="@id/signOutDialogFragment"
             app:popUpToInclusive="true" />
     </dialog>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofile.UserProfileFragment"
+        android:label="UserProfileFragment" />
 </navigation>
