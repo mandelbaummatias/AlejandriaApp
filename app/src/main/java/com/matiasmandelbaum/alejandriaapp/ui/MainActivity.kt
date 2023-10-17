@@ -37,11 +37,13 @@ class MainActivity : AppCompatActivity() {
         val user = auth.currentUser
         if (user != null) {
             Log.d(TAG, "mi user logueado $user")
-            showMenuItem(R.id.logout)
+            showMenuItem(R.id.logout) //var args? //iterar?
+            showMenuItem(R.id.booksReadListFragment)
 
         } else {
             Log.d(TAG, "user is null: $user")
             hideMenuItem(R.id.logout)
+            hideMenuItem(R.id.booksReadListFragment)
         }
     }
 
@@ -96,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeListFragment, R.id.booksReadListFragment, R.id.subscriptionListFragment,
-                R.id.availableBooksFragment//, R.id.signOutDialogFragment
+               // R.id.availableBooksFragment//, R.id.signOutDialogFragment
             ), drawerLayout
         )
 
