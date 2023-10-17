@@ -36,10 +36,42 @@ class MainActivity : AppCompatActivity() {
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
         if (user != null) {
-            Log.d(TAG, "Mi user logueado ${user.uid}")
+            Log.d(TAG, "mi user logueado $user")
+            showMenuItem(R.id.logout)
+
         } else {
-            Log.d(TAG, "user is null")
+            Log.d(TAG, "user is null: $user")
+            hideMenuItem(R.id.logout)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        //   authManager.addAuthStateListener(authStateListener)
+        AuthManager.addAuthStateListener(authStateListener)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        AuthManager.removeAuthStateListener(authStateListener)
+        //  authManager.removeAuthStateListener(authStateListener)
+    }
+
+    private fun hideMenuItem(itemId: Int) {
+        Log.d(TAG, "showMenuItem")
+        val navView: NavigationView = binding.navView
+        val menu = navView.menu
+        Log.d(TAG, "consegui menu en hideMenuItem $menu")
+        menu.findItem(itemId)?.isVisible = false// = false
+    }
+
+    // Function to show a menu item
+    private fun showMenuItem(itemId: Int) {
+        Log.d(TAG, "showMenuItem")
+        val navView: NavigationView = binding.navView
+        val menu = navView.menu
+        Log.d(TAG, "consegui menu en showMenuItem $menu")
+        menu.findItem(itemId)?.isVisible = true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,17 +102,6 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-//
-//        val menu = navView.menu
-//        val item = menu.findItem(R.id.logout)
-//        if(AuthManager.getCurrentUser() != null){
-//            Log.d(TAG, "mi item (que es el logout) $item")
-//        } else{
-//            menu.removeItem(item.itemId)
-//        }
-
-        //navView.setItem
 
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -121,6 +142,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.signOutDialogFragment -> {
                     true
                 }
+
                 else -> true
             }
 
@@ -138,33 +160,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        navController.addOnDestinationChangedListener { nc: NavController, nd: NavDestination, args: Bundle? ->
-//            if (nd.id == nc.graph.startDestinationId) {
-//                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-//                Log.d("addOnDestinationChangedListener", "En start")
-//            } else {
-//                val signOutFragment =
-//                    R.id.signOutDialogFragment // Replace with the ID of the fragment you want to search for
-//                if (nd.id == signOutFragment) {
-//                    navController.popBackStack()
-//                    val nuevo = signOutFragment as SignOutDialogFragment
-//                    nuevo.show(supportFragmentManager,"hola")
-//                    true
-//                    // You found the fragment, you can perform actions here
-//                    Log.d(
-//                        "addOnDestinationChangedListener",
-//                        "Found the fragment with ID: $signOutFragment"
-//                    )
-//                } else {
-//                    // Fragment not found
-//                    Log.d(
-//                        "addOnDestinationChangedListener",
-//                        "Fragment with ID: $signOutFragment not found"
-//                    )
-//                }
-//                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-//            }
-//        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
