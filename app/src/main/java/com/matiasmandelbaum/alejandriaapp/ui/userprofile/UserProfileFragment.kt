@@ -1,15 +1,12 @@
 package com.matiasmandelbaum.alejandriaapp.ui.userprofile
 
-import android.R
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,6 +23,7 @@ class UserProfileFragment : Fragment() {
 
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
+    private var previousEmail: String? = null
 
 
     private lateinit var binding: UserProfileMainBinding
@@ -34,6 +32,7 @@ class UserProfileFragment : Fragment() {
         val user = auth.currentUser
         if (user != null) {
             val userEmail = user.email
+            previousEmail = userEmail
             Log.d(TAG, "Email of the logged-in user: $userEmail")
 
             // Query the Firestore collection to find a user with the matching email.
@@ -48,6 +47,10 @@ class UserProfileFragment : Fragment() {
                         val nombre = document.getString("nombre")
                         val apellido = document.getString("apellido")
                         val email = document.getString("email")
+
+                        Log.d(TAG, "$nombre")
+                        Log.d(TAG, "$apellido")
+                        Log.d(TAG, "$email")
 
                         // Update the edit texts with the retrieved data
                         binding.editNombre.setText(nombre)
@@ -143,9 +146,32 @@ class UserProfileFragment : Fragment() {
                 Log.e(TAG, "Error updating document: $exception")
             }
 
+       // val currentUser = FirebaseAuth.getInstance().currentUser
 
+        val user = FirebaseAuth.getInstance().currentUser
+        // Get auth credentials from the user for re-authentication
+        // Get auth credentials from the user for re-authentication
+        val credential = EmailAuthProvider
+            //hay que poenr el mail de nuevo y la contraseña
+            .getCredential("${user?.email}", "1") // Current Login Credentials \\
 
-        // Set TextInputEditText fields as non-editable
+        // Prompt the user to re-provide their sign-in credentials
+        // Prompt the user to re-provide their sign-in credentials
+        user!!.reauthenticate(credential)
+            .addOnCompleteListener {
+                Log.d(TAG, "User re-authenticated.")
+                //Now change your email address \\
+                //----------------Code for Changing Email Address----------\\
+              //  val user = FirebaseAuth.getInstance().currentUser
+                user!!.updateEmail(newEmail)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "User email address updated.")
+                        }
+                    }
+                //----------------------------------------------------------\\
+            }
+
         binding.editNombre.isEnabled = false
         binding.editApellido.isEnabled = false
         binding.editEmail.isEnabled = false

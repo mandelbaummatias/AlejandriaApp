@@ -7,7 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 object AuthManager {
     private val auth = FirebaseAuth.getInstance()
 
-    fun addAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
+        fun addAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
         auth.addAuthStateListener(listener)
     }
 
