@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
+import com.matiasmandelbaum.alejandriaapp.ui.signin.SignInFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -179,6 +181,8 @@ class UserProfileFragment : Fragment() {
 
         isInEditMode = false
     }
+
+
 
 }
 
