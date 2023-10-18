@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/userProfileFragment">
+    app:startDestination="@id/signInFragment">
 
     <fragment
         android:id="@+id/homeListFragment"
@@ -93,6 +93,9 @@
         <action
             android:id="@+id/action_signInFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_verificationFragment"
+            app:destination="@id/verificationFragment" />
     </fragment>
 
     <fragment
@@ -126,6 +129,18 @@
     </dialog>
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofile.UserProfileFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfileFragment"
         android:label="UserProfileFragment" />
+    <fragment
+        android:id="@+id/userMailFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.userMainmail.UserMailFragment"
+        android:label="UserMailFragment" />
+    <fragment
+        android:id="@+id/verificationFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.verification.VerificationFragment"
+        android:label="VerificationFragment" >
+        <action
+            android:id="@+id/action_verificationFragment_to_homeListFragment"
+            app:destination="@id/homeListFragment" />
+    </fragment>
 </navigation>

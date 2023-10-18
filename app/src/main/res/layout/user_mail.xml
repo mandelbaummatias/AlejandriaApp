@@ -7,11 +7,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/userInfoHeader"
+        android:id="@+id/userMailHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
-        android:text="@string/personalInfo"
+        android:text="Cambio de email"
         android:textColor="?attr/colorOnPrimaryContainer"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,43 +19,42 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editNombreLayout"
+        android:id="@+id/editEmailLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userInfoHeader">
+        app:layout_constraintTop_toBottomOf="@+id/userMailHeader">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editNombre"
+            android:id="@+id/editEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre"
-            android:inputType="text"
+            android:hint="Correo Electrónico"
+            android:inputType="textEmailAddress"
             android:textSize="20sp"
             android:textColor="?attr/colorOnPrimaryContainer"
             android:enabled="false" /> <!-- Set android:enabled to false -->
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editApellidoLayout"
+        android:id="@+id/passwordLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editNombreLayout">
+        app:layout_constraintTop_toBottomOf="@+id/editEmailLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editApellido"
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Apellido"
-            android:textColor="?attr/colorOnPrimaryContainer"
-            android:inputType="text"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
             android:textSize="20sp"
-            android:enabled="false" /> <!-- Set android:enabled to false -->
+            android:textColor="?attr/colorOnPrimaryContainer"
+            />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/edit_fab"
@@ -63,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="Edit"
+        android:contentDescription="Editar"
         android:src="@drawable/ic_edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
