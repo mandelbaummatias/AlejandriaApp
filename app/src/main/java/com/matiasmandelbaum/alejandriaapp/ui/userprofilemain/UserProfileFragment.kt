@@ -1,4 +1,4 @@
-package com.matiasmandelbaum.alejandriaapp.ui.userprofile
+package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
 
 import android.os.Bundle
 import android.util.Log
@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG = "UserProfileFragment"
 
 @AndroidEntryPoint
-class UserProfileFragment : Fragment() {
+class UserProfileMainFragment : Fragment() {
 
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
@@ -50,12 +49,12 @@ class UserProfileFragment : Fragment() {
 
                         Log.d(TAG, "$nombre")
                         Log.d(TAG, "$apellido")
-                        Log.d(TAG, "$email")
+                       // Log.d(TAG, "$email")
 
                         // Update the edit texts with the retrieved data
                         binding.editNombre.setText(nombre)
                         binding.editApellido.setText(apellido)
-                        binding.editEmail.setText(email)
+                    //    binding.editEmail.setText(email)
 
                         userDocumentReference = document.reference
                         Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $email")
@@ -110,13 +109,13 @@ class UserProfileFragment : Fragment() {
         isInEditMode = true
         binding.editNombreLayout.visibility = View.VISIBLE
         binding.editApellidoLayout.visibility = View.VISIBLE
-        binding.editEmailLayout.visibility = View.VISIBLE
+     //   binding.editEmailLayout.visibility = View.VISIBLE
 
 
         // Set TextInputEditText fields as editable
         binding.editNombre.isEnabled = true
         binding.editApellido.isEnabled = true
-        binding.editEmail.isEnabled = true
+        //binding.editEmail.isEnabled = true
 
         binding.editNombre.requestFocus()
         binding.editNombre.text?.let { binding.editNombre.setSelection(it.length) }
@@ -128,14 +127,14 @@ class UserProfileFragment : Fragment() {
         // Update the Firestore document with the edited values
         val newNombre = binding.editNombre.text.toString()
         val newApellido = binding.editApellido.text.toString()
-        val newEmail = binding.editEmail.text.toString()
+       // val newEmail = binding.editEmail.text.toString()
 
         // Get the current user's email
         userDocumentReference?.update(
             mapOf(
                 "nombre" to newNombre,
                 "apellido" to newApellido,
-                "email" to newEmail
+                //"email" to newEmail
             )
         )
             ?.addOnSuccessListener {
@@ -148,33 +147,33 @@ class UserProfileFragment : Fragment() {
 
        // val currentUser = FirebaseAuth.getInstance().currentUser
 
-        val user = FirebaseAuth.getInstance().currentUser
-        // Get auth credentials from the user for re-authentication
-        // Get auth credentials from the user for re-authentication
-        val credential = EmailAuthProvider
-            //hay que poenr el mail de nuevo y la contraseña
-            .getCredential("${user?.email}", "1") // Current Login Credentials \\
-
-        // Prompt the user to re-provide their sign-in credentials
-        // Prompt the user to re-provide their sign-in credentials
-        user!!.reauthenticate(credential)
-            .addOnCompleteListener {
-                Log.d(TAG, "User re-authenticated.")
-                //Now change your email address \\
-                //----------------Code for Changing Email Address----------\\
-              //  val user = FirebaseAuth.getInstance().currentUser
-                user!!.updateEmail(newEmail)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d(TAG, "User email address updated.")
-                        }
-                    }
-                //----------------------------------------------------------\\
-            }
+//        val user = FirebaseAuth.getInstance().currentUser
+//        // Get auth credentials from the user for re-authentication
+//        // Get auth credentials from the user for re-authentication
+//        val credential = EmailAuthProvider
+//            //hay que poenr el mail de nuevo y la contraseña
+//            .getCredential("${user?.email}", "1") // Current Login Credentials \\
+//
+//        // Prompt the user to re-provide their sign-in credentials
+//        // Prompt the user to re-provide their sign-in credentials
+//        user!!.reauthenticate(credential)
+//            .addOnCompleteListener {
+//                Log.d(TAG, "User re-authenticated.")
+//                //Now change your email address \\
+//                //----------------Code for Changing Email Address----------\\
+//              //  val user = FirebaseAuth.getInstance().currentUser
+//                user!!.updateEmail(newEmail)
+//                    .addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            Log.d(TAG, "User email address updated.")
+//                        }
+//                    }
+//                //----------------------------------------------------------\\
+//            }
 
         binding.editNombre.isEnabled = false
         binding.editApellido.isEnabled = false
-        binding.editEmail.isEnabled = false
+        //binding.editEmail.isEnabled = false
 
         binding.editFab.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_edit)
 
