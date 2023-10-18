@@ -40,7 +40,7 @@ class VerificationFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.navigateToLoginSuccessful.observe(this) {
+        viewModel.navigateToLoginSuccessful.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 val message = "Cuenta verificada! Bienvenido a AlejandriaApp"
                 Snackbar.make(
@@ -53,7 +53,7 @@ class VerificationFragment : Fragment() {
             }
         }
 
-        viewModel.showContinueButton.observe(this) {
+        viewModel.showContinueButton.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 binding.startButton.isVisible = true
             }
