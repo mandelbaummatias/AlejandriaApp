@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/userInfoHeader"
+        android:id="@+id/userMailHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userInfoHeader">
+        app:layout_constraintTop_toBottomOf="@+id/userMailHeader">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editNombre"

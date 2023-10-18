@@ -11,21 +11,21 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
-import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileMainBinding
+import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 
 private const val TAG = "UserProfileFragment"
 
 @AndroidEntryPoint
-class UserProfileMainFragment : Fragment() {
+class UserProfileFragment : Fragment() {
 
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
     private var previousEmail: String? = null
 
 
-    private lateinit var binding: UserProfileMainBinding
+    private lateinit var binding: UserProfileBinding
     private val firestore = FirebaseFirestore.getInstance()
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
@@ -99,7 +99,7 @@ class UserProfileMainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = UserProfileMainBinding.inflate(inflater, container, false)
+        binding = UserProfileBinding.inflate(inflater, container, false)
 
         return binding.root
     }

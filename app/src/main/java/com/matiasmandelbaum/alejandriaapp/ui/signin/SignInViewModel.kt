@@ -42,6 +42,10 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
     val viewState: StateFlow<SignInViewState>
         get() = _viewState
 
+    private val _navigateToVerifyEmail = MutableLiveData<Event<Boolean>>()
+    val navigateToVerifyEmail: LiveData<Event<Boolean>>
+        get() = _navigateToVerifyEmail
+
     private var _showErrorDialog = MutableLiveData(false)
     val showErrorDialog: LiveData<Boolean> = _showErrorDialog
     fun onSignInSelected(userSignIn: UserSignIn) {
@@ -58,7 +62,8 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
             _viewState.value = SignInViewState(isLoading = true)
             val accountCreated = createAccountUseCase(userSignIn)
             if (accountCreated) {
-                _navigateToHome.value = Event(true)
+                _navigateToVerifyEmail.value = Event(true)
+           //     _navigateToHome.value = Event(true)
             } else {
                 _showErrorDialog.value = true
                 Log.d(TAG, "show error: $showErrorDialog")
@@ -70,6 +75,7 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
     fun onFieldsChanged(userSignIn: UserSignIn) {
         _viewState.value = userSignIn.toSignInViewState()
     }
+
 
     fun onLoginSelected() {
         _navigateToLogin.value = Event(true)

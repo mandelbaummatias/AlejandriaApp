@@ -168,6 +168,12 @@ class SignInFragment : Fragment() {
             }
         }
 
+        viewModel.navigateToVerifyEmail.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                goToVerifyEmail()
+            }
+        }
+
         viewModel.navigateToLogin.observe(viewLifecycleOwner){
             it.getContentIfNotHandled()?.let {
                 goToLogin()
@@ -181,6 +187,11 @@ class SignInFragment : Fragment() {
         snackbar.show()
     }
 
+    private fun goToVerifyEmail() {
+        val action = SignInFragmentDirections.actionSignInFragmentToVerificationFragment()
+        findNavController().navigate(action)
+    }
+
     private fun showEmailAlreadyRegistered(){
         val snackbar = Snackbar.make(requireView(),
             getString(R.string.error_signin), Snackbar.LENGTH_LONG)
@@ -191,6 +202,8 @@ class SignInFragment : Fragment() {
         val action = SignInFragmentDirections.actionSignInFragmentToLoginFragment()
         findNavController().navigate(action)
     }
+
+
 
     private fun goToHome(){
         val action = SignInFragmentDirections.actionSignInFragmentToHomeListFragment()
