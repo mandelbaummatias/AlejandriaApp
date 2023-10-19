@@ -108,6 +108,7 @@
     <string name="pwSettingsTitle">Cambio de contraseña</string>
     <string name="newPw">Nueva contraseña</string>
     <string name="newPwConfirmation">Confirme nueva contraseña</string>
+    <string name="actualPassword">Contraseña actual</string>
 
 
 

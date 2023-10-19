@@ -34,7 +34,7 @@
             android:inputType="text"
             android:textSize="20sp"
             android:textColor="?attr/colorOnPrimaryContainer"
-            android:enabled="false" /> <!-- Set android:enabled to false -->
+            android:enabled="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -53,9 +53,8 @@
             android:textColor="?attr/colorOnPrimaryContainer"
             android:inputType="text"
             android:textSize="20sp"
-            android:enabled="false" /> <!-- Set android:enabled to false -->
+            android:enabled="false" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/edit_fab"
@@ -67,5 +66,33 @@
         android:src="@drawable/ic_edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-  />
+        app:backgroundTint="#e0953f"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/overlay_fab_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Botón edición de perfil"
+        android:src="@drawable/ic_profile"
+        app:layout_constraintBottom_toTopOf="@+id/edit_fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:backgroundTint="#e0953f"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/overlay_fab_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Botón ajustes"
+        android:src="@drawable/ic_cogs"
+        app:layout_constraintBottom_toTopOf="@+id/overlay_fab_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:backgroundTint="#e0953f"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
