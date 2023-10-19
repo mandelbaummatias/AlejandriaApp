@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -13,10 +15,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
 import com.matiasmandelbaum.alejandriaapp.databinding.UserMailBinding
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewModel
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfileFragmentDirections
 
 
 import dagger.hilt.android.AndroidEntryPoint
 import org.checkerframework.checker.units.qual.A
+import kotlin.reflect.jvm.internal.impl.types.checker.NewCapturedType
 
 
 private const val TAG = "UserMailFragment"
@@ -26,6 +31,8 @@ class UserMailFragment : Fragment() {
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
     private var previousEmail: String? = null
+
+    private val viewModel : UserEmailViewModel by viewModels()
 
 
     private lateinit var binding: UserMailBinding
@@ -70,6 +77,14 @@ class UserMailFragment : Fragment() {
         }
     }
 
+    private fun initObservers() {
+//        viewModel.navigateToVerifyEmail.observe(viewLifecycleOwner) {
+//            it.getContentIfNotHandled()?.let {
+//                goToVerifyEmail()
+//            }
+//        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -102,7 +117,7 @@ class UserMailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = UserMailBinding.inflate(inflater, container, false)
-
+        initObservers()
         return binding.root
     }
 
@@ -125,6 +140,9 @@ class UserMailFragment : Fragment() {
         // Update the Firestore document with the edited values
         val newEmail = binding.editEmail.text.toString()
         val password = binding.password.text.toString()
+
+
+      //  findNavController().navigate(UserMailFragmentDirections.actionUserMailFragmentToVerificationFragment())
 
         // Get the current user's email
 //        userDocumentReference?.update(
@@ -157,32 +175,62 @@ class UserMailFragment : Fragment() {
         user!!.reauthenticate(credential)
             .addOnCompleteListener {
                 Log.d(TAG, "User re-authenticated.")
+                goToVerifyEmail(newEmail)
+                //viewModel.verifyEmailBeforeUpdate()
                 //Now change your email address \\
                 //----------------Code for Changing Email Address----------\\
                 //  val user = FirebaseAuth.getInstance().currentUser
-                user!!.updateEmail(newEmail)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d(TAG, "User email address updated.")
-                            userDocumentReference?.update(
-                                mapOf(
-                                    //                "nombre" to newNombre,
-                                    //                "apellido" to newApellido,
-                                    "email" to newEmail
-                                )
-                            )?.addOnSuccessListener {
-                                // Document updated successfully
-                                Log.d(TAG, "Document updated successfully")
-                            }
-                                ?.addOnFailureListener { exception ->
-                                    Log.e(TAG, "Error updating document: $exception")
-                                }
+//                user.verifyBeforeUpdateEmail(newEmail) //hay que hacerle que espere con el VerificationFragment
+//                        //y quiza también un loguot
+//
+//                    .addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            Log.d(TAG, "User email address updated.")
+//                            userDocumentReference?.update(
+//                                mapOf(
+//                                    //                "nombre" to newNombre,
+//                                    //                "apellido" to newApellido,
+//                                    "email" to newEmail
+//                                )
+//                            )?.addOnSuccessListener {
+//                                // Document updated successfully
+//                                Log.d(TAG, "Document updated successfully")
+//                               // AuthManager.signOut() ->>>ACÁ!!!!!!!
+//                            }
+//                                ?.addOnFailureListener { exception ->
+//                                    Log.e(TAG, "Error updating document: $exception")
+//                                }
+//
+//                        }
+//                    }
+//                    .addOnFailureListener {
+//                        Log.e(TAG, "Error updating user email: $it")
+//                    }
 
-                        }
-                    }
-                    .addOnFailureListener {
-                        Log.e(TAG, "Error updating user email: $it")
-                    }
+
+//                user!!.updateEmail(newEmail)
+//                    .addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            Log.d(TAG, "User email address updated.")
+//                            userDocumentReference?.update(
+//                                mapOf(
+//                                    //                "nombre" to newNombre,
+//                                    //                "apellido" to newApellido,
+//                                    "email" to newEmail
+//                                )
+//                            )?.addOnSuccessListener {
+//                                // Document updated successfully
+//                                Log.d(TAG, "Document updated successfully")
+//                            }
+//                                ?.addOnFailureListener { exception ->
+//                                    Log.e(TAG, "Error updating document: $exception")
+//                                }
+//
+//                        }
+//                    }
+//                    .addOnFailureListener {
+//                        Log.e(TAG, "Error updating user email: $it")
+//                    }
                 //----------------------------------------------------------\\
             }
 
@@ -202,8 +250,10 @@ class UserMailFragment : Fragment() {
         isInEditMode = false
     }
 
-
-
+    private fun goToVerifyEmail(newEmail:String) {
+        val action = UserMailFragmentDirections.actionUserMailFragmentToVerificationBeforeUpdateFragment(newEmail)
+        findNavController().navigate(action)
+    }
 }
 
 

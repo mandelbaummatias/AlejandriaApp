@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
+import com.matiasmandelbaum.alejandriaapp.ui.signin.SignInFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "UserProfileFragment"
