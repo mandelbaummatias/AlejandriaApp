@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,7 +14,6 @@ import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
-
 
 private const val TAG = "UserProfileFragment"
 
@@ -23,7 +23,6 @@ class UserProfileFragment : Fragment() {
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
     private var previousEmail: String? = null
-
 
     private lateinit var binding: UserProfileBinding
     private val firestore = FirebaseFirestore.getInstance()
@@ -40,24 +39,20 @@ class UserProfileFragment : Fragment() {
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     if (!querySnapshot.isEmpty) {
-                        val document = querySnapshot.documents[0] // Access the first (and only) document
+                        val document =
+                            querySnapshot.documents[0] // Access the first (and only) document
 
                         // User document found, you can access its data here.
                         val nombre = document.getString("nombre")
                         val apellido = document.getString("apellido")
-                        val email = document.getString("email")
 
-                        Log.d(TAG, "$nombre")
-                        Log.d(TAG, "$apellido")
-                       // Log.d(TAG, "$email")
+                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido")
 
                         // Update the edit texts with the retrieved data
                         binding.editNombre.setText(nombre)
                         binding.editApellido.setText(apellido)
-                    //    binding.editEmail.setText(email)
 
                         userDocumentReference = document.reference
-                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $email")
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -71,27 +66,45 @@ class UserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.overlayFab1.visibility = View.GONE
+        binding.overlayFab2.visibility = View.GONE
+
         binding.editFab.setOnClickListener {
-            if (isInEditMode) {
-                // Save the changes
-                saveChanges()
+            if (binding.overlayFab1.visibility == View.VISIBLE) {
+                // Hide overlay_fab_1 and overlay_fab_2
+                binding.overlayFab1.visibility = View.GONE
+                binding.overlayFab2.visibility = View.GONE
             } else {
+                // Show overlay_fab_1 and overlay_fab_2
+                binding.overlayFab1.visibility = View.VISIBLE
+                binding.overlayFab2.visibility = View.VISIBLE
+            }
+        }
+
+        binding.overlayFab1.setOnClickListener {
+            if (!isInEditMode) {
                 // Enter edit mode
                 enterEditMode()
+            } else {
+                // Save the changes
+                saveChanges()
             }
+        }
+
+        binding.overlayFab2.setOnClickListener {
+            // Aquí navegamos al fragmento userMailFragment
+            findNavController().navigate(com.matiasmandelbaum.alejandriaapp.R.id.userMailFragment)
         }
     }
 
     override fun onStart() {
         super.onStart()
-        //   authManager.addAuthStateListener(authStateListener)
         AuthManager.addAuthStateListener(authStateListener)
     }
 
     override fun onStop() {
         super.onStop()
         AuthManager.removeAuthStateListener(authStateListener)
-        //  authManager.removeAuthStateListener(authStateListener)
     }
 
     override fun onCreateView(
@@ -100,41 +113,32 @@ class UserProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = UserProfileBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
-
     private fun enterEditMode() {
         isInEditMode = true
-        binding.editNombreLayout.visibility = View.VISIBLE
-        binding.editApellidoLayout.visibility = View.VISIBLE
-     //   binding.editEmailLayout.visibility = View.VISIBLE
-
 
         // Set TextInputEditText fields as editable
         binding.editNombre.isEnabled = true
         binding.editApellido.isEnabled = true
-        //binding.editEmail.isEnabled = true
 
         binding.editNombre.requestFocus()
         binding.editNombre.text?.let { binding.editNombre.setSelection(it.length) }
 
-        binding.editFab.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_save)
+        binding.overlayFab1.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_save)
     }
 
     private fun saveChanges() {
         // Update the Firestore document with the edited values
         val newNombre = binding.editNombre.text.toString()
         val newApellido = binding.editApellido.text.toString()
-       // val newEmail = binding.editEmail.text.toString()
 
         // Get the current user's email
         userDocumentReference?.update(
             mapOf(
                 "nombre" to newNombre,
-                "apellido" to newApellido,
-                //"email" to newEmail
+                "apellido" to newApellido
             )
         )
             ?.addOnSuccessListener {
@@ -145,40 +149,10 @@ class UserProfileFragment : Fragment() {
                 Log.e(TAG, "Error updating document: $exception")
             }
 
-       // val currentUser = FirebaseAuth.getInstance().currentUser
-
-//        val user = FirebaseAuth.getInstance().currentUser
-//        // Get auth credentials from the user for re-authentication
-//        // Get auth credentials from the user for re-authentication
-//        val credential = EmailAuthProvider
-//            //hay que poenr el mail de nuevo y la contraseña
-//            .getCredential("${user?.email}", "1") // Current Login Credentials \\
-//
-//        // Prompt the user to re-provide their sign-in credentials
-//        // Prompt the user to re-provide their sign-in credentials
-//        user!!.reauthenticate(credential)
-//            .addOnCompleteListener {
-//                Log.d(TAG, "User re-authenticated.")
-//                //Now change your email address \\
-//                //----------------Code for Changing Email Address----------\\
-//              //  val user = FirebaseAuth.getInstance().currentUser
-//                user!!.updateEmail(newEmail)
-//                    .addOnCompleteListener { task ->
-//                        if (task.isSuccessful) {
-//                            Log.d(TAG, "User email address updated.")
-//                        }
-//                    }
-//                //----------------------------------------------------------\\
-//            }
-
         binding.editNombre.isEnabled = false
         binding.editApellido.isEnabled = false
-        //binding.editEmail.isEnabled = false
-
-        binding.editFab.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_edit)
+        binding.overlayFab1.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_profile)
 
         isInEditMode = false
     }
-
 }
-

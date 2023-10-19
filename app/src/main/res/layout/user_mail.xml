@@ -66,5 +66,5 @@
         android:src="@drawable/ic_edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:backgroundTint="#e0953f"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
