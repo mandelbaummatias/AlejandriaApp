@@ -114,6 +114,15 @@ class MainActivity : AppCompatActivity() {
                     dialog.show(supportFragmentManager, "SignOutDialogFragment")
                 }
 
+
+                R.id.profile -> {
+                    if(AuthManager.getCurrentUser() != null){
+                        navController.navigate(R.id.userProfileFragment)
+                    } else {
+                        navController.navigate(R.id.loginFragment)
+                    }
+                }
+
                 else -> {
                     NavigationUI.onNavDestinationSelected(it, navController)
                     drawerLayout.closeDrawers()

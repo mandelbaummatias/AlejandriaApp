@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/signInFragment">
+    app:startDestination="@id/homeListFragment">
 
     <fragment
         android:id="@+id/homeListFragment"
@@ -143,4 +143,8 @@
             android:id="@+id/action_verificationFragment_to_homeListFragment"
             app:destination="@id/homeListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofilepw.ChangePasswordFragment"
+        android:label="ChangePasswordFragment" />
 </navigation>
