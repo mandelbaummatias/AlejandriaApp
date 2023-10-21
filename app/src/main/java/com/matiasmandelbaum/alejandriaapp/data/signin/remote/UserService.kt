@@ -17,7 +17,7 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
             "email" to userSignIn.email,
             "fecha_nacimiento" to userSignIn.birthDate,
             "nombre" to userSignIn.name,
-            "test" to "test"
+          //  "test" to "test"
         )
 
         firebase.db
