@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.signin
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,20 +15,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.dialog.DialogFragmentLauncher
-import com.matiasmandelbaum.alejandriaapp.common.dialog.ErrorDialog
 import com.matiasmandelbaum.alejandriaapp.common.ex.dismissKeyboard
 import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
-import com.matiasmandelbaum.alejandriaapp.common.ex.show
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSigninBinding
-import com.matiasmandelbaum.alejandriaapp.ui.home.HomeListFragmentDirections
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -139,6 +132,10 @@ class SignInFragment : Fragment() {
             showDatePicker()
         }
 
+        binding.textViewLogin.setOnClickListener {
+            viewModel.onLoginSelected()
+        }
+
 
         with(binding) {
             btnRegistro.setOnClickListener {
@@ -160,23 +157,57 @@ class SignInFragment : Fragment() {
     private fun initObservers() {
         viewModel.navigateToHome.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.registro_exitoso),
-                    Toast.LENGTH_SHORT
-                ).show()
-                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToHomeListFragment())
+                goToHome()
+                showSignInSucessful()
             }
         }
 
         viewModel.showErrorDialog.observe(viewLifecycleOwner) { showError ->
             if (showError) {
-                // Show a Snackbar with the error message
-                val snackbar = Snackbar.make(requireView(),
-                    getString(R.string.la_cuenta_de_email_ya_existe), Snackbar.LENGTH_LONG)
-                snackbar.show()
+                showEmailAlreadyRegistered()
             }
         }
+
+        viewModel.navigateToVerifyEmail.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                goToVerifyEmail()
+            }
+        }
+
+        viewModel.navigateToLogin.observe(viewLifecycleOwner){
+            it.getContentIfNotHandled()?.let {
+                goToLogin()
+            }
+        }
+    }
+
+    private fun showSignInSucessful(){
+        val snackbar = Snackbar.make(requireView(),
+            getString(R.string.registro_exitoso), Snackbar.LENGTH_SHORT)
+        snackbar.show()
+    }
+
+    private fun goToVerifyEmail() {
+        val action = SignInFragmentDirections.actionSignInFragmentToVerificationFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun showEmailAlreadyRegistered(){
+        val snackbar = Snackbar.make(requireView(),
+            getString(R.string.error_signin), Snackbar.LENGTH_LONG)
+        snackbar.show()
+    }
+
+    private fun goToLogin(){
+        val action = SignInFragmentDirections.actionSignInFragmentToLoginFragment()
+        findNavController().navigate(action)
+    }
+
+
+
+    private fun goToHome(){
+        val action = SignInFragmentDirections.actionSignInFragmentToHomeListFragment()
+        findNavController().navigate(action)
     }
 
 //    private fun showErrorDialog() {

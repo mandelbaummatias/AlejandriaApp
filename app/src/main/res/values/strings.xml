@@ -2,6 +2,8 @@
     <string name="app_name">AlejandriaApp</string>
     <string name="drawer_layout_behavior">androidx.drawerlayout.widget.DrawerLayout$DrawerLayoutCompat</string>
 
+    <string name="globalAccept">Aceptar</string>
+
     <!-- Navigation strings -->
     <string name="menu">Menu</string>
     <string name="inicio">Inicio</string>
@@ -54,6 +56,60 @@
     <string name="registro_exitoso">Registro exitoso!</string>
     <string name="error_en_registro">Error en registro</string>
     <string name="selecciona_fecha_de_nacimiento">Selecciona fecha de nacimiento</string>
-    <string name="la_cuenta_de_email_ya_existe">La cuenta de email ya existe!</string>
+    <string name="error_signin">La cuenta de email ya existe!</string>
+
+
+    <!--Login-->
+    <string name="login_subtitle"><![CDATA[Empoyering tech amazing individuals to shine trough hackathons, talks & challenges]]></string>
+    <string name="login_sign_in">¿Todavía no tienes cuenta? Regístrate</string>
+    <string name="login_button_loggin">INICIAR SESIÓN</string>
+    <string name="login_hint_password">Contraseña</string>
+    <string name="login_hint_user">Usuario o correo</string>
+    <string name="login_error_mail">El email no es válido</string>
+    <string name="login_error_password">Debe contener al menos 6 caracteres</string>
+    <string name="login_footer_unselected">¿Todavía no tienes cuenta?</string>
+    <string name="login_footer_selected">Regístrate</string>
+    <string name="login_error_dialog_title">No hemos encontrado el usuario</string>
+    <string name="login_error_dialog_body">Verifique los datos o vuelva a intentarlo</string>
+    <string name="login_error_dialog_negative_action">Cancelar</string>
+    <string name="login_error_dialog_positive_action">Reintentar</string>
+    <string name="error_login">El usuario o la contraseña son incorrectos</string>
+    <string name="confirmacion">¿Está seguro de que desea cerrar sesión?</string>
+    <string name="titulo_logout">¿Desea cerrar sesión?</string>
+    <string name="si">Sí</string>
+    <string name="no">No</string>
+
+    <!--User profile-->
+    <string name="personalInfo">Información personal</string>
+    <string name="domicilio">Domicilio</string>
+
+    <string name="realName">Nombre(s):</string>
+    <string name="surname">Apellido(s):</string>
+    <string name="email">Email:</string>
+
+    <string name="country">País:</string>
+    <string name="city">Ciudad:</string>
+    <string name="pc">Código Postal:</string>
+    <string name="address">Dirección:</string>
+
+    <string name="userPfpText">Foto de perfil del usuario</string>
+
+    <string name="settingsButtonInfo">Botón que lleva a la vista de ajustes de usuario</string>
+
+    <string name="UPMainSettingsHeader">Ajustes de usuario</string>
+    <string name="UPMSEmailSettings">Cambio de correo electrónico</string>
+    <string name="UPMSPwSettings">Cambio de contraseña</string>
+
+    <string name="emailSettingsTitle">Cambio de correo electrónico</string>
+    <string name="newEmail">Nuevo correo electrónico</string>
+    <string name="newEmailConfirmation">Confirme nuevo correo electrónico</string>
+    <string name="newEmailPwConfirmation">Contraseña</string>
+
+    <string name="pwSettingsTitle">Cambio de contraseña</string>
+    <string name="newPw">Nueva contraseña</string>
+    <string name="newPwConfirmation">Confirme nueva contraseña</string>
+    <string name="actualPassword">Contraseña actual</string>
+
+
 
 </resources>
