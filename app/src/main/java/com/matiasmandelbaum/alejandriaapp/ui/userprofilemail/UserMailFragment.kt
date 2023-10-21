@@ -251,8 +251,8 @@ class UserMailFragment : Fragment() {
     }
 
     private fun goToVerifyEmail(newEmail:String) {
-        val action = UserMailFragmentDirections.actionUserMailFragmentToVerificationBeforeUpdateFragment(newEmail)
-        findNavController().navigate(action)
+//        val action = UserMailFragmentDirections.actionUserMailFragmentToVerificationBeforeUpdateFragment(newEmail)
+//        findNavController().navigate(action)
     }
 }
 
