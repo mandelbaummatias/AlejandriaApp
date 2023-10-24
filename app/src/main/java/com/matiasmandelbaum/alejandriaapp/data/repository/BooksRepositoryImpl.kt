@@ -2,13 +2,13 @@ package com.matiasmandelbaum.alejandriaapp.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.matiasmandelbaum.alejandriaapp.common.Result
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.model.BookFirestore
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.GoogleBooksResponse
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.ImageLinks
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.GoogleBooksService
 import com.matiasmandelbaum.alejandriaapp.data.util.FirebaseConstants
-import com.matiasmandelbaum.alejandriaapp.domain.model.Book
+import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -112,7 +112,8 @@ class BooksRepositoryImpl @Inject constructor(
             isbn = bookFirestore.isbn_13,
             descripcion = bookGoogle.items[0].volumeInfo.description, //Siempre es uno, al ser un ISBN identificador único
             valoracion = bookGoogle.items[0].volumeInfo.averageRating,
-            imageLinks = ImageLinks(bookGoogle.items[0].volumeInfo.imageLinks?.smallThumbnail)
+            imageLinks = ImageLinks(bookGoogle.items[0].volumeInfo.imageLinks?.smallThumbnail),
+            cantidadDisponible = bookFirestore.cantidad_disponible
         )
     }
 

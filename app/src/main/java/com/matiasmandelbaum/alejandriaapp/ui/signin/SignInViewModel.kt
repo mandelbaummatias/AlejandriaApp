@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matiasmandelbaum.alejandriaapp.common.Event
+import com.matiasmandelbaum.alejandriaapp.common.event.Event
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.CreateAccountUseCase
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,8 +62,8 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
             _viewState.value = SignInViewState(isLoading = true)
             val accountCreated = createAccountUseCase(userSignIn)
             if (accountCreated) {
-                _navigateToVerifyEmail.value = Event(true)
-           //     _navigateToHome.value = Event(true)
+                //navigateToVerifyEmail.value = Event(true)
+                _navigateToHome.value = Event(true)
             } else {
                 _showErrorDialog.value = true
                 Log.d(TAG, "show error: $showErrorDialog")

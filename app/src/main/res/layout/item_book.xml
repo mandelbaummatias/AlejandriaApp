@@ -20,7 +20,7 @@
 <data>
     <variable
         name="book"
-        type="com.matiasmandelbaum.alejandriaapp.domain.model.Book" />
+        type="com.matiasmandelbaum.alejandriaapp.domain.model.book.Book" />
     <variable
         name="clickListener"
         type="com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListener" />
