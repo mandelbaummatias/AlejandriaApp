@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.databinding.ItemBookBinding
-import com.matiasmandelbaum.alejandriaapp.domain.model.Book
+import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 
 private const val TAG = "BookListAdapter"
 
@@ -95,7 +94,7 @@ class BookListAdapter(val clickListener: BookListener) : ListAdapter<Book, BookL
 }
 
 class BookListener(val clickListener: (book: Book) -> Unit) {
-    fun onClick(book:Book) = clickListener(book)
+    fun onClick(book: Book) = clickListener(book)
 }
 
 

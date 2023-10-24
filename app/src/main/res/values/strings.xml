@@ -109,7 +109,8 @@
     <string name="newPw">Nueva contraseña</string>
     <string name="newPwConfirmation">Confirme nueva contraseña</string>
     <string name="actualPassword">Contraseña actual</string>
-
+    <string name="mercadopago_api_key"></string>
+    <string name="mercadopago_api_base_url">https://api.mercadopago.com/\n</string>
 
 
 </resources>

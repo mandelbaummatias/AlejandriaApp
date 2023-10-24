@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSearchResultListBinding
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListAdapter
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListener
-import com.matiasmandelbaum.alejandriaapp.ui.home.HomeListFragmentDirections
-import com.matiasmandelbaum.alejandriaapp.ui.searchresult.SearchResultViewModel
-import com.matiasmandelbaum.alejandriaapp.common.Result
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "SearchResultListFragment"

@@ -1,4 +1,4 @@
-package com.matiasmandelbaum.alejandriaapp.domain.model
+package com.matiasmandelbaum.alejandriaapp.domain.model.book
 
 import android.os.Parcelable
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.ImageLinks
@@ -11,5 +11,6 @@ data class Book(
     val isbn: String,
     val descripcion: String?,
     val valoracion: Double?,
-    val imageLinks: ImageLinks?
+    val imageLinks: ImageLinks?,
+    val cantidadDisponible: Int
 ): Parcelable

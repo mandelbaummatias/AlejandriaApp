@@ -1,8 +1,8 @@
 package com.matiasmandelbaum.alejandriaapp
 
 import android.app.Application
-import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.core.googlebooks.GoogleBooksConfig
+import com.matiasmandelbaum.alejandriaapp.core.mercadopago.MercadoPagoConfig
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -12,6 +12,8 @@ class AlejandriaApp : Application() {
         super.onCreate()
         GoogleBooksConfig.baseUrl= resources.getString(R.string.google_books_api_base_url)
         GoogleBooksConfig.apiKey = resources.getString(R.string.google_books_api_key)
+        MercadoPagoConfig.apiKey = resources.getString(R.string.mercadopago_api_key)
+        MercadoPagoConfig.baseUrl = resources.getString(R.string.mercadopago_api_base_url)
        // AuthManager.init()
     }
 }
