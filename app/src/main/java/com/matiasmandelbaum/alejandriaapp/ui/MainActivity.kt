@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         val user = auth.currentUser
         if (user != null) {
             Log.d(TAG, "mi user logueado $user")
-            showMenuItem(R.id.logout) //var args? //iterar?
+            showMenuItem(R.id.logout)
             showMenuItem(R.id.booksReadListFragment)
 
         } else {
@@ -57,17 +57,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
+        //  viewModel.getUserById("k123pEvyOBNjY0Kmun7R")
         Log.d(TAG, "onStart")
         if (::id.isInitialized) {
             Log.d(TAG, "my subscriptionId onStart: $id ")
-            viewModel.fetchSubscription(id)
-         //   if(viewModel.subscriptionId)
-            // 'id' has been initialized, you can use it here
         } else {
             Log.d(TAG, " subscriptionId not initialized")
         }
-        //   authManager.addAuthStateListener(authStateListener)
         AuthManager.addAuthStateListener(authStateListener)
     }
 
@@ -75,7 +71,6 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         AuthManager.removeAuthStateListener(authStateListener)
         Log.d(TAG, "onStop")
-        //  authManager.removeAuthStateListener(authStateListener)
     }
 
     override fun onPause() {
@@ -86,13 +81,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
-//        if (::id.isInitialized) {
-//            Log.d(TAG, "my subscriptionId onResume: $id ")
-//            viewModel.fetchSubscription(id)
-//            // 'id' has been initialized, you can use it here
-//        } else {
-//            Log.d(TAG, " subscriptionId not initialized")
-//        }
     }
 
 
@@ -135,7 +123,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeListFragment, R.id.booksReadListFragment, R.id.subscriptionListFragment,
-                // R.id.availableBooksFragment//, R.id.signOutDialogFragment
             ), drawerLayout
         )
 
@@ -144,13 +131,11 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                //R.id.signOutDialogFragment > -> Log
                 R.id.logout -> {
                     Log.d(TAG, "hola logout!!!")
                     val dialog = SignOutDialogFragment()
                     dialog.show(supportFragmentManager, "SignOutDialogFragment")
                 }
-
 
                 R.id.profile -> {
                     if (AuthManager.getCurrentUser() != null) {
@@ -165,7 +150,6 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout.closeDrawers()
                 }
             }
-
             true
         }
 
@@ -202,60 +186,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val customTabsCallback = object : CustomTabsCallback() {
-            override fun onNavigationEvent(navigationEvent: Int, extras: Bundle?) {
-                super.onNavigationEvent(navigationEvent, extras)
-                // Handle Custom Tab navigation events here
-                when (navigationEvent) {
-                    NAVIGATION_FINISHED -> {
-                        Log.d(TAG, "navgiatoin finished")
-                        // Custom Tab navigation finished
-                        // You can put your code here to handle the event
-                    }
-
-                    // Add more cases for other events as needed
-                }
-            }
-        }
-
-//
-//        viewModel.subscriptionId.observe(this) {
-//            when (it) {
-//                is Result.Success -> {
-//                    if(it.data == "authorized"){
-//                        //
-//                        Log.d(TAG, "suscripción pagada $it!!")
-//                    } else{
-//                        Log.d(TAG, "no se pago todavia...$it!!")
-//                    }
-//                //Log.d(TAG, "QUE ONDA SUS AL VOLVER ${it.data}")
-//
-//                }
-//
-//                is Result.Error -> {
-//                    Log.d(TAG, "error!!!")
-//                    Toast.makeText(
-//                        this,
-//                        it.message,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//                else -> {
-//                    Log.d(TAG, "qué onda??")
-//                    Unit
-//                }
-//            }
-//        }
-
         viewModel.subscriptionStatus.observe(this) {
             when (it) {
                 is Result.Success -> {
-                    if(it.data.status == "authorized"){
-                        //
-                        Log.d(TAG, "suscripción pagada $it!!")
-                    } else{
-                        Log.d(TAG, "no se pago todavia...$it!!")
+                    when (it.data.status) {
+                        "authorized" -> {
+                            //
+                            Log.d(TAG, "suscripción pagada $it!!")
+                        }
+
+                        "pending" -> {
+                            Log.d(TAG, "está pending!!!...$it!!")
+
+                        }
+
+                        else -> {
+                            Log.d(TAG, "esta paused o cancelled...$it!!")
+                        }
                     }
                     //Log.d(TAG, "QUE ONDA SUS AL VOLVER ${it.data}")
 
@@ -277,12 +224,35 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.user.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    if (it.data.subscriptionId.isNotBlank()) {
+                        Log.d("User", "is not blank ${it.data.subscriptionId}")
+                    } else {
+                        Log.d("User", "is blank ${it.data.subscriptionId}")
+                    }
+                }
+
+                is Result.Error -> {
+                    Log.d("User", "error ${it.message}")
+                }
+
+                is Result.Finished -> Unit
+                Result.Loading -> Unit
+            }
+        }
+
         viewModel.subscription.observe(this) {
             when (it) {
-
                 is Result.Success -> {
                     Log.d(TAG, "SUCCESS SUBS $it")
                     val url = it.data.initPoint
+//                    viewModel.addSubscriptionIdToUser(
+//                        it.data.id,
+//                        "k123pEvyOBNjY0Kmun7R"
+//                    )
+                    viewModel.updateInitPointUrl(it.data.initPoint)
                     id = it.data.id
                     val intent = CustomTabsIntent.Builder()
                         .build()
@@ -290,6 +260,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 is Result.Error -> {
+                    Log.d(TAG, "error...${it.message}")
                     Toast.makeText(
                         this,
                         it.message,
@@ -302,39 +273,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-//        lifecycleScope.launch {
-//            this@MainActivity.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.subscription.collect {
-//                    when(it){
-//                        is Result.Success -> {
-//                            val data: Subscription = it.data// Get the data from the Success resource
-//                            // Now you can work with the 'data' list
-//                            // For example, if you want to access the first item:
-//                            Log.d(TAG, "first item $data")
-//
-//                            Log.d(TAG, "SUCCESS SUBS $it")
-//                            val url = it.data.initPoint
-//                            id = it.data.id
-//                            val intent = CustomTabsIntent.Builder()
-//                                .build()
-//                            intent.launchUrl(this@MainActivity, Uri.parse(url))                            // Do something with 'firstItem'
-//                        }
-//                        Result.Loading -> Log.d(TAG,"Loading")
-//                        is Result.Error -> {
-//                            val errorMessage = it.message
-//                            Log.d(TAG, "error! : $errorMessage")// Get the error message from the Error resource
-//                            // Handle the error message as needed
-//                        }
-//                        Result.Finished -> Log.d(TAG, "Finished")
-//                        else -> {}
-//                    }
-//                }
-//            }
-//        }
-        
-        
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         Log.d(TAG, "onSupportNavigateUp")
