@@ -17,19 +17,24 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
         const val USER_COLLECTION = "users"
     }
 
-    suspend fun createUserTable(userSignIn: UserSignIn) = runCatching {
+    suspend fun createUserTable(userSignIn: UserSignIn, uid: String) = runCatching {
 
         val user = hashMapOf(
             "apellido" to userSignIn.lastName,
             "email" to userSignIn.email,
             "fecha_nacimiento" to userSignIn.birthDate,
             "nombre" to userSignIn.name,
-            //  "test" to "test"
         )
 
         firebase.db
             .collection(USER_COLLECTION)
-            .add(user).await()
+            .document(uid) // Specify the custom document ID here
+            .set(user)
+            .await()
+
+//        firebase.db
+//            .collection(USER_COLLECTION)
+//            .add(user).await()
 
     }.isSuccess
 
@@ -92,34 +97,6 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
         return true
     }
 
-    //    suspend fun getUserById(userId: String): Boolean {
-//        val userRef = Firebase.firestore.collection("users").document(userId)
-//
-//        try {
-//            val snapshot = userRef.get().await()
-//
-//            if (snapshot.exists()) {
-//                val userData = snapshot.data
-//                val subscription = userData["suscripcion_mp_id"]
-//                if (userData != null && userData["suscripcion_mp_id"].is) {
-//                    // User has the desired subscription
-//                    Log.d(TAG, "user tiene subs")
-//                    // You can add code for any success handling here
-//                    // For example, you can access other user properties like userData["nombre"], userData["email"], etc.
-//                } else {
-//                    Log.d(TAG, "user no tiene esa subs")
-//                }
-//                // User does not have the desired subscription
-//                // You can add code for handling this case
-//            }
-//
-//        } catch (e: Exception) {
-//            Log.d(TAG, "Failure on getting user data: ${e.message}")
-//            // Handle the error
-//            // You can add code to handle the error here
-//        }
-//        return true
-//    }
     suspend fun getUserById(userId: String): Result<User> {
         val userRef = Firebase.firestore.collection("users").document(userId)
 

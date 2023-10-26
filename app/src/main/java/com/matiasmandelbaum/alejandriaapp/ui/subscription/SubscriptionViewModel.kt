@@ -11,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.AddSubscriptionIdToUserUseCase
-import com.matiasmandelbaum.alejandriaapp.domain.usecase.CheckUserHasSubscriptionIdUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.FetchSubscriptionUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByIdUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserBySubscriptionIdUseCase
@@ -31,7 +30,6 @@ class SubscriptionViewModel @Inject constructor(
 
     init {
         Log.d(TAG, "init")
-        // continueSubscription("")
     }
 
 
@@ -103,6 +101,15 @@ class SubscriptionViewModel @Inject constructor(
                 _user.postValue(result)
             }
         }
+
+    fun notifyUserSignOut(userId: String) {
+        Log.d(TAG, "getUserById")
+        _user.value = Result.Loading
+        viewModelScope.launch {
+            val result = getUserByIdUseCase(userId)
+            _user.postValue(result)
+        }
+    }
 
         fun updateInitPointUrl(initPoint: String) {
             Log.d(TAG, "updateInitPoint $initPoint")

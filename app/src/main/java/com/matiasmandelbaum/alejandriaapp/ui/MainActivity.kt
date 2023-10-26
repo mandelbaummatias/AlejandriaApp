@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.browser.customtabs.CustomTabsCallback
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
@@ -45,6 +44,11 @@ class MainActivity : AppCompatActivity() {
         val user = auth.currentUser
         if (user != null) {
             Log.d(TAG, "mi user logueado $user")
+            val userUid = AuthManager.getCurrentUser()?.uid
+            userUid?.let {
+                viewModel.getUserById(it)
+            }
+
             showMenuItem(R.id.logout)
             showMenuItem(R.id.booksReadListFragment)
 
@@ -57,14 +61,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        //  viewModel.getUserById("k123pEvyOBNjY0Kmun7R")
-        Log.d(TAG, "onStart")
-        if (::id.isInitialized) {
-            Log.d(TAG, "my subscriptionId onStart: $id ")
-        } else {
-            Log.d(TAG, " subscriptionId not initialized")
+        val userUid = AuthManager.getCurrentUser()?.uid
+        Log.d(TAG, "UI onStart : $userUid")
+        if(userUid != null){
+            viewModel.getUserById(userUid)
+        } else{
+            Log.d(TAG, "no hay UID")
         }
+
+
+        Log.d(TAG, "onStart")
         AuthManager.addAuthStateListener(authStateListener)
+
     }
 
     override fun onStop() {
@@ -73,31 +81,16 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onStop")
     }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume")
-    }
-
-
     private fun hideMenuItem(itemId: Int) {
-        Log.d(TAG, "showMenuItem")
         val navView: NavigationView = binding.navView
         val menu = navView.menu
-        Log.d(TAG, "consegui menu en hideMenuItem $menu")
         menu.findItem(itemId)?.isVisible = false// = false
     }
 
     // Function to show a menu item
     private fun showMenuItem(itemId: Int) {
-        Log.d(TAG, "showMenuItem")
         val navView: NavigationView = binding.navView
         val menu = navView.menu
-        Log.d(TAG, "consegui menu en showMenuItem $menu")
         menu.findItem(itemId)?.isVisible = true
     }
 
@@ -204,8 +197,6 @@ class MainActivity : AppCompatActivity() {
                             Log.d(TAG, "esta paused o cancelled...$it!!")
                         }
                     }
-                    //Log.d(TAG, "QUE ONDA SUS AL VOLVER ${it.data}")
-
                 }
 
                 is Result.Error -> {
@@ -248,10 +239,10 @@ class MainActivity : AppCompatActivity() {
                 is Result.Success -> {
                     Log.d(TAG, "SUCCESS SUBS $it")
                     val url = it.data.initPoint
-//                    viewModel.addSubscriptionIdToUser(
-//                        it.data.id,
-//                        "k123pEvyOBNjY0Kmun7R"
-//                    )
+                    viewModel.addSubscriptionIdToUser(
+                        it.data.id,
+                        AuthManager.getCurrentUser()?.uid.toString()
+                    )
                     viewModel.updateInitPointUrl(it.data.initPoint)
                     id = it.data.id
                     val intent = CustomTabsIntent.Builder()
