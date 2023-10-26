@@ -62,6 +62,7 @@ class SubscriptionListFragment : Fragment() {
                 is Result.Success -> {
                     if (result.data.status == "pending") {
                         Log.d(TAG, "consegui usuario")
+                        //si consiguió usuario al princi
                         binding.basicPlanSubscribeBtn.setOnClickListener {
                             viewModel.continueSubscription(result.data.id)
 
