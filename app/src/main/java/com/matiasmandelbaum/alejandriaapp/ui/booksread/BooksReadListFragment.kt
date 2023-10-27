@@ -14,6 +14,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.matiasmandelbaum.alejandriaapp.R
+import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentBooksReadListBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,5 +33,16 @@ class BooksReadListFragment : Fragment() {
         binding = FragmentBooksReadListBinding.inflate(inflater, container, false)
         Log.d(TAG, "onCreateView")
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        AuthManager.getAuthStateLiveData().observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                Log.d(TAG, "user logged $user")
+            } else {
+                Log.d(TAG, "user is signed out")
+            }
+        }
     }
 }
