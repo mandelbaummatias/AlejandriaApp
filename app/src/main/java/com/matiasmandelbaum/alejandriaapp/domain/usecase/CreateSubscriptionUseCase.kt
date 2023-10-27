@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class CreateSubscriptionUseCase @Inject constructor(private val mercadoPagoRepository: MercadoPagoRepository) {
-    suspend operator fun invoke(): Result<Subscription> {
-        return mercadoPagoRepository.createSubscription()
+    suspend operator fun invoke(payerEmail: String): Result<Subscription> {
+        return mercadoPagoRepository.createSubscription(payerEmail)
     }
 }
 

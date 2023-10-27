@@ -5,7 +5,7 @@ import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import kotlinx.coroutines.flow.Flow
 
 interface MercadoPagoRepository {
-    suspend fun createSubscription(): Result<Subscription>
+    suspend fun createSubscription(payerEmail: String): Result<Subscription>
 
 //    fun createSubscription(): Flow<Result<Subscription>>
 
