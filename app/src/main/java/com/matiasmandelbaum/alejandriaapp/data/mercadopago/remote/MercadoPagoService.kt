@@ -12,16 +12,6 @@ private const val TAG = "MercadoPagoService"
 class MercadoPagoService @Inject constructor(private val service: MercadoPagoApiClient, private val customResponseInterceptor: CustomResponseInterceptor) {
     suspend fun createSubscription(subscriptionRequest: SubscriptionRequest): SubscriptionResponse? {
         return withContext(Dispatchers.IO) {
-
-//            val lastResponse = customResponseInterceptor.getLastResponse()
-//            if (lastResponse != null) {
-//                // Access response data, including the status and body
-//                val status = lastResponse.code
-//                val responseBody = lastResponse.body?.string()
-//               Log.d(TAG, "status $status responseBody $responseBody")
-//            } else {
-//                Log.d(TAG, "todavia no capture nada")
-//            }
             val response = service.createSubscription(subscriptionRequest)
             response.body()
         }

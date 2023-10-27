@@ -37,12 +37,18 @@ class BooksReadListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AuthManager.getAuthStateLiveData().observe(viewLifecycleOwner) { user ->
+        //AuthManager.getAuthStateLiveData().observe(viewLifecycleOwner) { user ->
+        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 Log.d(TAG, "user logged $user")
             } else {
                 Log.d(TAG, "user is signed out")
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume")
     }
 }

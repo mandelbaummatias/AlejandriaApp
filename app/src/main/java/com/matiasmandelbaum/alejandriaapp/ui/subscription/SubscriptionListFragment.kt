@@ -35,11 +35,15 @@ class SubscriptionListFragment : Fragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //  viewModel.getUserBySubscriptionId()
 
-        AuthManager.getAuthStateLiveData().observe(viewLifecycleOwner) { user ->
+
+
+
+        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 Log.d(TAG, "user logged $user")
                 val userUid = AuthManager.getCurrentUser()?.uid
@@ -51,7 +55,7 @@ class SubscriptionListFragment : Fragment() {
                 binding.basicPlanSubscribeBtn.setOnClickListener {
                     Snackbar.make(
                         requireView(),
-                        "Iniciar sesión para subscribirse!", Snackbar.LENGTH_SHORT
+                        getString(R.string.solicitud_iniciar_sesion), Snackbar.LENGTH_SHORT
                     ).show()
 
                 }
@@ -77,7 +81,7 @@ class SubscriptionListFragment : Fragment() {
     private fun initListeners() {
         binding.basicPlanSubscribeBtn.setOnClickListener {
             Log.d(TAG, "click basic")
-            viewModel.createSubscription()
+            AuthManager.getCurrentUser()?.email?.let {viewModel.createSubscription(it) }
         }
 
         viewModel.subscriptionExists.observe(viewLifecycleOwner) { result ->
@@ -128,6 +132,11 @@ class SubscriptionListFragment : Fragment() {
         }
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume")
     }
 
     private fun handleLoading(isLoading: Boolean) {

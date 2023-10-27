@@ -51,12 +51,12 @@ class SubscriptionViewModel @Inject constructor(
     val subscriptionUrl: LiveData<String> = _subscriptionUrl
 
 
-    fun createSubscription() {
+    fun createSubscription(payerEmail:String) {
         Log.d(TAG, "createSubscription()")
         _subscription.value = Result.Loading
         viewModelScope.launch {
             //Log.d(TAG, "click en subscription")
-            val result = createSubscriptionUseCase()
+            val result = createSubscriptionUseCase(payerEmail)
             _subscription.postValue(result)
         }
     }

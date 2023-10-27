@@ -1,25 +1,27 @@
 package com.matiasmandelbaum.alejandriaapp.common.auth
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.Glide.init
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-
+private const val TAG = "AuthManager"
 object AuthManager {
     private val auth = FirebaseAuth.getInstance()
    // private val auth = FirebaseAuth.getInstance()
-    private val authStateLiveData = MutableLiveData<FirebaseUser?>()
+    private val _authStateLiveData = MutableLiveData<FirebaseUser?>()
+    val authStateLiveData : LiveData<FirebaseUser?> = _authStateLiveData
 
     init {
+        Log.d(TAG, "init")
         auth.addAuthStateListener { firebaseAuth ->
-            authStateLiveData.value = firebaseAuth.currentUser
+            Log.d(TAG, "value changed ${firebaseAuth.currentUser}")
+            _authStateLiveData.value = firebaseAuth.currentUser
         }
     }
 
-    fun getAuthStateLiveData(): LiveData<FirebaseUser?> {
-        return authStateLiveData
-    }
         fun addAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
         auth.addAuthStateListener(listener)
     }
@@ -29,13 +31,15 @@ object AuthManager {
     }
 
     fun signOut() {
+        Log.d(TAG,"signOut")
         auth.signOut()
+        _authStateLiveData.value = null
+        _authStateLiveData.value?.reload()
     }
 
     fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
     }
-
 
 }
 
