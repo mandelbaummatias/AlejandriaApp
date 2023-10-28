@@ -2,7 +2,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionViewModel" />
+            type="com.matiasmandelbaum.alejandriaapp.ui.MainViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

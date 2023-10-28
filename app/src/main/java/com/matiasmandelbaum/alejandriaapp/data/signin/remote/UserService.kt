@@ -4,7 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
-import com.matiasmandelbaum.alejandriaapp.ui.subscription.User
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import com.matiasmandelbaum.alejandriaapp.common.result.Result

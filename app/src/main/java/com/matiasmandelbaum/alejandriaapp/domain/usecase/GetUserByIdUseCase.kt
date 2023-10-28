@@ -1,9 +1,7 @@
 package com.matiasmandelbaum.alejandriaapp.domain.usecase
 
-import android.util.Log
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
-import com.matiasmandelbaum.alejandriaapp.ui.subscription.User
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import javax.inject.Inject
 

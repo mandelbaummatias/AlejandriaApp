@@ -27,7 +27,6 @@ import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.ActivityMainBinding
 import com.matiasmandelbaum.alejandriaapp.ui.signout.SignOutDialogFragment
-import com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity"
@@ -38,17 +37,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var id: String
 
-    private val viewModel: SubscriptionViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
         if (user != null) {
             Log.d(TAG, "mi user logueado $user")
-            val userUid = AuthManager.getCurrentUser()?.uid
-            userUid?.let {
-                viewModel.getUserById(it)
-            }
-
             showMenuItem(R.id.logout)
             showMenuItem(R.id.booksReadListFragment)
 
@@ -63,12 +57,6 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         val userUid = AuthManager.getCurrentUser()?.uid
         Log.d(TAG, "UI onStart : $userUid")
-        if(userUid != null){
-            viewModel.getUserById(userUid)
-        } else{
-            Log.d(TAG, "no hay UID")
-        }
-
 
         Log.d(TAG, "onStart")
         AuthManager.addAuthStateListener(authStateListener)
@@ -176,61 +164,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.d("addOnDestinationChangedListener", "Fuera de start")
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            }
-        }
-
-        viewModel.subscriptionStatus.observe(this) {
-            when (it) {
-                is Result.Success -> {
-                    when (it.data.status) {
-                        "authorized" -> {
-                            //
-                            Log.d(TAG, "suscripción pagada $it!!")
-                        }
-
-                        "pending" -> {
-                            Log.d(TAG, "está pending!!!...$it!!")
-
-                        }
-
-                        else -> {
-                            Log.d(TAG, "esta paused o cancelled...$it!!")
-                        }
-                    }
-                }
-
-                is Result.Error -> {
-                    Log.d(TAG, "error!!!")
-                    Toast.makeText(
-                        this,
-                        it.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                else -> {
-                    Log.d(TAG, "qué onda??")
-                    Unit
-                }
-            }
-        }
-
-        viewModel.user.observe(this) {
-            when (it) {
-                is Result.Success -> {
-                    if (it.data.subscriptionId.isNotBlank()) {
-                        Log.d("User", "is not blank ${it.data.subscriptionId}")
-                    } else {
-                        Log.d("User", "is blank ${it.data.subscriptionId}")
-                    }
-                }
-
-                is Result.Error -> {
-                    Log.d("User", "error ${it.message}")
-                }
-
-                is Result.Finished -> Unit
-                Result.Loading -> Unit
             }
         }
 

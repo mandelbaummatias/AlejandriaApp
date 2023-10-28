@@ -1,30 +1,30 @@
-package com.matiasmandelbaum.alejandriaapp.ui.subscription
+package com.matiasmandelbaum.alejandriaapp.ui
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
-import com.matiasmandelbaum.alejandriaapp.domain.usecase.CreateSubscriptionUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.AddSubscriptionIdToUserUseCase
+import com.matiasmandelbaum.alejandriaapp.domain.usecase.CreateSubscriptionUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.FetchSubscriptionUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByIdUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserBySubscriptionIdUseCase
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "SubscriptionViewModel"
+private const val TAG = "MainViewModel"
 
 @HiltViewModel
-class SubscriptionViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     private val createSubscriptionUseCase: CreateSubscriptionUseCase,
     private val fetchSubscriptionUseCase: FetchSubscriptionUseCase,
     private val addSubscriptionIdToUserUseCase: AddSubscriptionIdToUserUseCase,
     private val getUserBySubscriptionIdUseCase: GetUserBySubscriptionIdUseCase,
-    //private val checkUserHasSubscriptionIdUseCase: CheckUserHasSubscriptionIdUseCase,
     private val getUserByIdUseCase: GetUserByIdUseCase
 ) : ViewModel() {
 
@@ -63,7 +63,10 @@ class SubscriptionViewModel @Inject constructor(
 
 
     fun continueSubscription(id: String) {
-        Log.d(TAG, "continueSubscription with $id")
+        Log.d(
+            TAG,
+            "continueSubscription with $id"
+        )
         _subscription.value = Result.Loading
         viewModelScope.launch {
             Log.d(TAG, "click en subscription")
@@ -74,7 +77,10 @@ class SubscriptionViewModel @Inject constructor(
     }
 
         fun fetchSubscription(id: String) {
-            Log.d(TAG, "ejecutando fetchSubscription")
+            Log.d(
+                TAG,
+                "ejecutando fetchSubscription"
+            )
             _subscriptionExists.value = Result.Loading
             viewModelScope.launch {
                 Log.d(TAG, "subscription fetch")
@@ -102,18 +108,12 @@ class SubscriptionViewModel @Inject constructor(
             }
         }
 
-    fun notifyUserSignOut(userId: String) {
-        Log.d(TAG, "getUserById")
-        _user.value = Result.Loading
-        viewModelScope.launch {
-            val result = getUserByIdUseCase(userId)
-            _user.postValue(result)
-        }
-    }
 
         fun updateInitPointUrl(initPoint: String) {
-            Log.d(TAG, "updateInitPoint $initPoint")
+            Log.d(
+                TAG,
+                "updateInitPoint $initPoint"
+            )
             _subscriptionUrl.value = initPoint
         }
     }
-
