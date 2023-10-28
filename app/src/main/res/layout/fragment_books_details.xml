@@ -97,7 +97,6 @@
             android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginTop="25dp"
-            android:backgroundTint="@color/md_theme_light_primary"
             android:text="@string/reserveBtn"
             android:textSize="20dp" />
 

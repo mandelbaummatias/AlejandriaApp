@@ -1,28 +1,48 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksdetails
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
+import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
+import com.matiasmandelbaum.alejandriaapp.domain.usecase.FetchSubscriptionUseCase
+import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByIdUseCase
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 private const val TAG = "BooksDetailViewModel"
 
 @HiltViewModel
-class BooksDetailViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : ViewModel() {
+class BooksDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val fetchSubscriptionUseCase: FetchSubscriptionUseCase,
+    private val getUserByIdUseCase: GetUserByIdUseCase
+) : ViewModel() {
     private val _book = MutableLiveData<Book>()
-    // val book : LiveData<Book> = _book
+
+    private val _subscriptionExists: MutableLiveData<Result<Subscription>> = MutableLiveData()
+    val subscriptionExists: LiveData<Result<Subscription>> = _subscriptionExists
+
+    private val _user: MutableLiveData<Result<User>?> = MutableLiveData()
+    val user: MutableLiveData<Result<User>?> = _user
+
 
     val book: Book = savedStateHandle["book"]!!
 
-    fun reserveBook() {
+    fun reserveBook(userEmail: String) {
         if (book.cantidadDisponible > 0) {
             // Decrease the available quantity by one
-           // book.cantidad_disponible--
+            // book.cantidad_disponible--
 
             // Update the Firestore document
             val db = FirebaseFirestore.getInstance()
@@ -39,18 +59,36 @@ class BooksDetailViewModel @Inject constructor(savedStateHandle: SavedStateHandl
 
                         // Create a reservation document
                         val reservationsCollection = db.collection("reservas_libros")
+                        // Get the current date
+                        val currentDate = LocalDate.now()
+
+// Format the current date as a string in the desired format (28/10/2023)
+                        val formattedCurrentDate =
+                            currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+
+// Calculate the fecha_fin by adding a month to fecha_inicio
+                        val fechaInicio = currentDate
+                        val fechaFin = fechaInicio.plusMonths(1)
+
+// Format the fecha_fin as a string in the desired format
+                        val formattedFechaInicio =
+                            fechaInicio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                        val formattedFechaFin =
+                            fechaFin.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+
+// Create the reservationData hashmap with the formatted dates
                         val reservationData = hashMapOf(
                             "estado" to "A retirar",
-                            "fecha_fin" to null, // Initialize as null
-                            "fecha_inicio" to null, // Initialize as null
+                            "fecha_inicio" to formattedFechaInicio,
+                            "fecha_fin" to formattedFechaFin,
                             "fecha_reserva" to FieldValue.serverTimestamp(),
                             "isbn_13" to book.isbn,
-                            "mail_usuario" to null
+                            "mail_usuario" to userEmail
                         )
 
                         reservationsCollection.add(reservationData)
                             .addOnSuccessListener {
-                                Log.d(TAG,"  // Reservation added successfully")
+                                Log.d(TAG, "  // Reservation added successfully")
                                 // Reservation added successfully
                             }
                             .addOnFailureListener { e ->
@@ -80,6 +118,30 @@ class BooksDetailViewModel @Inject constructor(savedStateHandle: SavedStateHandl
         Log.d(TAG, "mi libro $book")
     }
 
+    fun fetchSubscription(id: String) {
+        Log.d(TAG, "ejecutando fetchSubscription")
+        _subscriptionExists.value = Result.Loading
+        viewModelScope.launch {
+            Log.d(TAG, "subscription fetch")
+            val result = fetchSubscriptionUseCase(id)
+            Log.d(TAG, "a ver $result")
+            _subscriptionExists.postValue(result)
+
+        }
+    }
+
+    fun getUserById(userId: String) {
+        Log.d(TAG, "getUserById")
+        _user.value = Result.Loading
+        viewModelScope.launch {
+            val result = getUserByIdUseCase(userId)
+            _user.value = result
+        }
+    }
+    fun resetUser() {
+        Log.d(TAG, "resetUser()")
+        _user.value = null
+    }
 }
 
 

@@ -24,8 +24,6 @@ class SubscriptionListViewModel @Inject constructor(
     private val createSubscriptionUseCase: CreateSubscriptionUseCase,
     private val fetchSubscriptionUseCase: FetchSubscriptionUseCase,
     private val addSubscriptionIdToUserUseCase: AddSubscriptionIdToUserUseCase,
-    private val getUserBySubscriptionIdUseCase: GetUserBySubscriptionIdUseCase,
-    //private val checkUserHasSubscriptionIdUseCase: CheckUserHasSubscriptionIdUseCase,
     private val getUserByIdUseCase: GetUserByIdUseCase
 ) : ViewModel() {
 
@@ -85,7 +83,7 @@ class SubscriptionListViewModel @Inject constructor(
 
         }
     }
-    
+
     fun getUserById(userId: String) {
         Log.d(TAG, "getUserById")
         _user.value = Result.Loading
@@ -95,16 +93,26 @@ class SubscriptionListViewModel @Inject constructor(
         }
     }
 
-   fun resetUser() {
+    fun resetUser() {
         Log.d(TAG, "resetUser()")
         _user.value = null
 
     }
 
+    fun addSubscriptionIdToUser(subscriptionId: String, userId: String) {
+        Log.d(TAG, "addSubscription ")
+        viewModelScope.launch {
+            addSubscriptionIdToUserUseCase(subscriptionId, userId)
+        }
+    }
 
 
     fun updateInitPointUrl(initPoint: String) {
-        Log.d(TAG, "updateInitPoint $initPoint")
+        Log.d(
+            TAG,
+            "updateInitPoint $initPoint"
+        )
         _subscriptionUrl.value = initPoint
     }
+
 }

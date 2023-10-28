@@ -27,6 +27,7 @@ import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.ActivityMainBinding
 import com.matiasmandelbaum.alejandriaapp.ui.signout.SignOutDialogFragment
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity"
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var id: String
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: SubscriptionListViewModel by viewModels()
 
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
@@ -57,7 +58,11 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         val userUid = AuthManager.getCurrentUser()?.uid
         Log.d(TAG, "UI onStart : $userUid")
-
+        if(userUid != null){
+            viewModel.getUserById(userUid)
+        } else{
+            Log.d(TAG, "no hay UID")
+        }
         Log.d(TAG, "onStart")
         AuthManager.addAuthStateListener(authStateListener)
 

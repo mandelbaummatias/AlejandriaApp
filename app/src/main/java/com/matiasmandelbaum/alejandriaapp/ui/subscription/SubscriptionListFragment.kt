@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.matiasmandelbaum.alejandriaapp.R
@@ -20,7 +21,7 @@ private const val TAG = "SubscriptionListFragment"
 class SubscriptionListFragment : Fragment() {
 
     private lateinit var binding: FragmentSubscriptionListBinding
-    private val viewModel: SubscriptionListViewModel by viewModels()
+    private val viewModel: SubscriptionListViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +56,7 @@ class SubscriptionListFragment : Fragment() {
             when (result) {
                 is Result.Success -> {
                     if (result.data.status == "pending") {
-                        Log.d(TAG, "consegui usuario")
+                        Log.d(TAG, "consegui usuario (sub pending)")
                         //si consiguió usuario al princi
                         binding.basicPlanSubscribeBtn.setOnClickListener {
                             viewModel.continueSubscription(result.data.id)
