@@ -10,7 +10,6 @@ import com.google.firebase.auth.FirebaseUser
 private const val TAG = "AuthManager"
 object AuthManager {
     private val auth = FirebaseAuth.getInstance()
-   // private val auth = FirebaseAuth.getInstance()
     private val _authStateLiveData = MutableLiveData<FirebaseUser?>()
     val authStateLiveData : LiveData<FirebaseUser?> = _authStateLiveData
 
@@ -33,8 +32,7 @@ object AuthManager {
     fun signOut() {
         Log.d(TAG,"signOut")
         auth.signOut()
-        _authStateLiveData.value = null
-        _authStateLiveData.value?.reload()
+        _authStateLiveData.postValue(null)
     }
 
     fun getCurrentUser(): FirebaseUser? {

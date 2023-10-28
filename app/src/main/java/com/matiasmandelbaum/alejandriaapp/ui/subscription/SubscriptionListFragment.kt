@@ -1,15 +1,12 @@
 package com.matiasmandelbaum.alejandriaapp.ui.subscription
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
@@ -23,7 +20,7 @@ private const val TAG = "SubscriptionListFragment"
 class SubscriptionListFragment : Fragment() {
 
     private lateinit var binding: FragmentSubscriptionListBinding
-    private val viewModel: SubscriptionViewModel by activityViewModels()
+    private val viewModel: SubscriptionListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,29 +37,6 @@ class SubscriptionListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-
-        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                Log.d(TAG, "user logged $user")
-                val userUid = AuthManager.getCurrentUser()?.uid
-                userUid?.let {
-                    viewModel.getUserById(it)
-                }
-            } else {
-                binding.basicPlanSubscribeBtn.visibility = View.VISIBLE
-                binding.basicPlanSubscribeBtn.setOnClickListener {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.solicitud_iniciar_sesion), Snackbar.LENGTH_SHORT
-                    ).show()
-
-                }
-            }
-        }
-
-
         initObservers()
         initListeners()
     }
@@ -76,13 +50,6 @@ class SubscriptionListFragment : Fragment() {
                 else -> {}
             }
         }
-    }
-
-    private fun initListeners() {
-        binding.basicPlanSubscribeBtn.setOnClickListener {
-            Log.d(TAG, "click basic")
-            AuthManager.getCurrentUser()?.email?.let {viewModel.createSubscription(it) }
-        }
 
         viewModel.subscriptionExists.observe(viewLifecycleOwner) { result ->
             when (result) {
@@ -95,6 +62,7 @@ class SubscriptionListFragment : Fragment() {
 
                         }
                     } else if (result.data.status == "authorized") {
+                        Log.d(TAG, "authorized from subscriptionExists")
                         binding.basicPlanSubscribeBtn.visibility = View.GONE
                     }
                 }
@@ -108,8 +76,6 @@ class SubscriptionListFragment : Fragment() {
                 }
             }
         }
-
-
 
         viewModel.user.observe(viewLifecycleOwner) { result ->
             when (result) {
@@ -128,8 +94,39 @@ class SubscriptionListFragment : Fragment() {
 
                 is Result.Finished -> Unit
                 Result.Loading -> Unit
+                else -> {}
             }
         }
+
+        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                Log.d(TAG, "user logged $user")
+                val userUid = AuthManager.getCurrentUser()?.uid
+                userUid?.let {
+                    viewModel.getUserById(it)
+                }
+            } else {
+                Log.d(TAG, "user not logged: button visible")
+                binding.basicPlanSubscribeBtn.visibility = View.VISIBLE
+                binding.basicPlanSubscribeBtn.setOnClickListener {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.solicitud_iniciar_sesion), Snackbar.LENGTH_SHORT
+                    ).show()
+
+                }
+            }
+        }
+
+    }
+
+    private fun initListeners() {
+        Log.d(TAG, "init listeners called")
+        binding.basicPlanSubscribeBtn.setOnClickListener {
+            Log.d(TAG, "click basic")
+            AuthManager.getCurrentUser()?.email?.let {viewModel.createSubscription(it) }
+        }
+
 
 
     }
@@ -137,6 +134,12 @@ class SubscriptionListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy")
+        viewModel.resetUser()
     }
 
     private fun handleLoading(isLoading: Boolean) {
