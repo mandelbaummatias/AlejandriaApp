@@ -26,6 +26,11 @@
             android:title="@string/suscripcion" />
 
         <item
+            android:id="@+id/reservedBooksFragment"
+            android:icon="@drawable/ic_fact_check"
+            android:title="@string/reservas" />
+
+        <item
             android:id="@+id/profile"
             android:icon="@drawable/ic_profile"
             android:title="@string/perfil" />
