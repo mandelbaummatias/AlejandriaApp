@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSubscriptionListBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 private const val TAG = "SubscriptionListFragment"
 
@@ -45,7 +47,9 @@ class SubscriptionListFragment : Fragment() {
     private fun initObservers() {
         viewModel.subscription.observe(viewLifecycleOwner) {
             when (it) {
-                is Result.Success -> handleLoading(false)
+                is Result.Success -> {
+                    handleLoading(false) //autorizado reserva
+                }
                 is Result.Loading -> handleLoading(true)
                 is Result.Error -> handleLoading(false)
                 else -> {}
