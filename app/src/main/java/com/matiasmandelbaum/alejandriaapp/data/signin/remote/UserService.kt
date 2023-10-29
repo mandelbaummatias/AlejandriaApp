@@ -24,6 +24,7 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
             "email" to userSignIn.email,
             "fecha_nacimiento" to userSignIn.birthDate,
             "nombre" to userSignIn.name,
+            "reservo_libro" to false
         )
 
         firebase.db
@@ -43,7 +44,8 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
         val userToUpdate = firebase.db.collection(USER_COLLECTION).document(userId)
 
         val updates = hashMapOf(
-            "suscripcion_mp_id" to subscriptionId
+            "suscripcion_mp_id" to subscriptionId,
+        //    "reservo_libro" to false
         )
 
         try {
@@ -115,7 +117,8 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
                 } else {
                     // User has the desired subscription
                     Log.d(TAG, "User has subscription $suscripcionMpId")
-                    Result.Success(User(suscripcionMpId))
+                    val isEnabled = userData["reservo_libro"] as? Boolean
+                    Result.Success(User(suscripcionMpId, isEnabled))
                     // You can add code for any success handling here
                     // For example, you can access other user properties like userData["nombre"], userData["email"], etc.
                 }

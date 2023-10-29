@@ -82,7 +82,15 @@ class BooksDetailFragment : Fragment() {
                         binding.bookReserveBtn.isEnabled = false
                     } else if (result.data.status == "authorized") {
                         Log.d(TAG, "authorized from subscriptionExists")
-                        binding.bookReserveBtn.isEnabled = true
+                        if(viewModel.isEnabledToReserve.value != false){
+                            Log.d(TAG, "has not reserved book and is enabled ${viewModel.hasReservedBook.value}")
+                            binding.bookReserveBtn.isEnabled = true
+                        } else{
+                            Log.d(TAG, "has reserved book and is NOT enabled ${viewModel.hasReservedBook.value}")
+                            binding.bookReserveBtn.isEnabled = false
+                        }
+
+
                     }
                 }
 
@@ -104,6 +112,16 @@ class BooksDetailFragment : Fragment() {
                         viewModel.fetchSubscription(result.data.subscriptionId)
                     } else {
                         Log.d(TAG, "is blank ${result.data.subscriptionId}")
+                        binding.bookReserveBtn.isEnabled = false
+                    }
+
+                    if (result.data.hasReservedBook != false) {
+                        Log.d(TAG, "usuario no habilitado para reserva ${result.data.hasReservedBook}")
+                        result.data.hasReservedBook?.let { viewModel.updateReservationState(!it) }
+                  //      binding.bookReserveBtn.isEnabled = false
+                    } else {
+                        Log.d(TAG, "usuario HABILITADO para reserva ${result.data.hasReservedBook}" )
+                        result.data.hasReservedBook.let { viewModel.updateReservationState(true) }
                     }
                 }
 
@@ -116,6 +134,21 @@ class BooksDetailFragment : Fragment() {
                 else -> {}
             }
         }
+
+
+        viewModel.reservationState.observe(viewLifecycleOwner) { reservationState ->
+            val isAuthorized = reservationState.isSubscriptionAuthorized
+            val canReserve = reservationState.hasReservedBook
+
+            binding.bookReserveBtn.isEnabled = isAuthorized && canReserve
+        }
+
+        viewModel.isEnabledToReserve.observe(viewLifecycleOwner){
+            if(!it){
+                binding.bookReserveBtn.isEnabled = false
+            }
+        }
+
     }
 
 
@@ -123,6 +156,7 @@ class BooksDetailFragment : Fragment() {
         super.onResume()
         Log.d(TAG, "onResume")
     }
+
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy")

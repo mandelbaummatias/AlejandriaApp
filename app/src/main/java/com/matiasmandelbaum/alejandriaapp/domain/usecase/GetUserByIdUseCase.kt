@@ -6,6 +6,7 @@ import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import javax.inject.Inject
 
 private const val TAG = "GetUserByIdUseCase"
+
 class GetUserByIdUseCase @Inject constructor(
     private val userService: UserService
 ) {

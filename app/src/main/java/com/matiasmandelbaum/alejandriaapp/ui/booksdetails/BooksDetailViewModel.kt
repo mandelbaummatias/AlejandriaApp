@@ -36,8 +36,17 @@ class BooksDetailViewModel @Inject constructor(
     private val _user: MutableLiveData<Result<User>?> = MutableLiveData()
     val user: MutableLiveData<Result<User>?> = _user
 
+    private val _isEnabledToReserve = MutableLiveData<Boolean>()
+    val isEnabledToReserve : LiveData<Boolean> = _isEnabledToReserve
+
 
     val book: Book = savedStateHandle["book"]!!
+
+    private val _reservationState = MutableLiveData<ReservationState>()
+    val reservationState: LiveData<ReservationState> = _reservationState
+
+    private val _hasReservedBook = MutableLiveData<Boolean>()
+    val hasReservedBook: LiveData<Boolean> = _hasReservedBook
 
     fun reserveBook(userEmail: String) {
         if (book.cantidadDisponible > 0) {
@@ -62,21 +71,21 @@ class BooksDetailViewModel @Inject constructor(
                         // Get the current date
                         val currentDate = LocalDate.now()
 
-// Format the current date as a string in the desired format (28/10/2023)
+                        // Format the current date as a string in the desired format (28/10/2023)
                         val formattedCurrentDate =
                             currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
-// Calculate the fecha_fin by adding a month to fecha_inicio
+                        // Calculate the fecha_fin by adding a month to fecha_inicio
                         val fechaInicio = currentDate
                         val fechaFin = fechaInicio.plusMonths(1)
 
-// Format the fecha_fin as a string in the desired format
+                        // Format the fecha_fin as a string in the desired format
                         val formattedFechaInicio =
                             fechaInicio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                         val formattedFechaFin =
                             fechaFin.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
-// Create the reservationData hashmap with the formatted dates
+                        // Create the reservationData hashmap with the formatted dates
                         val reservationData = hashMapOf(
                             "estado" to "A retirar",
                             "fecha_inicio" to formattedFechaInicio,
@@ -88,27 +97,47 @@ class BooksDetailViewModel @Inject constructor(
 
                         reservationsCollection.add(reservationData)
                             .addOnSuccessListener {
-                                Log.d(TAG, "  // Reservation added successfully")
-                                // Reservation added successfully
+                                Log.d(TAG, "Reservation added successfully")
+
+                                // Reservation added successfully, now update the "users" collection
+                                val usersCollection = db.collection("users")
+                                usersCollection
+                                    .whereEqualTo("email", userEmail)
+                                    .get()
+                                    .addOnSuccessListener { userDocuments ->
+                                        if (userDocuments.size() > 0) {
+                                            val userDocument = userDocuments.documents[0]
+                                            val userReference = userDocument.reference
+                                            userReference.update("reservo_libro", true)
+                                            updateReservationState(false)
+                                        } else {
+                                            Log.d(TAG, "User not found")
+                                            // Handle the case when the user with the given email is not found.
+                                        }
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.d(TAG, "User query or update failed $e")
+                                        // Handle errors if the user query or update fails.
+                                    }
                             }
                             .addOnFailureListener { e ->
-                                Log.d(TAG, "error in reservation $e")
+                                Log.d(TAG, "Error in reservation $e")
                                 // Handle errors if the reservation document creation fails.
                             }
                     } else {
-                        Log.d(TAG, "isbn not found")
+                        Log.d(TAG, "ISBN not found")
                         // Handle the case when the book with the given ISBN is not found.
                     }
                 }
                 .addOnFailureListener { e ->
-                    Log.d(TAG, "query or update failed $e")
+                    Log.d(TAG, "Query or update failed $e")
                     // Handle errors if the query or update fails.
                 }
 
             // Notify observers of the change in the book's availability
             _book.value = book
         } else {
-            Log.d(TAG, "no books to reserve (devolver mensaje")
+            Log.d(TAG, "No books to reserve (devolver mensaje)")
             // Handle the case when there are no available books to reserve
         }
     }
@@ -138,10 +167,23 @@ class BooksDetailViewModel @Inject constructor(
             _user.value = result
         }
     }
+
+    fun updateReservationState(isEnabled: Boolean){
+        Log.d(TAG, "updateReservationState $isEnabled")
+        _isEnabledToReserve.value = isEnabled
+    }
+
     fun resetUser() {
         Log.d(TAG, "resetUser()")
         _user.value = null
     }
+
+
 }
+
+data class ReservationState(
+    val isSubscriptionAuthorized: Boolean,
+    val hasReservedBook: Boolean
+)
 
 

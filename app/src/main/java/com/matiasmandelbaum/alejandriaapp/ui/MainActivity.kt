@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
                         it.data.id,
                         AuthManager.getCurrentUser()?.uid.toString()
                     )
-                    viewModel.updateInitPointUrl(it.data.initPoint)
+                    //viewModel.updateInitPointUrl(it.data.initPoint)
                     id = it.data.id
                     val intent = CustomTabsIntent.Builder()
                         .build()
