@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksdetails
 
-import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -59,20 +58,6 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                 userUid?.let {
                     viewModel.getUserById(it)
                 }
-//                binding.bookReserveBtn.setOnClickListener {
-//                    // Check if there are available books before reserving
-//                    if (viewModel.book.cantidadDisponible > 0) {
-//                        // Reserve the book
-//                        viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
-//                        Toast.makeText(context, "Reserva de Libro.", Toast.LENGTH_SHORT).show()
-//                    } else {
-//                        Toast.makeText(
-//                            context,
-//                            "No hay libros disponibles para reservar.",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
             } else {
                 Log.d(TAG, "user not logged")
                 binding.bookReserveBtn.isEnabled = false
@@ -82,30 +67,34 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         viewModel.subscriptionExists.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Success -> {
-                    if (result.data.status == "pending") {
-                        Log.d(TAG, "subscription pending...")
-                        //si consiguió usuario al princi
-                        binding.bookReserveBtn.setOnClickListener {
+                    if (viewModel.book.cantidadDisponible > 0) {
+                        when (result.data.status) {
+                            "pending" -> {
+                                Log.d(TAG, "subscription pending...")
+                                //si consiguió usuario al princi
+                                binding.bookReserveBtn.setOnClickListener {
 
-                            val subscriptionId = result.data.id
+                                    val subscriptionId = result.data.id
 
-                            val args = Bundle()
-                            args.putString("subscriptionId", subscriptionId)
+                                    val args = Bundle()
+                                    args.putString("subscriptionId", subscriptionId)
 
-                            val dialog = SubscriptionRequiredDialogFragment()
+                                    val dialog = SubscriptionRequiredDialogFragment()
 
 
-                            dialog.arguments = args
-                            dialog.setDialogClickListener(this)
-                            dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
-                        }
-                       // binding.bookReserveBtn.isEnabled = false
-                    } else if (result.data.status == "authorized") {
-                        Log.d(TAG, "authorized from subscriptionExists")
-                        if(viewModel.isEnabledToReserve.value != false){
-                            //binding.bookReserveBtn.setOnClickListener {
-                                // Check if there are available books before reserving
-                                if (viewModel.book.cantidadDisponible > 0) {
+                                    dialog.arguments = args
+                                    dialog.setDialogClickListener(this)
+                                    dialog.show(
+                                        childFragmentManager,
+                                        "SubscriptionRequiredDialogFragment"
+                                    )
+                                }
+                            }
+
+                            "authorized" -> {
+                                Log.d(TAG, "authorized from subscriptionExists")
+                                if (viewModel.isEnabledToReserve.value != false) {
+                                    //        if (viewModel.book.cantidadDisponible > 0) {
                                     Log.d(TAG, "hay mas de 1")
                                     binding.bookReserveBtn.setOnClickListener {
                                         val dialog = ConfirmBookReservationDialogFragment()
@@ -114,10 +103,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                                             childFragmentManager,
                                             "SubscriptionRequiredDialogFragment"
                                         )
-                                        // Reserve the book
-                                        //  viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
-                                        //  Toast.makeText(context, "Reserva de Libro.", Toast.LENGTH_SHORT)
-                                    }       //  .show()
+                                    }
                                 } else {
                                     binding.bookReserveBtn.visibility = View.GONE
                                     Toast.makeText( //esto pasarlo antes del click
@@ -128,15 +114,30 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
 
                                 }
-                           // }
-                            Log.d(TAG, "has not reserved book and is enabled ${viewModel.hasReservedBook.value}")
-                            binding.bookReserveBtn.isEnabled = true
-                        } else{
-                            Log.d(TAG, "has reserved book and is NOT enabled ${viewModel.hasReservedBook.value}")
-                            binding.bookReserveBtn.isEnabled = false
+                                // }
+                                Log.d(
+                                    TAG,
+                                    "has not reserved book and is enabled ${viewModel.hasReservedBook.value}"
+                                )
+                                binding.bookReserveBtn.isEnabled = true
+                            }
+
+                            else -> {
+                                Log.d(
+                                    TAG,
+                                    "has reserved book and is NOT enabled ${viewModel.hasReservedBook.value}"
+                                )
+                                binding.bookReserveBtn.isEnabled = false
+                            }
                         }
 
-
+                    } else {
+                        binding.bookReserveBtn.visibility = View.GONE
+                        Toast.makeText( //esto pasarlo antes del click
+                            context,
+                            "No hay libros disponibles para reservar.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
@@ -160,20 +161,20 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
                     } else {
                         Log.d(TAG, "is blank ${result.data.subscriptionId}")
-                        //binding.bookReserveBtn.isEnabled = false
                         binding.bookReserveBtn.setOnClickListener {
                             val dialog = SubscriptionRequiredDialogFragment()
-                           // dialog.setDialogClickListener(this)
                             dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
                         }
                     }
 
                     if (result.data.hasReservedBook != false) {
-                        Log.d(TAG, "usuario no habilitado para reserva ${result.data.hasReservedBook}")
+                        Log.d(
+                            TAG,
+                            "usuario no habilitado para reserva ${result.data.hasReservedBook}"
+                        )
                         result.data.hasReservedBook?.let { viewModel.updateReservationState(!it) }
-                  //      binding.bookReserveBtn.isEnabled = false
                     } else {
-                        Log.d(TAG, "usuario HABILITADO para reserva ${result.data.hasReservedBook}" )
+                        Log.d(TAG, "usuario HABILITADO para reserva ${result.data.hasReservedBook}")
                         result.data.hasReservedBook.let { viewModel.updateReservationState(true) }
                     }
                 }
@@ -196,8 +197,8 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
             binding.bookReserveBtn.isEnabled = isAuthorized && canReserve
         }
 
-        viewModel.isEnabledToReserve.observe(viewLifecycleOwner){
-            if(!it){
+        viewModel.isEnabledToReserve.observe(viewLifecycleOwner) {
+            if (!it) {
                 binding.bookReserveBtn.isEnabled = false
             }
         }
@@ -216,10 +217,10 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
-        if(!isInitialized){
+        if (!isInitialized) {
             Log.d(TAG, ("isInitialized false. Setting to true..."))
             isInitialized = true
-        } else{
+        } else {
             Log.d(TAG, ("isInitialized true!"))
             val userUid = AuthManager.getCurrentUser()?.uid
             userUid?.let {
@@ -237,11 +238,14 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
 
     override fun onFinishClickDialog(clickValue: Boolean) {
-        if(clickValue){
+        if (clickValue) {
             viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
-            Snackbar.make(requireView(), "Reserva de libro exitoso! Puede retirarla en la Av.Siempreviva 742, de 9:00 a 17:00, planta baja", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(
+                requireView(),
+                "Reserva de libro exitoso! Puede retirarla en la Av.Siempreviva 742, de 9:00 a 17:00, planta baja",
+                Snackbar.LENGTH_INDEFINITE
+            )
                 .show();
-
         }
     }
 }
