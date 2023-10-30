@@ -48,6 +48,14 @@ class BooksDetailViewModel @Inject constructor(
     private val _hasReservedBook = MutableLiveData<Boolean>()
     val hasReservedBook: LiveData<Boolean> = _hasReservedBook
 
+    private val _dialogResult = MutableLiveData<Boolean>()
+    val dialogResult: LiveData<Boolean> get() = _dialogResult
+
+    fun onDialogResult(result: Boolean) {
+        Log.d(TAG, "onDialogResult()")
+        _dialogResult.postValue(result)
+    }
+
     fun reserveBook(userEmail: String) {
         if (book.cantidadDisponible > 0) {
             // Decrease the available quantity by one
