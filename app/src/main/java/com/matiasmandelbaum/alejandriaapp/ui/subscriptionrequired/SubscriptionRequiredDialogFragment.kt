@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
+import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,11 +29,11 @@ class SubscriptionRequiredDialogFragment : DialogFragment() {
             .setNegativeButton("Quizá después") { _, _ ->
                 // User clicked the negative button
                 Log.d(TAG, "Negative button clicked")
-                listener?.onFinishClickDialog("negative")
+               // listener?.onFinishClickDialog(false)
                 dismiss()
             }
             .setPositiveButton(getString(R.string.si)) { _, _ ->
-                listener?.onFinishClickDialog("positive")
+               // listener?.onFinishClickDialog(true)
                 dismiss()
                 if (subscriptionId != null) {
                     Log.d(TAG, "subscriptionId is not null")
@@ -49,9 +50,9 @@ class SubscriptionRequiredDialogFragment : DialogFragment() {
             .create()
     }
 
-    interface DialogClickListener {
-        fun onFinishClickDialog(inputText: String)
-    }
+//    interface DialogClickListener {
+//        fun onFinishClickDialog(inputText: String)
+//    }
 
     fun setDialogClickListener(listener: DialogClickListener) {
         this.listener = listener
