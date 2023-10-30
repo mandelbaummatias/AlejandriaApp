@@ -107,12 +107,4 @@ class SubscriptionListViewModel @Inject constructor(
     }
 
 
-    fun updateInitPointUrl(initPoint: String) {
-        Log.d(
-            TAG,
-            "updateInitPoint $initPoint"
-        )
-        _subscriptionUrl.value = initPoint
-    }
-
 }
