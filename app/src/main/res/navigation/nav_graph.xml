@@ -60,6 +60,12 @@
         tools:layout="@layout/fragment_subscription_list" />
 
     <fragment
+        android:id="@+id/reservedBooksFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.booksreserved.BooksReservedFragment"
+        android:label="@string/reservas"
+        tools:layout="@layout/fragment_books_reserved" />
+
+    <fragment
         android:id="@+id/bookDetailsFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.booksdetails.BooksDetailFragment"
         android:label="Detalles"
