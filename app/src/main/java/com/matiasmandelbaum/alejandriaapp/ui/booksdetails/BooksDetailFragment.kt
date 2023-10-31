@@ -67,6 +67,8 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         viewModel.subscriptionExists.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Success -> {
+                    Log.d(TAG, "mi book ${viewModel.book}")
+                    Log.d("VIENDO CANTIDAD", "cant disponible ${viewModel.book.cantidadDisponible}")
                     if (viewModel.book.cantidadDisponible > 0) {
                         when (result.data.status) {
                             "pending" -> {
@@ -108,7 +110,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                                     binding.bookReserveBtn.visibility = View.GONE
                                     Toast.makeText( //esto pasarlo antes del click
                                         context,
-                                        "No hay libros disponibles para reservar.",
+                                        "Ya se reservo este mes!",
                                         Toast.LENGTH_SHORT
                                     ).show()
 
@@ -131,7 +133,8 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                             }
                         }
 
-                    } else {
+                    } else if (viewModel.book.cantidadDisponible <= 0) {
+                        Log.d("VIENDO CANTIDAD", "cant disponible menor?? ${viewModel.book.cantidadDisponible}")
                         binding.bookReserveBtn.visibility = View.GONE
                         Toast.makeText( //esto pasarlo antes del click
                             context,
