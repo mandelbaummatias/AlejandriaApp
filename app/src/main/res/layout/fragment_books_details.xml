@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.subscription.SubscriptionListFragment">
+    tools:context="com.matiasmandelbaum.alejandriaapp.ui.booksdetails.BooksDetailFragment">
 
     <TextView
         android:id="@+id/bookIsbn"
@@ -16,6 +16,7 @@
         android:layout_weight="1"
         android:textSize="30dp"
         android:gravity="center"
+        tools:text="@string/un_libro_para_leer"
         android:textColor="@color/md_theme_light_primary"/>
 
     <com.google.android.material.card.MaterialCardView
@@ -40,6 +41,7 @@
                 android:gravity="center"
                 android:textColor="@color/md_theme_light_primary"
                 android:textSize="30dp"
+                tools:text="@string/un_libro_para_leer"
                 android:textStyle="bold" />
 
             <TextView
@@ -48,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="20dp"
+                tools:text="@string/un_autor"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -60,12 +63,14 @@
                     android:id="@+id/starIcon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_star"/>
+                    android:src="@drawable/ic_star"
+                    tools:src="@drawable/ic_star"/>
                 <TextView
                     android:id="@+id/bookCalification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp"
+                    />
             </LinearLayout>
 
             <ImageView
@@ -87,7 +92,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="18dp"/>
+                    android:textSize="18dp"
+                    tools:text="@string/sinopsis"/>
             </ScrollView>
 
         </LinearLayout>
