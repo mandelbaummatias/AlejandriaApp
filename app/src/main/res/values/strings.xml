@@ -10,6 +10,7 @@
     <string name="busqueda">Búsqueda</string>
     <string name="libros_leidos">Libros leídos</string>
     <string name="suscripcion">Suscripción</string>
+    <string name="reservas">Reservas</string>
     <string name="perfil">Perfil</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
     <string name="search_hint">Buscá por libro o autor...</string>
@@ -113,6 +114,14 @@
     <string name="mercadopago_api_base_url">https://api.mercadopago.com/</string>
     <string name="solicitud_iniciar_sesion">Iniciar sesión para suscribirse!</string>
 
+
+    <!--Reserved Book Card Item-->
+    <string name="notLogedReservedBooksMsg">Debes ingresar para ver tus reservas</string>
+    <string name="noReservedBooksMsg">Todavia no tienes ninguna reserva</string>
+    <string name="reservedBookIsbnLabel">ISBN</string>
+    <string name="reservedBookTitleLabel">Titulo del Libro</string>
+    <string name="reservedBookAuthorLabel">Autor del Libro</string>
+    <string name="reservedBookDateLabel">Fecha de la reserva</string>
 
 
 </resources>
