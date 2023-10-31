@@ -1,13 +1,16 @@
 package com.matiasmandelbaum.alejandriaapp.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.MenuProvider
-import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -21,9 +24,10 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
-import com.matiasmandelbaum.alejandriaapp.common.ex.show
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.ActivityMainBinding
 import com.matiasmandelbaum.alejandriaapp.ui.signout.SignOutDialogFragment
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity"
@@ -32,12 +36,15 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var id: String
+
+    private val viewModel: SubscriptionListViewModel by viewModels()
 
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
         if (user != null) {
             Log.d(TAG, "mi user logueado $user")
-            showMenuItem(R.id.logout) //var args? //iterar?
+            showMenuItem(R.id.logout)
             showMenuItem(R.id.booksReadListFragment)
 
         } else {
@@ -49,30 +56,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        //   authManager.addAuthStateListener(authStateListener)
+        val userUid = AuthManager.getCurrentUser()?.uid
+        Log.d(TAG, "UI onStart : $userUid")
+        if(userUid != null){
+            viewModel.getUserById(userUid)
+        } else{
+            Log.d(TAG, "no hay UID")
+        }
+        Log.d(TAG, "onStart")
         AuthManager.addAuthStateListener(authStateListener)
+
     }
 
     override fun onStop() {
         super.onStop()
         AuthManager.removeAuthStateListener(authStateListener)
-        //  authManager.removeAuthStateListener(authStateListener)
+        Log.d(TAG, "onStop")
     }
 
     private fun hideMenuItem(itemId: Int) {
-        Log.d(TAG, "showMenuItem")
         val navView: NavigationView = binding.navView
         val menu = navView.menu
-        Log.d(TAG, "consegui menu en hideMenuItem $menu")
         menu.findItem(itemId)?.isVisible = false// = false
     }
 
     // Function to show a menu item
     private fun showMenuItem(itemId: Int) {
-        Log.d(TAG, "showMenuItem")
         val navView: NavigationView = binding.navView
         val menu = navView.menu
-        Log.d(TAG, "consegui menu en showMenuItem $menu")
         menu.findItem(itemId)?.isVisible = true
     }
 
@@ -98,7 +109,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeListFragment, R.id.booksReadListFragment, R.id.subscriptionListFragment,
-               // R.id.availableBooksFragment//, R.id.signOutDialogFragment
             ), drawerLayout
         )
 
@@ -107,16 +117,14 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                //R.id.signOutDialogFragment > -> Log
                 R.id.logout -> {
                     Log.d(TAG, "hola logout!!!")
                     val dialog = SignOutDialogFragment()
                     dialog.show(supportFragmentManager, "SignOutDialogFragment")
                 }
 
-
                 R.id.profile -> {
-                    if(AuthManager.getCurrentUser() != null){
+                    if (AuthManager.getCurrentUser() != null) {
                         navController.navigate(R.id.userProfileFragment)
                     } else {
                         navController.navigate(R.id.loginFragment)
@@ -128,19 +136,12 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout.closeDrawers()
                 }
             }
-
             true
         }
 
         addMenuProvider(object : MenuProvider {
 
             override fun onPrepareMenu(menu: Menu) {
-//                val coso = menu.getItem(R.id.loginFragment)
-//                if(coso != null){
-//                    Log.d(TAG, "LO ENCONTRE AL LOGIN")
-//                } else{
-//                    Log.d(TAG, "no lo encontré...")
-//                }
 
             }
 
@@ -171,7 +172,38 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.subscription.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    Log.d(TAG, "SUCCESS SUBS $it")
+                    val url = it.data.initPoint
+                    viewModel.addSubscriptionIdToUser(
+                        it.data.id,
+                        AuthManager.getCurrentUser()?.uid.toString()
+                    )
+                    //viewModel.updateInitPointUrl(it.data.initPoint)
+                    id = it.data.id
+                    val intent = CustomTabsIntent.Builder()
+                        .build()
+                    intent.launchUrl(this@MainActivity, Uri.parse(url))
+                }
+
+                is Result.Error -> {
+                    Log.d(TAG, "error...${it.message}")
+                    Toast.makeText(
+                        this,
+                        it.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                else -> {
+                    Unit
+                }
+            }
+        }
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         Log.d(TAG, "onSupportNavigateUp")
@@ -180,4 +212,5 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
 }

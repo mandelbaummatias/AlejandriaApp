@@ -17,13 +17,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
+import com.google.rpc.context.AttributeContext.Auth
 import com.matiasmandelbaum.alejandriaapp.R
-import com.matiasmandelbaum.alejandriaapp.common.Result
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager.addAuthStateListener
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager.removeAuthStateListener
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentHomeListBinding
-import com.matiasmandelbaum.alejandriaapp.domain.model.Book
+import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListAdapter
 import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,18 +66,6 @@ class HomeListFragment : Fragment() {
         return binding.root
     }
 
-//    private val authManager = AuthManager.instance // Use the AuthManager instance
-//
-//    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-//        val user = auth.currentUser
-//        if (user != null) {
-//        Log.d(TAG,"Mi user logueado ${user.uid}")
-//        } else {
-//            Log.d(TAG, "user is null")
-//        }
-//    }
-
- //   private val authManager = AuthManager.instance // Use the AuthManager instance
 
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser

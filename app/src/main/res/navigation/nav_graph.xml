@@ -61,13 +61,13 @@
 
     <fragment
         android:id="@+id/bookDetailsFragment"
-        android:name="com.matiasmandelbaum.alejandriaapp.ui.booksdetails.BooksDetailsFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.booksdetails.BooksDetailFragment"
         android:label="Detalles"
         tools:layout="@layout/fragment_books_details">
 
         <argument
             android:name="book"
-            app:argType="com.matiasmandelbaum.alejandriaapp.domain.model.Book" />
+            app:argType="com.matiasmandelbaum.alejandriaapp.domain.model.book.Book" />
 
 
     </fragment>
