@@ -108,6 +108,7 @@ class BooksReservedFragment : Fragment() {
                     val reserve = Reserves(isbn, title, author, reserveDate)
                     reserveList.add(reserve)
                 }
+                reserveList.sort()
                 adapter.notifyDataSetChanged()
             }
     }
