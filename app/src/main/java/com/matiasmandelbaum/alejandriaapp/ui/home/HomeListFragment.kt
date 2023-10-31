@@ -34,10 +34,9 @@ private const val TAG = "HomeListFragment"
 
 @AndroidEntryPoint
 class HomeListFragment : Fragment() {
-    var books: MutableList<Book> = ArrayList()
+    private var currentBookList: List<Book> = emptyList()
+    private var isFirstLoad = true
     private val viewModel: HomeViewModel by viewModels()
-    private lateinit var bookListAdapter: BookListAdapter
-
     private lateinit var binding: FragmentHomeListBinding
 
     override fun onCreateView(
@@ -46,7 +45,6 @@ class HomeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeListBinding.inflate(inflater, container, false)
-        // bookListAdapter =
         binding.lifecycleOwner = viewLifecycleOwner
         binding.recyclerView.adapter = BookListAdapter(BookListener {
             Log.d(TAG, "click")
@@ -55,10 +53,7 @@ class HomeListFragment : Fragment() {
                     it
                 )
             )
-//             //   R.id.action_homeListFragment_to_bookDetailsFragment
-//            )
-        }
-        )
+        })
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
 
 
@@ -70,7 +65,7 @@ class HomeListFragment : Fragment() {
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
         if (user != null) {
-            Log.d(TAG,"Mi user logueado ${user.uid}")
+            Log.d(TAG, "Mi user logueado ${user.uid}")
         } else {
             Log.d(TAG, "user is null")
         }
@@ -83,34 +78,46 @@ class HomeListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-     //   authManager.addAuthStateListener(authStateListener)
         addAuthStateListener(authStateListener)
     }
 
     override fun onStop() {
         super.onStop()
         removeAuthStateListener(authStateListener)
-      //  authManager.removeAuthStateListener(authStateListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getAllBooks()
+
+        if (currentBookList.isNotEmpty()) {
+            val adapter = binding.recyclerView.adapter as BookListAdapter
+            adapter.submitList(currentBookList)
+            Log.d(TAG, "Using existing data. Size: ${currentBookList.size}")
+        } else {
+            viewModel.getAllBooks()
+        }
         setupMenu()
 
         viewModel.bookListState.observe(viewLifecycleOwner) {
             when (it) {
                 is Result.Success -> {
+
                     handleLoading(false)
-                    val adapter = binding.recyclerView.adapter as BookListAdapter
-                    adapter.submitList(it.data)
-                    Log.d(TAG, " mi data ${it.data.size}")
+                    val newBookList = it.data
+                    if (isFirstLoad) {
+                        isFirstLoad = false
+                        currentBookList = newBookList
+                        val adapter = binding.recyclerView.adapter as BookListAdapter
+                        adapter.submitList(newBookList)
+                        Log.d(TAG, "New data loaded. Size: ${newBookList.size}")
+                    } else {
+                        Log.d(TAG, "Data is the same. Not updating the RecyclerView.")
+                    }
                 }
 
                 is Result.Loading -> handleLoading(true)
                 is Result.Error -> handleLoading(false)
                 else -> {
-
                 }
             }
         }
