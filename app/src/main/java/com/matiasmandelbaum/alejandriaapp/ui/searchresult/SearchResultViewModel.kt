@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matiasmandelbaum.alejandriaapp.common.Result
-import com.matiasmandelbaum.alejandriaapp.domain.model.Book
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetBooksByTitleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

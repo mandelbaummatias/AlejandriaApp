@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.matiasmandelbaum.alejandriaapp"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.matiasmandelbaum.alejandriaapp"
@@ -127,6 +127,9 @@ dependencies {
 
     //Coil
     implementation ("io.coil-kt:coil:2.2.2")
+
+    //Browser
+    implementation ("androidx.browser:browser:1.6.0")
 
 }
 

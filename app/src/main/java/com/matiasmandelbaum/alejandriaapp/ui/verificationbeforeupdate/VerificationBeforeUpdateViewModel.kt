@@ -6,8 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matiasmandelbaum.alejandriaapp.common.Event
-import com.matiasmandelbaum.alejandriaapp.domain.usecase.SendEmailVerificationUseCase
+import com.matiasmandelbaum.alejandriaapp.common.event.Event
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.VerifyEmailBeforeUpdateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch

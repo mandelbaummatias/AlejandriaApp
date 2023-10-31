@@ -1,4 +1,4 @@
-package com.matiasmandelbaum.alejandriaapp.common
+package com.matiasmandelbaum.alejandriaapp.common.event
 
 import android.util.Log
 
