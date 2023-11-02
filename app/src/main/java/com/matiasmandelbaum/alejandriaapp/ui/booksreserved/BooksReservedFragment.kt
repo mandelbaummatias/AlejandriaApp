@@ -15,7 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.ReserveAdapter
-import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class BooksReservedFragment : Fragment() {
@@ -102,10 +102,7 @@ class BooksReservedFragment : Fragment() {
                     val author = bookDocument.getString("autor") ?: ""
                     val dateReserve = reserveDocument.getDate("fecha_reserva")
 
-                    val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm")
-                    val reserveDate = sdf.format(dateReserve)
-
-                    val reserve = Reserves(isbn, title, author, reserveDate)
+                    val reserve = Reserves(isbn, title, author, dateReserve ?:  Date())
                     reserveList.add(reserve)
                 }
                 reserveList.sort()
