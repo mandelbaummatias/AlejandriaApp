@@ -81,4 +81,16 @@ class GetAllBooksUseCaseTest {
         val errorMessage = (response as Result.Error).message
         assertEquals(expectedExceptionMessage, errorMessage)
     }
+
+    @Test
+    fun `when the API call is in a loading state, return Result Loading`() = runBlocking {
+        // Given: Simulate a loading state returned from the repository
+        coEvery { booksRepository.getAllBooks() } returns Result.Loading
+
+        // When
+        val response = getAllBooksUseCase()
+
+        // Then
+        assert(response is Result.Loading)
+    }
 }
