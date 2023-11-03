@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.ui.booksreserved.Reserves
+import java.text.SimpleDateFormat
 
 class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerView.Adapter<ReserveAdapter.MyViewHolder>() {
 
@@ -25,7 +26,10 @@ class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerVi
         holder.isbn.text = currentReserve.isbn
         holder.title.text = currentReserve.title
         holder.author.text = currentReserve.author
-        holder.reserveDate.text = currentReserve.reserveDate
+
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm")
+        val stringDate = dateFormat.format(currentReserve.reserveDate)
+        holder.reserveDate.text = stringDate
     }
 
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
