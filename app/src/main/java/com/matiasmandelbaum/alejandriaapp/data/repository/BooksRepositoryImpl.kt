@@ -93,6 +93,16 @@ class BooksRepositoryImpl @Inject constructor(
         return querySnapshot.toObjects(BookFirestore::class.java)
     }
 
+    private suspend fun getBooksFromFirestoreByIsbn(isbn: String): List<BookFirestore> {
+        val querySnapshot =
+            firestore.collection(FirebaseConstants.BOOKS_COLLECTION)
+                .orderBy("isbn_13") //Ver para no hardcodearlo
+                .startAt(isbn)
+                .get()
+                .await()
+        return querySnapshot.toObjects(BookFirestore::class.java)
+    }
+
     private suspend fun getAllBooksFromFirestore(): List<BookFirestore> {
         val querySnapshot =
             firestore.collection(FirebaseConstants.BOOKS_COLLECTION)

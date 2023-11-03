@@ -124,9 +124,6 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics-ktx")
 
-    // Picasso
-    implementation("com.squareup.picasso:picasso:2.71828")
-
     //Coil
     implementation ("io.coil-kt:coil:2.2.2")
 

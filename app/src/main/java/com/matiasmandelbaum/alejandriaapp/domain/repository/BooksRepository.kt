@@ -7,4 +7,8 @@ interface BooksRepository {
 
     suspend fun getAllBooks(): Result<List<Book>>
 
+    suspend fun reserveBook(isbn: String, userEmail: String): Boolean
+
+    suspend fun updateBook(book: Book): Result<Boolean>
+
 }
