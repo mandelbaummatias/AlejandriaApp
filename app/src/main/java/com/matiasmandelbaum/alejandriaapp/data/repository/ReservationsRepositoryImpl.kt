@@ -9,7 +9,7 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
     ReservationsRepository {
 
     private val db = firestore
-    private val reservationsCollection = db.collection("reservations")
+    private val reservationsCollection = db.collection("reservas_libros")
 
     override suspend fun createReservation(reservation: Reservation): Boolean {
         return try {
