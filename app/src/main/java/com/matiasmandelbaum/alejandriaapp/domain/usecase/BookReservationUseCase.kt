@@ -1,4 +1,5 @@
-import android.util.Log
+package com.matiasmandelbaum.alejandriaapp.domain.usecase
+
 import com.google.firebase.Timestamp
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
@@ -8,7 +9,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.repository.ReservationsReposito
 import com.matiasmandelbaum.alejandriaapp.domain.repository.UsersRepository
 
 import javax.inject.Inject
-import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -17,7 +17,7 @@ class BookReservationUseCase @Inject constructor(
     private val reservationRepository: ReservationsRepository,
     private val userRepository: UsersRepository
 ) {
-    override suspend fun reserveBook(title: String, email: String): Boolean {
+     suspend fun reserveBook(title: String, email: String): Boolean {
         val bookResult: Result<List<Book>> = booksRepository.getBooksByTitle(title)
         if (bookResult is Result.Success) {
             val booksList = bookResult.data

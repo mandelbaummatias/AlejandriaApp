@@ -75,7 +75,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                                 Log.d(TAG, "subscription pending...")
                                 //si consiguió usuario al princi
                                 binding.bookReserveBtn.setOnClickListener {
-
+                                    Log.d(TAG, " click resrva")
                                     val subscriptionId = result.data.id
 
                                     val args = Bundle()
