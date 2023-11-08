@@ -82,6 +82,14 @@ class BooksRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun reserveBook(isbn: String, userEmail: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateBook(book: Book): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
     private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
         val querySnapshot =
             firestore.collection(FirebaseConstants.BOOKS_COLLECTION)
