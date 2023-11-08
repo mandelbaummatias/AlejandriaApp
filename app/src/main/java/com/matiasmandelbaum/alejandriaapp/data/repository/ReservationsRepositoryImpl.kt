@@ -1,5 +1,6 @@
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.domain.model.reservation.Reservation
 import com.matiasmandelbaum.alejandriaapp.domain.repository.ReservationsRepository
 import kotlinx.coroutines.tasks.await
@@ -10,6 +11,13 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
 
     private val db = firestore
     private val reservationsCollection = db.collection("reservas_libros")
+    override suspend fun getReservationByUserEmail(email: String): Reservation {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAllReservations(): Result<List<Reservation>> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun createReservation(reservation: Reservation): Boolean {
         return try {
