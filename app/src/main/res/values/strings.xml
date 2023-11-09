@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AlejandriaApp</string>
+    <string name="app_name">Alejandria</string>
     <string name="drawer_layout_behavior">androidx.drawerlayout.widget.DrawerLayout$DrawerLayoutCompat</string>
 
     <string name="globalAccept">Aceptar</string>
