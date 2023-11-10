@@ -37,7 +37,6 @@ class AuthenticationService @Inject constructor(private val firebase: FirebaseCl
     }.isSuccess
 
 
-
     suspend fun login(email: String, password: String): LoginResult = runCatching {
         firebase.auth.signInWithEmailAndPassword(email, password).await()
     }.toLoginResult()

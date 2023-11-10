@@ -28,13 +28,13 @@ class BooksRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val googleBooksService: GoogleBooksService
 ) : BooksRepository {
-
-    private val client = ClientSearch(
-        applicationID = ApplicationID(""),
-        apiKey = APIKey("")
-    )
-    private val indexName = IndexName("libros")
-    private lateinit var index : Index
+//
+//    private val client = ClientSearch(
+//        applicationID = ApplicationID(""),
+//        apiKey = APIKey("")
+//    )
+//    private val indexName = IndexName("libros")
+//    private lateinit var index : Index
 
     override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
         return try {
@@ -106,32 +106,32 @@ class BooksRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-//    private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
-//        val querySnapshot =
-//            firestore.collection(FirebaseConstants.BOOKS_COLLECTION)
-//                .orderBy("titulo") //Ver para no hardcodearlo
-//                .startAt(title)
-//                .endAt("$title~")
-//                .get()
-//                .await()
-//        return querySnapshot.toObjects(BookFirestore::class.java)
-//    }
-
     private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
-        index = client.initIndex(indexName)
-        var libros: List<BookFirestore> = emptyList()
-
-        try {
-            val response = index.search(Query(title))
-            libros = response.hits.deserialize(BookFirestore.serializer())
-            Log.d(TAG, "mi response $response")
-            Log.d(TAG, "mis libros $libros")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during Algolia search", e)
-        }
-
-        return libros
+        val querySnapshot =
+            firestore.collection(FirebaseConstants.BOOKS_COLLECTION)
+                .orderBy("titulo") //Ver para no hardcodearlo
+                .startAt(title)
+                .endAt("$title~")
+                .get()
+                .await()
+        return querySnapshot.toObjects(BookFirestore::class.java)
     }
+
+//    private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
+//        index = client.initIndex(indexName)
+//        var libros: List<BookFirestore> = emptyList()
+//
+//        try {
+//            val response = index.search(Query(title))
+//            libros = response.hits.deserialize(BookFirestore.serializer())
+//            Log.d(TAG, "mi response $response")
+//            Log.d(TAG, "mis libros $libros")
+//        } catch (e: Exception) {
+//            Log.e(TAG, "Error during Algolia search", e)
+//        }
+//
+//        return libros
+//    }
     
 
     private suspend fun getBooksFromFirestoreByIsbn(isbn: String): List<BookFirestore> {

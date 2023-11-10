@@ -175,7 +175,16 @@ class UserMailFragment : Fragment() {
         user!!.reauthenticate(credential)
             .addOnCompleteListener {
                 Log.d(TAG, "User re-authenticated.")
-                goToVerifyEmail(newEmail)
+              //  goToVerifyEmail(newEmail)
+                user.updateEmail(newEmail)
+                        userDocumentReference?.update(
+            mapOf(
+//                "nombre" to newNombre,
+//                "apellido" to newApellido,
+                "email" to newEmail
+            )
+        )
+
                 //viewModel.verifyEmailBeforeUpdate()
                 //Now change your email address \\
                 //----------------Code for Changing Email Address----------\\
@@ -234,12 +243,12 @@ class UserMailFragment : Fragment() {
                 //----------------------------------------------------------\\
             }
 
-        user!!.verifyBeforeUpdateEmail(newEmail).addOnSuccessListener {
-            Log.d(TAG, "Verify email sended")
-        }.addOnFailureListener {
-            Log.d(TAG, "Error in sending verify email")
-        }
-
+//        user!!.verifyBeforeUpdateEmail(newEmail).addOnSuccessListener {
+//            Log.d(TAG, "Verify email sended")
+//        }.addOnFailureListener {
+//            Log.d(TAG, "Error in sending verify email")
+//        }
+//
 
 
 
