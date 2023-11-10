@@ -2,7 +2,6 @@ package com.matiasmandelbaum.alejandriaapp.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
-import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.model.BookFirestore
 import com.matiasmandelbaum.alejandriaapp.data.util.FirebaseConstants
 import com.matiasmandelbaum.alejandriaapp.domain.model.user.User
 import com.matiasmandelbaum.alejandriaapp.domain.repository.UsersRepository
