@@ -6,6 +6,7 @@ plugins {
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
+    id ("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -129,6 +130,13 @@ dependencies {
 
     //Browser
     implementation ("androidx.browser:browser:1.6.0")
+
+    //Algolia
+    implementation ("com.algolia:instantsearch-android:3.+")
+    implementation ("com.algolia:instantsearch-android-paging3:3.+")
+
+    implementation ("com.algolia:algoliasearch-client-kotlin:1.8.0")
+    implementation("io.ktor:ktor-client-android:2.0.1")
 
 }
 
