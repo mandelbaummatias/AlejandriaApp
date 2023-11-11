@@ -110,4 +110,12 @@
         android:text="@string/reserveBtn"
         android:textSize="20dp" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="220dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:visibility="visible" />
+
 </LinearLayout>

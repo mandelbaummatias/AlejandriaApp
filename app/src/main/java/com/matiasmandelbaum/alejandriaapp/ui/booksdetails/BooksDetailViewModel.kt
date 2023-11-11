@@ -9,10 +9,14 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
+import com.matiasmandelbaum.alejandriaapp.domain.usecase.CreateReservationUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.FetchSubscriptionUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByIdUseCase
+import com.matiasmandelbaum.alejandriaapp.domain.usecase.ReserveBookUseCase
+import com.matiasmandelbaum.alejandriaapp.domain.usecase.UpdateUserReservationStateUseCase
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -26,7 +30,10 @@ private const val TAG = "BooksDetailViewModel"
 class BooksDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val fetchSubscriptionUseCase: FetchSubscriptionUseCase,
-    private val getUserByIdUseCase: GetUserByIdUseCase
+    private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val reserveBookUseCase: ReserveBookUseCase,
+    private val updateUserReservationStateUseCase: UpdateUserReservationStateUseCase,
+    private val createReservationUseCase: CreateReservationUseCase
 ) : ViewModel() {
     private val _book = MutableLiveData<Book>()
 
@@ -37,7 +44,7 @@ class BooksDetailViewModel @Inject constructor(
     val user: MutableLiveData<Result<User>?> = _user
 
     private val _isEnabledToReserve = MutableLiveData<Boolean>()
-    val isEnabledToReserve : LiveData<Boolean> = _isEnabledToReserve
+    val isEnabledToReserve: LiveData<Boolean> = _isEnabledToReserve
 
 
     val book: Book = savedStateHandle["book"]!!
@@ -51,10 +58,8 @@ class BooksDetailViewModel @Inject constructor(
     private val _dialogResult = MutableLiveData<Boolean>()
     val dialogResult: LiveData<Boolean> get() = _dialogResult
 
-    fun onDialogResult(result: Boolean) {
-        Log.d(TAG, "onDialogResult()")
-        _dialogResult.postValue(result)
-    }
+    private val _onSuccessfulReservation = MutableLiveData<Result<ReservationResult>?>()
+    val onSuccessfulReservation: LiveData<Result<ReservationResult>?> = _onSuccessfulReservation
 
     fun reserveBook(userEmail: String) {
         if (book.cantidadDisponible > 0) {
@@ -150,10 +155,42 @@ class BooksDetailViewModel @Inject constructor(
         }
     }
 
-    fun onCreate() {
-        Log.d(TAG, "init!")
-        Log.d(TAG, "mi libro $book")
+    fun reserveBook2(userEmail: String) {
+        _onSuccessfulReservation.value = Result.Loading
+        viewModelScope.launch {
+
+            val result = reserveBookUseCase(book.isbn, userEmail, book.cantidadDisponible)
+            when (result) {
+                is Result.Success -> {
+                    updateUserReservationStateUseCase(userEmail)
+                    createReservationUseCase(book.isbn, userEmail)
+
+                    // If reserveBookUseCase is successful, proceed with updateUserUseCase and createReservationUseCase
+                    //    updateUserAndCreateReservation(userEmail)
+                    _onSuccessfulReservation.postValue(result)
+                }
+
+                is Result.Error -> _onSuccessfulReservation.postValue(result)
+                else -> {
+                    Unit
+                }
+            }
+            // _onSuccessfulReservation.postValue(result)
+
+        }
     }
+
+    //    private val _onSuccessfulReservation = MutableLiveData<Result<Boolean>?>()
+//    val onSuccessfulReservation: MutableLiveData<Result<Boolean>?> = _onSuccessfulReservation
+
+//    fun reserveBook2(userEmail: String) {
+//        _onSuccessfulReservation.value = Result.Loading
+//        viewModelScope.launch {
+//            val result = reserveBookUseCase(book.isbn, userEmail, book.cantidadDisponible)
+//            _onSuccessfulReservation.postValue(result)
+//        }
+//    }
+
 
     fun fetchSubscription(id: String) {
         Log.d(TAG, "ejecutando fetchSubscription")
@@ -176,7 +213,7 @@ class BooksDetailViewModel @Inject constructor(
         }
     }
 
-    fun updateReservationState(isEnabled: Boolean){
+    fun updateReservationState(isEnabled: Boolean) {
         Log.d(TAG, "updateReservationState $isEnabled")
         _isEnabledToReserve.value = isEnabled
     }
@@ -189,9 +226,6 @@ class BooksDetailViewModel @Inject constructor(
 
 }
 
-data class ReservationState(
-    val isSubscriptionAuthorized: Boolean,
-    val hasReservedBook: Boolean
-)
+
 
 

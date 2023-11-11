@@ -12,19 +12,3 @@ class CreateSubscriptionUseCase @Inject constructor(private val mercadoPagoRepos
         return mercadoPagoRepository.createSubscription(payerEmail)
     }
 }
-
-//    suspend operator fun invoke(): Flow<Result<Subscription>> = flow {
-//        emit(Result.Loading)
-//
-//        val networkRequest = mercadoPagoRepository.createSubscription()
-//
-//        when(networkRequest) {
-//            is Result.Success -> emit(networkRequest)
-//            is Result.Error -> emit(Result.Error(networkRequest.message))
-//            else -> Result.Finished
-//        }
-//    }
-
-//    operator fun invoke(): Flow<Result<Subscription>> =
-//        mercadoPagoRepository.createSubscription()
-//}

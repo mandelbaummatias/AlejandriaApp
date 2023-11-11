@@ -7,9 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface MercadoPagoRepository {
     suspend fun createSubscription(payerEmail: String): Result<Subscription>
 
-//    fun createSubscription(): Flow<Result<Subscription>>
-
-   // suspend fun fetchSubscription(id: String): Result<String>
-
-     suspend fun fetchSubscription(id: String): Result<Subscription>
+    suspend fun fetchSubscription(id: String): Result<Subscription>
 }

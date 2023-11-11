@@ -9,10 +9,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
+import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentBooksDetailsBinding
+import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import com.matiasmandelbaum.alejandriaapp.ui.confirmbookreservation.ConfirmBookReservationDialogFragment
 import com.matiasmandelbaum.alejandriaapp.ui.subscriptionrequired.SubscriptionRequiredDialogFragment
 import com.squareup.picasso.Picasso
@@ -33,7 +36,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBooksDetailsBinding.inflate(inflater, container, false)
-        viewModel.onCreate()
+        // viewModel.onCreate()
         val rating = viewModel.book.valoracion
 
         binding.bookIsbn.text = viewModel.book.titulo
@@ -66,129 +69,28 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
         viewModel.subscriptionExists.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Result.Success -> {
-                    Log.d(TAG, "mi book ${viewModel.book}")
-                    Log.d("VIENDO CANTIDAD", "cant disponible ${viewModel.book.cantidadDisponible}")
-                    if (viewModel.book.cantidadDisponible > 0) {
-                        when (result.data.status) {
-                            "pending" -> {
-                                Log.d(TAG, "subscription pending...")
-                                //si consiguió usuario al princi
-                                binding.bookReserveBtn.setOnClickListener {
-
-                                    val subscriptionId = result.data.id
-
-                                    val args = Bundle()
-                                    args.putString("subscriptionId", subscriptionId)
-
-                                    val dialog = SubscriptionRequiredDialogFragment()
-
-
-                                    dialog.arguments = args
-                                    dialog.setDialogClickListener(this)
-                                    dialog.show(
-                                        childFragmentManager,
-                                        "SubscriptionRequiredDialogFragment"
-                                    )
-                                }
-                            }
-
-                            "authorized" -> {
-                                Log.d(TAG, "authorized from subscriptionExists")
-                                if (viewModel.isEnabledToReserve.value != false) {
-                                    //        if (viewModel.book.cantidadDisponible > 0) {
-                                    Log.d(TAG, "hay mas de 1")
-                                    binding.bookReserveBtn.setOnClickListener {
-                                        val dialog = ConfirmBookReservationDialogFragment()
-                                        dialog.setDialogClickListener(this)
-                                        dialog.show(
-                                            childFragmentManager,
-                                            "SubscriptionRequiredDialogFragment"
-                                        )
-                                    }
-                                } else {
-                                    binding.bookReserveBtn.visibility = View.GONE
-                                    Toast.makeText( //esto pasarlo antes del click
-                                        context,
-                                        "Ya se reservo este mes!",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-
-
-                                }
-                                // }
-                                Log.d(
-                                    TAG,
-                                    "has not reserved book and is enabled ${viewModel.hasReservedBook.value}"
-                                )
-                                binding.bookReserveBtn.isEnabled = true
-                            }
-
-                            else -> {
-                                Log.d(
-                                    TAG,
-                                    "has reserved book and is NOT enabled ${viewModel.hasReservedBook.value}"
-                                )
-                                binding.bookReserveBtn.isEnabled = false
-                            }
-                        }
-
-                    } else if (viewModel.book.cantidadDisponible <= 0) {
-                        Log.d("VIENDO CANTIDAD", "cant disponible menor?? ${viewModel.book.cantidadDisponible}")
-                        binding.bookReserveBtn.visibility = View.GONE
-                        Toast.makeText( //esto pasarlo antes del click
-                            context,
-                            "No hay libros disponibles para reservar.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-
-                is Result.Error -> {
-                    Unit
-                }
-
-                else -> {
-                    Unit
-                }
+                is Result.Success -> handleSuccessResult(result.data)
+                is Result.Error -> Unit
+                else -> Unit
             }
         }
 
         viewModel.user.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Success -> {
-                    if (result.data.subscriptionId.isNotBlank()) {
-                        Log.d(TAG, "is not blank ${result.data.subscriptionId}")
-                        viewModel.fetchSubscription(result.data.subscriptionId)
+                    handleUserSuccess(result.data)
+                    handleLoading(false)
 
-
-                    } else {
-                        Log.d(TAG, "is blank ${result.data.subscriptionId}")
-                        binding.bookReserveBtn.setOnClickListener {
-                            val dialog = SubscriptionRequiredDialogFragment()
-                            dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
-                        }
-                    }
-
-                    if (result.data.hasReservedBook != false) {
-                        Log.d(
-                            TAG,
-                            "usuario no habilitado para reserva ${result.data.hasReservedBook}"
-                        )
-                        result.data.hasReservedBook?.let { viewModel.updateReservationState(!it) }
-                    } else {
-                        Log.d(TAG, "usuario HABILITADO para reserva ${result.data.hasReservedBook}")
-                        result.data.hasReservedBook.let { viewModel.updateReservationState(true) }
-                    }
                 }
 
                 is Result.Error -> {
-                    Log.d(TAG, "error ${result.message}")
+                    handleUserError(result.message)
+                    handleLoading(false)
                 }
 
                 is Result.Finished -> Unit
-                Result.Loading -> Unit
-                else -> {}
+                is Result.Loading -> handleLoading(true)
+                else -> Unit
             }
         }
 
@@ -214,6 +116,32 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
             }
         }
 
+        viewModel.onSuccessfulReservation.observe(viewLifecycleOwner){
+            when(it){
+                is Result.Success -> {
+                    Log.d(TAG, "mi ReservationResult $it")
+                }
+
+                is Result.Error -> {
+                    Log.d(tag, "MI ERROR ${it.message}")
+                }
+
+                else -> {Unit}
+            }
+        }
+
+    }
+
+    private fun handleLoading(isLoading: Boolean) {
+        with(binding) {
+            if (isLoading) {
+                bookReserveBtn.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
+            } else {
+                bookReserveBtn.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -233,6 +161,111 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
     }
 
+    private fun handleSuccessResult(subscription: Subscription) {
+        Log.d(TAG, "mi book ${viewModel.book}")
+        Log.d("VIENDO CANTIDAD", "cant disponible ${viewModel.book.cantidadDisponible}")
+
+        if (viewModel.book.cantidadDisponible <= 0) {
+            handleNoBooksAvailable()
+            return
+        }
+
+        when (subscription.status) {
+            "pending" -> handlePendingStatus(subscription.id)
+            "authorized" -> handleAuthorizedStatus()
+            else -> handleOtherStatus()
+        }
+    }
+
+    private fun handleNoBooksAvailable() {
+        Log.d("VIENDO CANTIDAD", "cant disponible menor?? ${viewModel.book.cantidadDisponible}")
+        binding.bookReserveBtn.visibility = View.GONE
+        Toast.makeText(
+            context,
+            "No hay libros disponibles para reservar.",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun handlePendingStatus(subscriptionId: String) {
+        Log.d(TAG, "subscription pending...")
+        binding.bookReserveBtn.setOnClickListener {
+            val args = Bundle().apply {
+                putString("subscriptionId", subscriptionId)
+            }
+            val dialog = SubscriptionRequiredDialogFragment().apply {
+                arguments = args
+                setDialogClickListener(this@BooksDetailFragment)
+            }
+            dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
+        }
+    }
+
+    private fun handleAuthorizedStatus() {
+        Log.d(TAG, "authorized from subscriptionExists")
+        if (viewModel.isEnabledToReserve.value != false) {
+            Log.d(TAG, "hay mas de 1")
+            binding.bookReserveBtn.setOnClickListener {
+                val dialog = ConfirmBookReservationDialogFragment().apply {
+                    setDialogClickListener(this@BooksDetailFragment)
+                }
+                dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
+            }
+        } else {
+            binding.bookReserveBtn.visibility = View.GONE
+            Toast.makeText(
+                context,
+                "Ya se reservo este mes!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        Log.d(TAG, "has not reserved book and is enabled ${viewModel.hasReservedBook.value}")
+        binding.bookReserveBtn.isEnabled = true
+    }
+
+    private fun handleOtherStatus() {
+        Log.d(TAG, "has reserved book and is NOT enabled ${viewModel.hasReservedBook.value}")
+        binding.bookReserveBtn.isEnabled = false
+    }
+
+    private fun handleUserSuccess(user: User) {
+        if (user.subscriptionId.isNotBlank()) {
+            handleNonBlankSubscriptionId(user.subscriptionId)
+        } else {
+            handleBlankSubscriptionId()
+        }
+
+        handleReservedBook(user.hasReservedBook)
+    }
+
+    private fun handleNonBlankSubscriptionId(subscriptionId: String) {
+        Log.d(TAG, "is not blank $subscriptionId")
+        viewModel.fetchSubscription(subscriptionId)
+    }
+
+    private fun handleBlankSubscriptionId() {
+        Log.d(TAG, "is blank")
+        binding.bookReserveBtn.setOnClickListener {
+            val dialog = SubscriptionRequiredDialogFragment()
+            dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
+        }
+    }
+
+    private fun handleReservedBook(hasReservedBook: Boolean?) {
+        if (hasReservedBook != false) {
+            Log.d(TAG, "usuario no habilitado para reserva $hasReservedBook")
+            hasReservedBook?.let { viewModel.updateReservationState(!it) }
+        } else {
+            Log.d(TAG, "usuario HABILITADO para reserva $hasReservedBook")
+            hasReservedBook.let { viewModel.updateReservationState(true) }
+        }
+    }
+
+    private fun handleUserError(errorMessage: String) {
+        Log.d(TAG, "error $errorMessage")
+    }
+
+
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy")
@@ -242,13 +275,18 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
     override fun onFinishClickDialog(clickValue: Boolean) {
         if (clickValue) {
-            viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
-            Snackbar.make(
-                requireView(),
-                "Reserva de libro exitoso! Puede retirarla en la Av.Siempreviva 742, de 9:00 a 17:00, planta baja",
-                Snackbar.LENGTH_INDEFINITE
-            )
-                .show();
+            //viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
+            viewModel.reserveBook2(AuthManager.getCurrentUser()?.email!!)
+            showSuccessfulReservationMessage()
         }
+    }
+
+    private fun showSuccessfulReservationMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.reserva_exitosa),
+            Snackbar.LENGTH_INDEFINITE
+        )
+            .show();
     }
 }
