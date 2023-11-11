@@ -2,7 +2,7 @@ package com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote
 
 import android.util.Log
 import com.matiasmandelbaum.alejandriaapp.core.googlebooks.GoogleBooksConfig
-import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.model.BookFirestore
+import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.response.BookFirestore
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.GoogleBooksResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
