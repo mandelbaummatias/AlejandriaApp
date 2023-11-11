@@ -106,6 +106,10 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44.2")
     kapt("com.google.dagger:hilt-compiler:2.44.2")
 
+
+    //Firebase Admin
+   // implementation ("com.google.firebase:firebase-admin:6.11.0")
+
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
@@ -137,6 +141,8 @@ dependencies {
 
     implementation ("com.algolia:algoliasearch-client-kotlin:1.8.0")
     implementation("io.ktor:ktor-client-android:2.0.1")
+
+
 
 }
 
