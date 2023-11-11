@@ -14,10 +14,23 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.algolia.search.client.ClientSearch
+import com.algolia.search.client.Index
+import com.algolia.search.helper.deserialize
+import com.algolia.search.model.APIKey
+import com.algolia.search.model.ApplicationID
+import com.algolia.search.model.IndexName
+import com.algolia.search.model.search.Query
 import com.matiasmandelbaum.alejandriaapp.R
+import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.response.BookFirestore
+
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.serialization.serializer
+
 
 private const val TAG = "SearchFragment"
 
@@ -88,7 +101,7 @@ class SearchFragment : Fragment() {
                             SearchFragmentDirections.actionSearchFragmentToSearchResultListFragment(
                                 it
                             )
-                        }
+                        } //y si está null o vacio?
 
                         action?.let {
                             findNavController().navigate(action)
