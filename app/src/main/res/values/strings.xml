@@ -125,6 +125,7 @@
     <string name="un_libro_para_leer">Un libro para leer</string>
     <string name="un_autor">Un autor</string>
     <string name="sinopsis">La sinopsis de un libro es un resumen breve que proporciona una descripción general de la trama, los personajes principales y el tema de la obra. Su propósito es dar a los lectores una idea general de qué trata el libro sin revelar demasiados detalles o spoilers. La sinopsis suele encontrarse en la contraportada del libro o en la solapa interior de la cubierta, y también se utiliza en las descripciones de libros en línea y catálogos de librerías.</string>
+    <string name="reserva_exitosa">Reserva de libro exitosa! Puede retirarla en la Av.Siempreviva 742, de 9:00 a 20:00, planta baja</string>
 
 
 </resources>

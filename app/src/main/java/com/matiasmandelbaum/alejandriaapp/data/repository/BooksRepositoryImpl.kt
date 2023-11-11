@@ -15,12 +15,16 @@ import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.GoogleBooksResp
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.ImageLinks
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.GoogleBooksService
 import com.matiasmandelbaum.alejandriaapp.data.util.FirebaseConstants
+import com.matiasmandelbaum.alejandriaapp.data.util.FirebaseConstants.BOOKS_COLLECTION
+import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 private const val TAG = "BooksRepositoryImpl"
@@ -28,6 +32,32 @@ class BooksRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val googleBooksService: GoogleBooksService
 ) : BooksRepository {
+
+
+    override suspend fun reserveBook2(isbn: String, userEmail: String, cant: Int): Result<ReservationResult> {
+        return try {
+            val result = suspendCoroutine { continuation ->
+                val booksCollection = firestore.collection(BOOKS_COLLECTION)
+                val book = booksCollection.document(isbn)
+
+                book.update("cantidad_disponible", cant - 1)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "update ok")
+                        // Call continuation.resume with the Result.Success
+                        continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
+                    }
+                    .addOnFailureListener {
+                        Log.d(TAG, "error en update $it")
+                        // Call continuation.resume with the Result.Error
+                        continuation.resume(Result.Error("Error reserving book: ${it.message}"))
+                    }
+            }
+
+            result
+        } catch (e: Exception) {
+            Result.Error("Error reserving book: ${e.message}")
+        }
+    }
 //
 //    private val client = ClientSearch(
 //        applicationID = ApplicationID(""),
@@ -64,6 +94,30 @@ class BooksRepositoryImpl @Inject constructor(
             Result.Error(e.message.toString())
         }
     }
+
+//    override suspend fun reserveBook2(isbn: String, userEmail: String, cant:Int): Result<Boolean> {
+//        Log.d(TAG, "reserveBook2")
+//        return try {
+//            val booksCollection= firestore.collection(BOOKS_COLLECTION)
+//            val book = booksCollection.document(isbn)
+//            Log.d(TAG, "mi book en reserveBook2 ${book.id}")
+//            book.update("cantidad_disponible", cant - 1).addOnSuccessListener {
+//                Log.d(TAG , "update ok")
+//            }.addOnFailureListener {
+//                Log.d(TAG , "error en update $it")
+//            }
+//            Result.Success(true) // Assuming reservation is successful
+//        } catch (e: Exception) {
+//            Result.Error("Error reserving book: ${e.message}")
+//        }
+//    }
+
+
+
+//}
+
+
+
 
     override suspend fun getAllBooks(): Result<List<Book>> {
         return try {

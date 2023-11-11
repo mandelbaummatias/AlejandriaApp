@@ -1,15 +1,20 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.util.FirebaseConstants
+import com.matiasmandelbaum.alejandriaapp.data.util.FirebaseConstants.USERS_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.domain.model.user.User
 import com.matiasmandelbaum.alejandriaapp.domain.repository.UsersRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
+private const val TAG = "UsersRepositoryImpl"
 
 class UsersRepositoryImpl @Inject constructor(
 
@@ -49,6 +54,28 @@ class UsersRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateUserReservationState(userEmail: String): Result<Unit> = suspendCoroutine { continuation ->
+        val usersCollection = firestore.collection(USERS_COLLECTION)
+
+        usersCollection
+            .whereEqualTo("email", userEmail)
+            .get()
+            .addOnSuccessListener { userDocuments ->
+                if (userDocuments.size() > 0) {
+                    val userDocument = userDocuments.documents[0]
+                    val userReference = userDocument.reference
+                    userReference.update("reservo_libro", true)
+                    continuation.resume(Result.Success(Unit))
+                } else {
+                    Log.d(TAG, "User not found")
+                    continuation.resume(Result.Error("User not found"))
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.d(TAG, "User query or update failed $e")
+                continuation.resume(Result.Error("User query or update failed: ${e.message}"))
+            }
+    }
 
 
 }
