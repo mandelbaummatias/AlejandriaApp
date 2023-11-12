@@ -3,6 +3,7 @@ package com.matiasmandelbaum.alejandriaapp.data.repository
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.EMAIL
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.HAS_RESERVED_BOOK
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.LAST_NAME
@@ -16,11 +17,16 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+
 private const val TAG = "UsersRepositoryImpl"
 
 class UsersRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
+    private val userService: UserService
 ) : UsersRepository {
+    override suspend fun getUserById(userId: String): Result<com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User> {
+        return userService.getUserById(userId)
+    }
 
     override suspend fun getUserByEmail(email: String): User {
         val allUsersResult = getAllUsers() // Obtiene todos los usuarios

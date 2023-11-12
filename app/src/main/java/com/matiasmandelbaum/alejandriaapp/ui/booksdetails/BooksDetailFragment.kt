@@ -15,8 +15,8 @@ import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClick
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentBooksDetailsBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
-import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import com.matiasmandelbaum.alejandriaapp.ui.confirmbookreservation.ConfirmBookReservationDialogFragment
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import com.matiasmandelbaum.alejandriaapp.ui.subscriptionrequired.SubscriptionRequiredDialogFragment
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +36,6 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBooksDetailsBinding.inflate(inflater, container, false)
-        // viewModel.onCreate()
         val rating = viewModel.book.valoracion
 
         binding.bookIsbn.text = viewModel.book.titulo
@@ -104,7 +103,8 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
         viewModel.isEnabledToReserve.observe(viewLifecycleOwner) {
             if (!it) {
-                binding.bookReserveBtn.isEnabled = false
+              //  binding.bookReserveBtn.isEnabled = false
+                binding.bookReserveBtn.visibility = View.INVISIBLE
             }
         }
 
@@ -162,8 +162,9 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     }
 
     private fun handleSuccessResult(subscription: Subscription) {
-        Log.d(TAG, "mi book ${viewModel.book}")
-        Log.d("VIENDO CANTIDAD", "cant disponible ${viewModel.book.cantidadDisponible}")
+        Log.d(TAG, "handleSuccessResult()")
+       // Log.d(TAG, "mi book ${viewModel.book}")
+        //Log.d("VIENDO CANTIDAD", "cant disponible ${viewModel.book.cantidadDisponible}")
 
         if (viewModel.book.cantidadDisponible <= 0) {
             handleNoBooksAvailable()
@@ -179,7 +180,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
     private fun handleNoBooksAvailable() {
         Log.d("VIENDO CANTIDAD", "cant disponible menor?? ${viewModel.book.cantidadDisponible}")
-        binding.bookReserveBtn.visibility = View.GONE
+        binding.bookReserveBtn.visibility = View.INVISIBLE
         Toast.makeText(
             context,
             getString(R.string.no_hay_libros_disponibles_para_reservar),
@@ -205,6 +206,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         Log.d(TAG, "authorized from subscriptionExists")
         if (viewModel.isEnabledToReserve.value != false) {
             Log.d(TAG, "hay mas de 1")
+            Log.d(TAG, "has not reserved book and is enabled ${viewModel.hasReservedBook.value}")
             binding.bookReserveBtn.setOnClickListener {
                 val dialog = ConfirmBookReservationDialogFragment().apply {
                     setDialogClickListener(this@BooksDetailFragment)
@@ -212,18 +214,20 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                 dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
             }
         } else {
-            binding.bookReserveBtn.visibility = View.GONE
             Toast.makeText(
                 context,
                 "Ya se reservo este mes!",
                 Toast.LENGTH_SHORT
             ).show()
+           // binding.bookReserveBtn.visibility = View.GONE //ojo ver
+
         }
-        Log.d(TAG, "has not reserved book and is enabled ${viewModel.hasReservedBook.value}")
+
         binding.bookReserveBtn.isEnabled = true
     }
 
     private fun handleOtherStatus() {
+        Log.d(TAG, "handleOtherStatus()")
         Log.d(TAG, "has reserved book and is NOT enabled ${viewModel.hasReservedBook.value}")
         binding.bookReserveBtn.isEnabled = false
     }
@@ -234,7 +238,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         } else {
             handleBlankSubscriptionId()
         }
-        handleReservedBook(user.hasReservedBook)
+       // handleReservedBook(user.hasReservedBook)
     }
 
     private fun handleNonBlankSubscriptionId(subscriptionId: String) {
