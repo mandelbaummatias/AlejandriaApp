@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -124,6 +125,9 @@ class UserProfileFragment : Fragment() {
         binding.editNombre.isEnabled = true
         binding.editApellido.isEnabled = true
 
+        // Cambiar el texto del encabezado
+        binding.userMailHeader.text = "Cambio de nombre"
+
         binding.editNombre.requestFocus()
         binding.editNombre.text?.let { binding.editNombre.setSelection(it.length) }
 
@@ -145,6 +149,7 @@ class UserProfileFragment : Fragment() {
             ?.addOnSuccessListener {
                 // Document updated successfully
                 Log.d(TAG, "Document updated successfully")
+                Toast.makeText(context, "Actualizado con éxito", Toast.LENGTH_SHORT).show()
             }
             ?.addOnFailureListener { exception ->
                 Log.e(TAG, "Error updating document: $exception")
@@ -153,6 +158,7 @@ class UserProfileFragment : Fragment() {
         binding.editNombre.isEnabled = false
         binding.editApellido.isEnabled = false
         binding.overlayFab1.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_profile)
+        binding.userMailHeader.text = getString(com.matiasmandelbaum.alejandriaapp.R.string.personalInfo)
 
         isInEditMode = false
     }
