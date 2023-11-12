@@ -12,8 +12,6 @@ interface BooksRepository {
 
     suspend fun updateBook(book: Book): Result<Boolean>
 
-    suspend fun reserveBook2(isbn: String, userEmail: String,cant: Int): Result<ReservationResult>
-
-    //suspend fun reserveBook2(isbn: String, userEmail: String,cant: Int): Result<Boolean>
+    suspend fun reserveBook(isbn: String, userEmail: String, quantity: Int): Result<ReservationResult>
 
 }

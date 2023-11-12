@@ -182,7 +182,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         binding.bookReserveBtn.visibility = View.GONE
         Toast.makeText(
             context,
-            "No hay libros disponibles para reservar.",
+            getString(R.string.no_hay_libros_disponibles_para_reservar),
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -234,7 +234,6 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         } else {
             handleBlankSubscriptionId()
         }
-
         handleReservedBook(user.hasReservedBook)
     }
 
@@ -276,7 +275,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     override fun onFinishClickDialog(clickValue: Boolean) {
         if (clickValue) {
             //viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
-            viewModel.reserveBook2(AuthManager.getCurrentUser()?.email!!)
+            viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
             showSuccessfulReservationMessage()
         }
     }
