@@ -34,15 +34,12 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     ): View {
         binding = FragmentBooksDetailsBinding.inflate(inflater, container, false)
         viewModel.onCreate()
-        val rating = viewModel.book.valoracion
+        var rating = viewModel.book.valoracion?.toFloat() ?: 0.0f
 
-        binding.bookIsbn.text = viewModel.book.titulo
         binding.bookTitle.text = viewModel.book.titulo
         binding.bookAuthor.text = viewModel.book.autor
         Picasso.get().load(viewModel.book.imageLinks?.smallThumbnail).into(binding.bookCover);
-        binding.bookCalification.text = rating?.let {
-            "Valoración: $it"
-        }
+        binding.bookCalification.rating = rating
         binding.bookSynopsis.text = viewModel.book.descripcion
         initObservers()
 
