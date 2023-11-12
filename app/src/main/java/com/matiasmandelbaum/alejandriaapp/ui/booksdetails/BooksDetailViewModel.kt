@@ -60,9 +60,11 @@ class BooksDetailViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = reserveBookUseCase(book.isbn, userEmail, book.cantidadDisponible)) {
                 is Result.Success -> {
+                    _isEnabledToReserve.postValue(false)
                     updateUserReservationStateUseCase(userEmail)
                     createReservationUseCase(book.isbn, userEmail)
                     _onSuccessfulReservation.postValue(result)
+
                 }
 
                 is Result.Error -> _onSuccessfulReservation.postValue(result)
@@ -90,6 +92,17 @@ class BooksDetailViewModel @Inject constructor(
         _user.value = Result.Loading
         viewModelScope.launch {
             val result = getUserByIdUseCase(userId)
+            when(result){
+                is Result.Success -> {
+                    if(result.data.hasReservedBook != false){
+                        _isEnabledToReserve.postValue(!result.data.hasReservedBook!!)
+                    } else{
+                        _isEnabledToReserve.postValue(true)
+                    }
+                }
+
+                else -> {}
+            }
             _user.value = result
         }
     }
