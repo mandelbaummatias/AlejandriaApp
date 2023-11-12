@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainScreen"
+    android:padding="30dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,6 +23,7 @@
         android:id="@+id/editNombreLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userMailHeader">
@@ -65,8 +67,7 @@
         android:contentDescription="Edit"
         android:src="@drawable/ic_edit"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="#e0953f"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/overlay_fab_1"
@@ -78,8 +79,7 @@
         android:src="@drawable/ic_profile"
         app:layout_constraintBottom_toTopOf="@+id/edit_fab"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        app:backgroundTint="#e0953f"/>
+        android:visibility="gone"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/overlay_fab_2"
@@ -88,11 +88,10 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="Botón ajustes"
-        android:src="@drawable/ic_cogs"
+        android:src="@drawable/ic_email"
         app:layout_constraintBottom_toTopOf="@+id/overlay_fab_1"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        app:backgroundTint="#e0953f"/>
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

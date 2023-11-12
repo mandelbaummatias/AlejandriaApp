@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -137,125 +138,56 @@ class UserMailFragment : Fragment() {
     }
 
     private fun saveChanges() {
-        // Update the Firestore document with the edited values
         val newEmail = binding.editEmail.text.toString()
         val password = binding.password.text.toString()
 
+        // verifica si el campo de contraseña esta vacio
+        if (password.isEmpty()) {
+            Toast.makeText(context, "Por favor, ingresa tu contraseña", Toast.LENGTH_SHORT).show()
 
-      //  findNavController().navigate(UserMailFragmentDirections.actionUserMailFragmentToVerificationFragment())
+            // restablecer los campos y el estado de la vista para evitar que problemas
+            resetView()
 
-        // Get the current user's email
-//        userDocumentReference?.update(
-//            mapOf(
-////                "nombre" to newNombre,
-////                "apellido" to newApellido,
-//                "email" to newEmail
-//            )
-//        )
-//            ?.addOnSuccessListener {
-//                // Document updated successfully
-//                Log.d(TAG, "Document updated successfully")
-//            }
-//            ?.addOnFailureListener { exception ->
-//                Log.e(TAG, "Error updating document: $exception")
-//            }
-
-        // val currentUser = FirebaseAuth.getInstance().currentUser
+            return
+        }
 
         val user = FirebaseAuth.getInstance().currentUser
-        // Get auth credentials from the user for re-authentication
-        // Get auth credentials from the user for re-authentication
-        val credential = EmailAuthProvider
-            //hay que poenr el mail de nuevo y la contraseña
-            .getCredential("$previousEmail", password) // Current Login Credentials \\
+        val credential = EmailAuthProvider.getCredential("$previousEmail", password)
 
-        // Prompt the user to re-provide their sign-in credentials
-        // Prompt the user to re-provide their sign-in credentials
         Log.d(TAG, "previous email: $previousEmail")
         user!!.reauthenticate(credential)
-            .addOnCompleteListener {
-                Log.d(TAG, "User re-authenticated.")
-              //  goToVerifyEmail(newEmail)
-                user.updateEmail(newEmail)
-                        userDocumentReference?.update(
-            mapOf(
-//                "nombre" to newNombre,
-//                "apellido" to newApellido,
-                "email" to newEmail
-            )
-        )
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "User re-authenticated.")
+                    user.updateEmail(newEmail)
+                    userDocumentReference?.update(
+                        mapOf(
+                            "email" to newEmail
+                        )
+                    )
 
-                //viewModel.verifyEmailBeforeUpdate()
-                //Now change your email address \\
-                //----------------Code for Changing Email Address----------\\
-                //  val user = FirebaseAuth.getInstance().currentUser
-//                user.verifyBeforeUpdateEmail(newEmail) //hay que hacerle que espere con el VerificationFragment
-//                        //y quiza también un loguot
-//
-//                    .addOnCompleteListener { task ->
-//                        if (task.isSuccessful) {
-//                            Log.d(TAG, "User email address updated.")
-//                            userDocumentReference?.update(
-//                                mapOf(
-//                                    //                "nombre" to newNombre,
-//                                    //                "apellido" to newApellido,
-//                                    "email" to newEmail
-//                                )
-//                            )?.addOnSuccessListener {
-//                                // Document updated successfully
-//                                Log.d(TAG, "Document updated successfully")
-//                               // AuthManager.signOut() ->>>ACÁ!!!!!!!
-//                            }
-//                                ?.addOnFailureListener { exception ->
-//                                    Log.e(TAG, "Error updating document: $exception")
-//                                }
-//
-//                        }
-//                    }
-//                    .addOnFailureListener {
-//                        Log.e(TAG, "Error updating user email: $it")
-//                    }
+                    // restablecer los campos
+                    binding.editEmail.isEnabled = false
+                    binding.editFab.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_edit)
+                    binding.password.setText("")
+                    isInEditMode = false
 
+                    Toast.makeText(context, "Correo electrónico actualizado con éxito", Toast.LENGTH_SHORT).show()
 
-//                user!!.updateEmail(newEmail)
-//                    .addOnCompleteListener { task ->
-//                        if (task.isSuccessful) {
-//                            Log.d(TAG, "User email address updated.")
-//                            userDocumentReference?.update(
-//                                mapOf(
-//                                    //                "nombre" to newNombre,
-//                                    //                "apellido" to newApellido,
-//                                    "email" to newEmail
-//                                )
-//                            )?.addOnSuccessListener {
-//                                // Document updated successfully
-//                                Log.d(TAG, "Document updated successfully")
-//                            }
-//                                ?.addOnFailureListener { exception ->
-//                                    Log.e(TAG, "Error updating document: $exception")
-//                                }
-//
-//                        }
-//                    }
-//                    .addOnFailureListener {
-//                        Log.e(TAG, "Error updating user email: $it")
-//                    }
-                //----------------------------------------------------------\\
+                } else {
+                    Toast.makeText(context, "La contraseña es incorrecta", Toast.LENGTH_SHORT).show()
+
+                    // restablecer los campos y el estado
+                    resetView()
+                }
             }
+    }
 
-//        user!!.verifyBeforeUpdateEmail(newEmail).addOnSuccessListener {
-//            Log.d(TAG, "Verify email sended")
-//        }.addOnFailureListener {
-//            Log.d(TAG, "Error in sending verify email")
-//        }
-//
-
-
-
-        binding.editEmail.isEnabled = false
-
+    private fun resetView() {
+        binding.editEmail.setText(previousEmail)
+        binding.password.setText("")
         binding.editFab.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_edit)
-
+        binding.editEmail.isEnabled = false
         isInEditMode = false
     }
 
