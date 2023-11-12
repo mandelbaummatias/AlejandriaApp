@@ -153,4 +153,9 @@
         android:id="@+id/changePasswordFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofilepw.ChangePasswordFragment"
         android:label="ChangePasswordFragment" />
+
+    <fragment
+        android:id="@+id/settings"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.settings.SettingsFragment"
+        android:label="@string/configuracion" />
 </navigation>
