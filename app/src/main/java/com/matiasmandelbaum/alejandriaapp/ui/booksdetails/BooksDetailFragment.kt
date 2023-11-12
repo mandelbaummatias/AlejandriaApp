@@ -66,10 +66,10 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
             }
         }
 
-        viewModel.subscriptionExists.observe(viewLifecycleOwner) { result ->
+        viewModel.subscriptionState.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Success -> handleSuccessResult(result.data)
-                is Result.Error -> Unit
+                is Result.Error -> Log.d(TAG, "error en fetchSub ${result.message}")
                 else -> Unit
             }
         }
@@ -99,6 +99,13 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
             val canReserve = reservationState.hasReservedBook
 
             binding.bookReserveBtn.isEnabled = isAuthorized && canReserve
+        }
+
+        viewModel.subscriptionExists.observe(viewLifecycleOwner){
+            if(!it){
+                Log.d(TAG, " subs is blank")
+                handleBlankSubscriptionId()
+            }
         }
 
         viewModel.isEnabledToReserve.observe(viewLifecycleOwner) {
@@ -190,24 +197,45 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
     private fun handlePendingStatus(subscriptionId: String) {
         Log.d(TAG, "subscription pending...")
+        handleButtonClick(subscriptionId)
+//        binding.bookReserveBtn.setOnClickListener {
+//            val args = Bundle().apply {
+//                putString("subscriptionId", subscriptionId)
+//            }
+//            val dialog = SubscriptionRequiredDialogFragment().apply {
+//                arguments = args
+//                setDialogClickListener(this@BooksDetailFragment)
+//            }
+//            dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
+//        }
+    }
+
+
+    private fun handleButtonClick(subscriptionId: String? = null) {
+        Log.d(TAG, "handling button click...")
+
         binding.bookReserveBtn.setOnClickListener {
-            val args = Bundle().apply {
-                putString("subscriptionId", subscriptionId)
-            }
             val dialog = SubscriptionRequiredDialogFragment().apply {
-                arguments = args
+                if (subscriptionId != null) {
+                    val args = Bundle().apply {
+                        putString("subscriptionId", subscriptionId)
+                    }
+                    arguments = args
+                }
                 setDialogClickListener(this@BooksDetailFragment)
             }
+
             dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
         }
     }
+
 
     private fun handleAuthorizedStatus() {
         Log.d(TAG, "authorized from subscriptionExists")
         if (viewModel.isEnabledToReserve.value != false) {
             Log.d(TAG, "hay mas de 1")
             Log.d(TAG, "has not reserved book and is enabled ${viewModel.hasReservedBook.value}")
-            binding.bookReserveBtn.setOnClickListener {
+            binding.bookReserveBtn.setOnClickListener { //TODO: este también con handleButton
                 val dialog = ConfirmBookReservationDialogFragment().apply {
                     setDialogClickListener(this@BooksDetailFragment)
                 }
@@ -233,11 +261,17 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     }
 
     private fun handleUserSuccess(user: User) {
-        if (user.subscriptionId.isNotBlank()) {
-            handleNonBlankSubscriptionId(user.subscriptionId)
-        } else {
-            handleBlankSubscriptionId()
-        }
+//        if (user.subscriptionId.isBlank()){
+//            handleBlankSubscriptionId() //ver de cambiarlo en VM
+//        }
+
+
+//
+//        if (user.subscriptionId.isNotBlank()) {
+//            handleNonBlankSubscriptionId(user.subscriptionId)
+//        } else {
+//
+//        }
        // handleReservedBook(user.hasReservedBook)
     }
 
@@ -246,12 +280,12 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         viewModel.fetchSubscription(subscriptionId)
     }
 
-    private fun handleBlankSubscriptionId() {
-        Log.d(TAG, "is blank")
-        binding.bookReserveBtn.setOnClickListener {
-            val dialog = SubscriptionRequiredDialogFragment()
-            dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
-        }
+    private fun handleBlankSubscriptionId() { //ver de cambiarlo en vm
+        handleButtonClick()
+//        binding.bookReserveBtn.setOnClickListener {
+//            val dialog = SubscriptionRequiredDialogFragment()
+//            dialog.show(childFragmentManager, "SubscriptionRequiredDialogFragment")
+//        }
     }
 
     private fun handleReservedBook(hasReservedBook: Boolean?) {
