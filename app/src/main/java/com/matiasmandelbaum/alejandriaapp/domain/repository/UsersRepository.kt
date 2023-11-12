@@ -7,4 +7,6 @@ interface UsersRepository {
     suspend fun getUserByEmail(email: String): User
 
     suspend fun getAllUsers(): Result<List<User>>
+
+    suspend fun updateUserReservationState(userEmail: String): Result<Unit>
 }

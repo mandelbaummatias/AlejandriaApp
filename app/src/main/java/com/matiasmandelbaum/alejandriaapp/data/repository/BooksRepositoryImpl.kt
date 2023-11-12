@@ -1,26 +1,24 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
 import android.util.Log
-import com.algolia.search.client.ClientSearch
-import com.algolia.search.client.Index
-import com.algolia.search.helper.deserialize
-import com.algolia.search.model.APIKey
-import com.algolia.search.model.ApplicationID
-import com.algolia.search.model.IndexName
-import com.algolia.search.model.search.Query
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.response.BookFirestore
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.GoogleBooksResponse
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.ImageLinks
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.GoogleBooksService
-import com.matiasmandelbaum.alejandriaapp.data.util.FirebaseConstants
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.AVAILABLE_QUANTITY
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.BOOKS_COLLECTION
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.TITLE
+import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 private const val TAG = "BooksRepositoryImpl"
@@ -28,6 +26,30 @@ class BooksRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val googleBooksService: GoogleBooksService
 ) : BooksRepository {
+    override suspend fun reserveBook(isbn: String, userEmail: String, quantity: Int): Result<ReservationResult> {
+        return try {
+            val result = suspendCoroutine { continuation ->
+                val booksCollection = firestore.collection(BOOKS_COLLECTION)
+                val book = booksCollection.document(isbn)
+
+                book.update(AVAILABLE_QUANTITY, quantity - 1)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "update ok")
+                        // Call continuation.resume with the Result.Success
+                        continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
+                    }
+                    .addOnFailureListener {
+                        Log.d(TAG, "error en update $it")
+                        // Call continuation.resume with the Result.Error
+                        continuation.resume(Result.Error("Error reserving book: ${it.message}"))
+                    }
+            }
+
+            result
+        } catch (e: Exception) {
+            Result.Error("Error reserving book: ${e.message}")
+        }
+    }
 //
 //    private val client = ClientSearch(
 //        applicationID = ApplicationID(""),
@@ -108,7 +130,7 @@ class BooksRepositoryImpl @Inject constructor(
 
     private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
         val querySnapshot =
-            firestore.collection(FirebaseConstants.BOOKS_COLLECTION)
+            firestore.collection(BOOKS_COLLECTION)
                 .orderBy("titulo") //Ver para no hardcodearlo
                 .startAt(title)
                 .endAt("$title~")
@@ -136,7 +158,7 @@ class BooksRepositoryImpl @Inject constructor(
 
     private suspend fun getBooksFromFirestoreByIsbn(isbn: String): List<BookFirestore> {
         val querySnapshot =
-            firestore.collection(FirebaseConstants.BOOKS_COLLECTION)
+            firestore.collection(BOOKS_COLLECTION)
                 .orderBy("isbn_13") //Ver para no hardcodearlo
                 .startAt(isbn)
                 .get()
@@ -146,8 +168,8 @@ class BooksRepositoryImpl @Inject constructor(
 
     private suspend fun getAllBooksFromFirestore(): List<BookFirestore> {
         val querySnapshot =
-            firestore.collection(FirebaseConstants.BOOKS_COLLECTION)
-                .orderBy("titulo") //Ver para no hardcodearlo
+            firestore.collection(BOOKS_COLLECTION)
+                .orderBy(TITLE) //Ver para no hardcodearlo
                 .get()
                 .await()
         return querySnapshot.toObjects(BookFirestore::class.java)

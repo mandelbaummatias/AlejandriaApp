@@ -1,5 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
+import android.util.Log
 import com.matiasmandelbaum.alejandriaapp.data.MercadoPagoSubscription
 import com.matiasmandelbaum.alejandriaapp.data.subscription.mapper.SubscriptionResponseMapperToDomain
 import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
@@ -15,6 +16,7 @@ class MercadoPagoRepositoryImpl @Inject constructor(
     private val subscriptionResponseMapperToDomain: SubscriptionResponseMapperToDomain
 ) : MercadoPagoRepository {
     override suspend fun createSubscription(payerEmail:String): Result<Subscription> {
+        Log.d(TAG, "payerEmail $payerEmail")
         return try {
             val response = remote.createSubscription(MercadoPagoSubscription.createSubscription(payerEmail))
             val subscriptionResponse =

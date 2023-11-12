@@ -129,6 +129,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                app:layout_constraintBottom_toBottomOf="@+id/bookReserveBtn"
+                app:layout_constraintEnd_toEndOf="@+id/bookReserveBtn"
+                app:layout_constraintStart_toStartOf="@+id/bookReserveBtn"
+                app:layout_constraintTop_toTopOf="@+id/bookReserveBtn"
+                android:visibility="invisible" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
@@ -156,6 +169,12 @@
             app:layout_constraintStart_toStartOf="@+id/verticalGuideLine"
             app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine"/>
 
+
     </com.google.android.material.card.MaterialCardView>
 
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

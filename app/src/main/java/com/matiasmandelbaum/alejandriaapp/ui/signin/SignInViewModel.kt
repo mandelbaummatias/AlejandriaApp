@@ -63,8 +63,8 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
             _viewState.value = SignInViewState(isLoading = true)
             val accountCreated = createAccountUseCase(userSignIn)
             if (accountCreated) {
-                _navigateToVerifyEmail.value = Event(true)
-                //_navigateToHome.value = Event(true)
+              //  _navigateToVerifyEmail.value = Event(true)
+                _navigateToHome.value = Event(true)
             } else {
                 _showErrorDialog.value = true
                 Log.d(TAG, "show error: $showErrorDialog")

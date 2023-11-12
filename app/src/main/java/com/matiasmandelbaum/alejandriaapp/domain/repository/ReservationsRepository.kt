@@ -11,4 +11,6 @@ interface ReservationsRepository {
 
     suspend fun createReservation(reservation: Reservation): Boolean
 
+    suspend fun createReservation(isbn:String, userEmail:String): Result<Unit>
+
 }
