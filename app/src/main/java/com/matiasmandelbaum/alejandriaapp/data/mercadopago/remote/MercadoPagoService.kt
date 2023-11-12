@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 private const val TAG = "MercadoPagoService"
-class MercadoPagoService @Inject constructor(private val service: MercadoPagoApiClient, private val customResponseInterceptor: CustomResponseInterceptor) {
+class MercadoPagoService @Inject constructor(private val service: MercadoPagoApiClient) {
     suspend fun createSubscription(subscriptionRequest: SubscriptionRequest): SubscriptionResponse? {
         return withContext(Dispatchers.IO) {
             val response = service.createSubscription(subscriptionRequest)
