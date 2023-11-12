@@ -9,13 +9,14 @@ import androidx.fragment.app.activityViewModels
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
+import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListenerProvider
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "SubscriptionRequiredDialogFragment"
 @AndroidEntryPoint
-class SubscriptionRequiredDialogFragment : DialogFragment() {
+class SubscriptionRequiredDialogFragment : DialogFragment(), DialogClickListenerProvider {
     private var listener: DialogClickListener? = null
 
     private val viewModel: SubscriptionListViewModel by activityViewModels()
@@ -49,12 +50,7 @@ class SubscriptionRequiredDialogFragment : DialogFragment() {
             }
             .create()
     }
-
-//    interface DialogClickListener {
-//        fun onFinishClickDialog(inputText: String)
-//    }
-
-    fun setDialogClickListener(listener: DialogClickListener) {
+    override fun setDialogClickListener(listener: DialogClickListener) {
         this.listener = listener
     }
 }
