@@ -28,12 +28,6 @@
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
 
-        <item name="colorAlejandriaTeal">#006a66</item>
-        <item name="colorOnAlejandriaTeal">#006A66</item>
-        <item name="colorAlejandriaTealContainer">#70F7F0</item>
-        <item name="colorOnAlejandriaTealContainer">#00201E</item>
-        <item name="harmonizeAlejandriaTeal">false</item>
-
     </style>
 
     <style name="Theme.AlejandriaApp" parent="Base.Theme.AlejandriaApp" />

@@ -45,6 +45,7 @@ class HomeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeListBinding.inflate(inflater, container, false)
+        binding.recyclerView.isVerticalScrollBarEnabled = false
         binding.lifecycleOwner = viewLifecycleOwner
         binding.recyclerView.adapter = BookListAdapter(BookListener {
             Log.d(TAG, "click")
