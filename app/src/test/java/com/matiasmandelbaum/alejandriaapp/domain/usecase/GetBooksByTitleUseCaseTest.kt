@@ -1,15 +1,16 @@
 package com.matiasmandelbaum.alejandriaapp.domain.usecase
 
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import io.mockk.MockKAnnotations
-import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class GetBooksByTitleUseCaseTest {
     @RelaxedMockK
@@ -74,18 +75,21 @@ class GetBooksByTitleUseCaseTest {
     }
 
     @Test
-    fun `when the API call throws an exception, return a Result Error with the exception message`() = runBlocking {
-        // Given
-        val title = "Sample Title"
-        val expectedExceptionMessage = "An error occurred"
-        coEvery { booksRepository.getBooksByTitle(title) } returns Result.Error(expectedExceptionMessage)
+    fun `when the API call throws an exception, return a Result Error with the exception message`() =
+        runBlocking {
+            // Given
+            val title = "Sample Title"
+            val expectedExceptionMessage = "An error occurred"
+            coEvery { booksRepository.getBooksByTitle(title) } returns Result.Error(
+                expectedExceptionMessage
+            )
 
-        // When
-        val response = getBooksByTitleUseCase(title)
+            // When
+            val response = getBooksByTitleUseCase(title)
 
-        // Then
-        assert(response is Result.Error)
-        val errorMessage = (response as Result.Error).message
-        assertEquals(expectedExceptionMessage, errorMessage)
-    }
+            // Then
+            assert(response is Result.Error)
+            val errorMessage = (response as Result.Error).message
+            assertEquals(expectedExceptionMessage, errorMessage)
+        }
 }
