@@ -11,7 +11,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.usecase.AddSubscriptionIdToUser
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.CreateSubscriptionUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.FetchSubscriptionUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByIdUseCase
-import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserBySubscriptionIdUseCase
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,21 +22,12 @@ private const val TAG = "SubscriptionListViewModel"
 class SubscriptionListViewModel @Inject constructor(
     private val createSubscriptionUseCase: CreateSubscriptionUseCase,
     private val fetchSubscriptionUseCase: FetchSubscriptionUseCase,
-    private val addSubscriptionIdToUserUseCase: AddSubscriptionIdToUserUseCase,
+    private val addSubscriptionIdToUserUseCase: AddSubscriptionIdToUserUseCase, //este
     private val getUserByIdUseCase: GetUserByIdUseCase
 ) : ViewModel() {
 
-    init {
-        Log.d(TAG, "init")
-    }
-
-
     private val _subscription: MutableLiveData<Result<Subscription>> = MutableLiveData()
     val subscription: LiveData<Result<Subscription>> = _subscription
-
-
-    private val _subscriptionStatus: MutableLiveData<Result<Subscription>> = MutableLiveData()
-    val subscriptionStatus: LiveData<Result<Subscription>> = _subscriptionStatus
 
     private val _subscriptionExists: MutableLiveData<Result<Subscription>> = MutableLiveData()
     val subscriptionExists: LiveData<Result<Subscription>> = _subscriptionExists
@@ -45,16 +35,10 @@ class SubscriptionListViewModel @Inject constructor(
     private val _user: MutableLiveData<Result<User>?> = MutableLiveData()
     val user: MutableLiveData<Result<User>?> = _user
 
-
-    private val _subscriptionUrl: MutableLiveData<String> = MutableLiveData()
-    val subscriptionUrl: LiveData<String> = _subscriptionUrl
-
-
     fun createSubscription(payerEmail: String) {
         Log.d(TAG, "createSubscription()")
         _subscription.value = Result.Loading
         viewModelScope.launch {
-            //Log.d(TAG, "click en subscription")
             val result = createSubscriptionUseCase(payerEmail)
             _subscription.postValue(result)
         }
@@ -105,6 +89,4 @@ class SubscriptionListViewModel @Inject constructor(
             addSubscriptionIdToUserUseCase(subscriptionId, userId)
         }
     }
-
-
 }

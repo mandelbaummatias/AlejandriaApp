@@ -131,6 +131,7 @@
     <string name="subscriptionid">subscriptionId</string>
     <string name="confirm_book_reservation_dialog_fragment">ConfirmBookReservationDialogFragment\n</string>
     <string name="subscription_required_dialog_fragment">SubscriptionRequiredDialogFragment</string>
+    <string name="suscripcion_exitosa">Suscripción exitosa!</string>
 
 
 </resources>

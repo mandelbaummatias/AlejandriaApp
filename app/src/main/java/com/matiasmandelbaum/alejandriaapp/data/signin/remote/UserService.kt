@@ -3,11 +3,11 @@ package com.matiasmandelbaum.alejandriaapp.data.signin.remote
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import com.matiasmandelbaum.alejandriaapp.common.result.Result
 
 private const val TAG = "UserService"
 
@@ -32,32 +32,22 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
             .document(uid) // Specify the custom document ID here
             .set(user)
             .await()
-
-//        firebase.db
-//            .collection(USER_COLLECTION)
-//            .add(user).await()
-
     }.isSuccess
 
 
-    suspend fun addSubsciptionId(subscriptionId: String, userId: String) {
+    suspend fun addSubscriptionId(subscriptionId: String, userId: String) {
         val userToUpdate = firebase.db.collection(USER_COLLECTION).document(userId)
 
         val updates = hashMapOf(
             "suscripcion_mp_id" to subscriptionId,
-        //    "reservo_libro" to false
         )
 
         try {
-            // Update the document using await() to wait for the result
             userToUpdate.update(updates as Map<String, Any>).await()
             Log.d(TAG, "update MP ok")
-            // The document was successfully updated
-            // You can add code for any success handling here
         } catch (e: Exception) {
             Log.d(TAG, "failure on update MP ${e.message}")
-            // Handle the error
-            // You can add code to handle the error here
+            throw e
         }
     }
 
