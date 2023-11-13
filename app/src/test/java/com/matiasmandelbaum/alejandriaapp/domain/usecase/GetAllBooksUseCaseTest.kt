@@ -1,19 +1,16 @@
 package com.matiasmandelbaum.alejandriaapp.domain.usecase
 
-import com.google.mlkit.vision.barcode.common.R
-import com.matiasmandelbaum.alejandriaapp.data.repository.BooksRepositoryImpl
-import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
-import com.matiasmandelbaum.alejandriaapp.domain.model.book.components.ImageLinks
-import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
+import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class GetAllBooksUseCaseTest {
 

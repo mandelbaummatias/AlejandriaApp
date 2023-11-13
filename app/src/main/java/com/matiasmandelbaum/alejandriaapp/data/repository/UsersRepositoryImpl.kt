@@ -24,6 +24,30 @@ class UsersRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val userService: UserService
 ) : UsersRepository {
+
+    override suspend fun updateUserReservationState(userEmail: String): Result<Unit> =
+        suspendCoroutine { continuation ->
+            val usersCollection = firestore.collection(USERS_COLLECTION)
+
+            usersCollection
+                .whereEqualTo(EMAIL, userEmail)
+                .get()
+                .addOnSuccessListener { userDocuments ->
+                    if (userDocuments.size() > 0) {
+                        val userDocument = userDocuments.documents[0]
+                        val userReference = userDocument.reference
+                        userReference.update(HAS_RESERVED_BOOK, true)
+                        continuation.resume(Result.Success(Unit))
+                    } else {
+                        Log.d(TAG, "User not found")
+                        continuation.resume(Result.Error("User not found"))
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.d(TAG, "User query or update failed $e")
+                    continuation.resume(Result.Error("User query or update failed: ${e.message}"))
+                }
+        }
     override suspend fun getUserById(userId: String): Result<com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User> {
         return userService.getUserById(userId)
     }
@@ -64,29 +88,7 @@ class UsersRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUserReservationState(userEmail: String): Result<Unit> =
-        suspendCoroutine { continuation ->
-            val usersCollection = firestore.collection(USERS_COLLECTION)
 
-            usersCollection
-                .whereEqualTo(EMAIL, userEmail)
-                .get()
-                .addOnSuccessListener { userDocuments ->
-                    if (userDocuments.size() > 0) {
-                        val userDocument = userDocuments.documents[0]
-                        val userReference = userDocument.reference
-                        userReference.update(HAS_RESERVED_BOOK, true)
-                        continuation.resume(Result.Success(Unit))
-                    } else {
-                        Log.d(TAG, "User not found")
-                        continuation.resume(Result.Error("User not found"))
-                    }
-                }
-                .addOnFailureListener { e ->
-                    Log.d(TAG, "User query or update failed $e")
-                    continuation.resume(Result.Error("User query or update failed: ${e.message}"))
-                }
-        }
 
 
 }
