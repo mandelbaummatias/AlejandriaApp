@@ -59,8 +59,10 @@ class MainActivity : AppCompatActivity() {
         val userUid = AuthManager.getCurrentUser()?.uid
         Log.d(TAG, "UI onStart : $userUid")
         if(userUid != null){
+            Log.d(TAG, "onStart(): userUid not null")
             viewModel.getUserById(userUid)
         } else{
+            Log.d(TAG, "onStart(): no userUid ")
             Log.d(TAG, "no hay UID")
         }
         Log.d(TAG, "onStart")

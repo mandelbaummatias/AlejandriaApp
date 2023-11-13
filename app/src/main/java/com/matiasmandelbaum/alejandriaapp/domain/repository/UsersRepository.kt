@@ -12,4 +12,6 @@ interface UsersRepository {
     suspend fun getAllUsers(): Result<List<User>>
 
     suspend fun updateUserReservationState(userEmail: String): Result<Unit>
+
+    suspend fun addSubscriptionId(subscriptionId: String, userId: String): Boolean
 }
