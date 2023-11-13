@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksdetails
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -39,94 +38,50 @@ class BooksDetailViewModel @Inject constructor(
     val subscriptionExists: LiveData<Boolean> = _subscriptionExists
 
     private val _user: MutableLiveData<Result<User>?> = MutableLiveData()
-    val user: MutableLiveData<Result<User>?> = _user
+    val user: LiveData<Result<User>?> = _user
 
     private val _isEnabledToReserve = MutableLiveData<Boolean>()
     val isEnabledToReserve: LiveData<Boolean> = _isEnabledToReserve
 
-    val book: Book = savedStateHandle["book"]!!
-
-    private val _reservationState = MutableLiveData<ReservationState>()
-    val reservationState: LiveData<ReservationState> = _reservationState
-
-    private val _hasReservedBook = MutableLiveData<Boolean>()
-    val hasReservedBook: LiveData<Boolean> = _hasReservedBook
-
-    private val _dialogResult = MutableLiveData<Boolean>()
-    val dialogResult: LiveData<Boolean> get() = _dialogResult
-
     private val _onSuccessfulReservation = MutableLiveData<Result<ReservationResult>?>()
     val onSuccessfulReservation: LiveData<Result<ReservationResult>?> = _onSuccessfulReservation
 
+    val book: Book = savedStateHandle["book"]!!
+
     fun reserveBook(userEmail: String) {
-        _onSuccessfulReservation.value = Result.Loading
         viewModelScope.launch {
             when (val result = reserveBookUseCase(book.isbn, userEmail, book.cantidadDisponible)) {
                 is Result.Success -> {
-                    _isEnabledToReserve.postValue(false)
-                    updateUserReservationStateUseCase(userEmail)
-                    createReservationUseCase(book.isbn, userEmail)
-                    _onSuccessfulReservation.postValue(result)
-
+                    handleSuccessfulReservation(result, userEmail)
                 }
-
-                is Result.Error -> _onSuccessfulReservation.postValue(result)
-                else -> {
-                    Unit
-                }
+                is Result.Error -> postOnSuccessfulReservation(result)
+                else -> Unit
             }
         }
     }
 
-    fun fetchSubscription(id: String) {
-        Log.d(TAG, "ejecutando fetchSubscription")
-        _subscriptionState.value = Result.Loading
+    private fun handleSuccessfulReservation(result: Result.Success<ReservationResult>, userEmail: String) {
         viewModelScope.launch {
-            Log.d(TAG, "subscription fetch")
-            val result = fetchSubscriptionUseCase(id)
-            Log.d(TAG, "a ver $result")
-            _subscriptionState.postValue(result)
-
+            postOnSuccessfulReservation(result)
+            _isEnabledToReserve.postValue(false)
+            updateUserReservationStateUseCase(userEmail)
+            createReservationUseCase(book.isbn, userEmail)
         }
     }
 
-//    fun getUserById(userId: String) {
-//        Log.d(TAG, "getUserById")
-//        _user.value = Result.Loading
-//        viewModelScope.launch {
-//            val result = getUserByIdUseCase(userId)
-//            when(result){
-//                is Result.Success -> {
-//                    if(result.data.hasReservedBook != false){
-//                        Log.d(TAG, "hasReservedBook es del  tipo ${result.data.hasReservedBook} ")
-//                        _isEnabledToReserve.postValue(!result.data.hasReservedBook!!)
-//                    }
-//                    else{
-//                        _isEnabledToReserve.postValue(true)
-//                    }
-//
-//                    val subscriptionId = result.data.subscriptionId
-//
-//
-//                    if(subscriptionId.isNotBlank()) {
-//                        Log.d(TAG, "user sub is not blank! $subscriptionId")
-//                        fetchSubscription(subscriptionId)
-//                    }//.let?
-//                    else{
-//                        _subscriptionExists.postValue(false)
-//                    }
-//
-//
-//                }
-//
-//                else -> {}
-//            }
-//            _user.value = result
-//        }
-//    }
+    private fun postOnSuccessfulReservation(result: Result<ReservationResult>) {
+        _onSuccessfulReservation.postValue(result)
+    }
+
+    private fun fetchSubscription(id: String) {
+        _subscriptionState.value = Result.Loading
+        viewModelScope.launch {
+            val result = fetchSubscriptionUseCase(id)
+            _subscriptionState.postValue(result)
+        }
+    }
 
     fun getUserById(userId: String) {
-        Log.d(TAG, "getUserById")
         _user.value = Result.Loading
         viewModelScope.launch {
             val result = getUserByIdUseCase(userId)
@@ -136,16 +91,13 @@ class BooksDetailViewModel @Inject constructor(
 
     private fun handleUserResult(result: Result<User>) {
         when (result) {
-            is Result.Success -> {
-                handleSuccess(result.data)
-            }
+            is Result.Success -> handleSuccess(result.data)
             else -> _user.value = result
         }
     }
 
     private fun handleSuccess(user: User) {
         if (user.hasReservedBook != false) {
-            Log.d(TAG, "hasReservedBook is of type ${user.hasReservedBook}")
             _isEnabledToReserve.postValue(!user.hasReservedBook!!)
         } else {
             _isEnabledToReserve.postValue(true)
@@ -154,7 +106,6 @@ class BooksDetailViewModel @Inject constructor(
         val subscriptionId = user.subscriptionId
 
         if (subscriptionId.isNotBlank()) {
-            Log.d(TAG, "user subscription is not blank! $subscriptionId")
             fetchSubscription(subscriptionId)
         } else {
             _subscriptionExists.postValue(false)
@@ -162,17 +113,7 @@ class BooksDetailViewModel @Inject constructor(
         _user.value = Result.Success(user)
     }
 
-    fun updateReservationState(isEnabled: Boolean) {
-        Log.d(TAG, "updateReservationState $isEnabled")
-        _isEnabledToReserve.value = isEnabled
-    }
-
     fun resetUser() {
-        Log.d(TAG, "resetUser()")
         _user.value = null
     }
 }
-
-
-
-
