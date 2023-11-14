@@ -14,6 +14,7 @@ import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -22,10 +23,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.ActivityMainBinding
+import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
 import com.matiasmandelbaum.alejandriaapp.ui.signout.SignOutDialogFragment
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,40 +37,25 @@ private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var id: String
+    private lateinit var navController: NavController
 
     private val viewModel: SubscriptionListViewModel by viewModels()
 
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-        val user = auth.currentUser
-        if (user != null) {
-            Log.d(TAG, "mi user logueado $user")
-            showMenuItem(R.id.logout)
-            showMenuItem(R.id.booksReadListFragment)
-
-        } else {
-            Log.d(TAG, "user is null: $user")
-            hideMenuItem(R.id.logout)
-            hideMenuItem(R.id.booksReadListFragment)
-        }
+        updateAuthState(auth.currentUser)
     }
 
     override fun onStart() {
         super.onStart()
+        setupAuthStateListener()
         val userUid = AuthManager.getCurrentUser()?.uid
-        Log.d(TAG, "UI onStart : $userUid")
-        if(userUid != null){
-            Log.d(TAG, "onStart(): userUid not null")
+        userUid?.let {
             viewModel.getUserById(userUid)
-        } else{
-            Log.d(TAG, "onStart(): no userUid ")
-            Log.d(TAG, "no hay UID")
         }
-        Log.d(TAG, "onStart")
-        AuthManager.addAuthStateListener(authStateListener)
-
     }
 
     override fun onStop() {
@@ -75,14 +63,23 @@ class MainActivity : AppCompatActivity() {
         AuthManager.removeAuthStateListener(authStateListener)
         Log.d(TAG, "onStop")
     }
+    private fun updateMenuItemVisibility(itemId: Int, isVisible: Boolean) {
+        val navView: NavigationView = binding.navView
+        val menu = navView.menu
+        menu.findItem(itemId)?.isVisible = isVisible
+    }
+
+    private fun updateAuthState(user: FirebaseUser?) {
+        updateMenuItemVisibility(R.id.logout, user != null)
+        updateMenuItemVisibility(R.id.booksReadListFragment, user != null)
+    }
 
     private fun hideMenuItem(itemId: Int) {
         val navView: NavigationView = binding.navView
         val menu = navView.menu
-        menu.findItem(itemId)?.isVisible = false// = false
+        menu.findItem(itemId)?.isVisible = false
     }
 
-    // Function to show a menu item
     private fun showMenuItem(itemId: Int) {
         val navView: NavigationView = binding.navView
         val menu = navView.menu
@@ -98,15 +95,15 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
-
         val navView: NavigationView = binding.navView
 
+        Log.d(TAG, "ViewModel hash code: ${viewModel.hashCode()}")
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-
-        val navController = navHostFragment.navController
+        // val navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -116,11 +113,39 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        setupUI()
+    }
 
+    private fun setupUI() {
+        setupDestinationChangedListener()
+        setupNavigationItemSelectedListener(navController, binding.drawerLayout)
+        setupMenuProvider()
+        setupAuthStateListener()
+        observeSubscriptionResult()
+    }
+
+    private fun setupDestinationChangedListener() {
+        val drawerLayout: DrawerLayout = binding.drawerLayout
+
+        navController.addOnDestinationChangedListener { _, nd: NavDestination, _ ->
+            if (nd.id == navController.graph.startDestinationId) {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                Log.d("addOnDestinationChangedListener", "En start")
+            } else {
+                Log.d("addOnDestinationChangedListener", "Fuera de start")
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
+        }
+    }
+
+    private fun setupNavigationItemSelectedListener(
+        navController: NavController,
+        drawerLayout: DrawerLayout
+    ) {
+        val navView: NavigationView = binding.navView
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.logout -> {
-                    Log.d(TAG, "hola logout!!!")
                     val dialog = SignOutDialogFragment()
                     dialog.show(supportFragmentManager, "SignOutDialogFragment")
                 }
@@ -140,72 +165,55 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+    }
 
+    private fun setupMenuProvider() {
         addMenuProvider(object : MenuProvider {
+            override fun onPrepareMenu(menu: Menu) {}
 
-            override fun onPrepareMenu(menu: Menu) {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
 
-            }
-
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
-
-                android.R.id.home -> navController.navigateUp(appBarConfiguration)
-                R.id.signOutDialogFragment -> {
-                    true
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                val navController = findNavController(R.id.nav_host_fragment)
+                return when (menuItem.itemId) {
+                    android.R.id.home -> navController.navigateUp(appBarConfiguration)
+                    R.id.signOutDialogFragment -> true
+                    else -> true
                 }
-
-                else -> true
             }
-
         })
+    }
 
-        navController.addOnDestinationChangedListener { nc: NavController, nd: NavDestination, args: Bundle? ->
-            if (nd.id == nc.graph.startDestinationId) {
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-                Log.d("addOnDestinationChangedListener", "En start")
+    private fun setupAuthStateListener() {
+        AuthManager.addAuthStateListener(authStateListener)
+    }
 
-
-            } else {
-                Log.d("addOnDestinationChangedListener", "Fuera de start")
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            }
-        }
-
+    private fun observeSubscriptionResult() {
         viewModel.subscription.observe(this) {
             when (it) {
-                is Result.Success -> {
-                    Log.d(TAG, "SUCCESS SUBS $it")
-                    val url = it.data.initPoint
-                    viewModel.addSubscriptionIdToUser(
-                        it.data.id,
-                        AuthManager.getCurrentUser()?.uid.toString()
-                    )
-                    //viewModel.updateInitPointUrl(it.data.initPoint)
-                    id = it.data.id
-                    val intent = CustomTabsIntent.Builder()
-                        .build()
-                    intent.launchUrl(this@MainActivity, Uri.parse(url))
-                }
-
-                is Result.Error -> {
-                    Log.d(TAG, "error...${it.message}")
-                    Toast.makeText(
-                        this,
-                        it.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                else -> {
-                    Unit
-                }
+                is Result.Success -> handleSubscriptionSuccess(it.data)
+                is Result.Error -> handleSubscriptionError(it.message)
+                else -> Unit
             }
         }
     }
 
+    private fun handleSubscriptionSuccess(subscription: Subscription) {
+        Log.d(TAG, "SUCCESS SUBS $subscription")
+        val url = subscription.initPoint
+        viewModel.addSubscriptionIdToUser(
+            subscription.id,
+            AuthManager.getCurrentUser()?.uid.toString()
+        )
+        id = subscription.id
+        val intent = CustomTabsIntent.Builder().build()
+        intent.launchUrl(this@MainActivity, Uri.parse(url))
+    }
+
+    private fun handleSubscriptionError(errorMessage: String?) {
+        Log.d(TAG, "error...$errorMessage")
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         Log.d(TAG, "onSupportNavigateUp")
@@ -214,5 +222,4 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
 }

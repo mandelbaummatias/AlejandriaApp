@@ -26,6 +26,7 @@ class SubscriptionListViewModel @Inject constructor(
     private val getUserByIdUseCase: GetUserByIdUseCase
 ) : ViewModel() {
 
+
     private val _subscription: MutableLiveData<Result<Subscription>> = MutableLiveData()
     val subscription: LiveData<Result<Subscription>> = _subscription
 
@@ -51,6 +52,7 @@ class SubscriptionListViewModel @Inject constructor(
         viewModelScope.launch {
             Log.d(TAG, "click en subscription")
             val result = fetchSubscriptionUseCase(id)
+            //_subscription.postValue(result)
             _subscription.postValue(result)
         }
 
@@ -58,29 +60,31 @@ class SubscriptionListViewModel @Inject constructor(
 
     fun fetchSubscription(id: String) {
         Log.d(TAG, "ejecutando fetchSubscription")
-        _subscriptionExists.value = Result.Loading
+        // _subscriptionExists.value = Result.Loading
         viewModelScope.launch {
             Log.d(TAG, "subscription fetch")
             val result = fetchSubscriptionUseCase(id)
             Log.d(TAG, "a ver $result")
-            _subscriptionExists.postValue(result)
+            // _subscriptionExists.postValue(result)
+            _subscriptionExists.value = result
 
         }
     }
 
     fun getUserById(userId: String) {
         Log.d(TAG, "getUserById")
-        _user.value = Result.Loading
+        // _user.value = Result.Loading
         viewModelScope.launch {
             val result = getUserByIdUseCase(userId)
-            _user.value = result
+              _user.postValue(result)
+           // _user.value = result
         }
     }
 
     fun resetUser() {
         Log.d(TAG, "resetUser()")
-        _user.value = null
-
+        //_user.postValue(null)
+       // _user.value = null
     }
 
     fun addSubscriptionIdToUser(subscriptionId: String, userId: String) {
