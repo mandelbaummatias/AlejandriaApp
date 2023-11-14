@@ -144,5 +144,12 @@ dependencies {
 
 
 
+    //Algolia
+    implementation ("com.algolia:instantsearch-android:3.+")
+    implementation ("com.algolia:instantsearch-android-paging3:3.+")
+
+    implementation ("com.algolia:algoliasearch-client-kotlin:1.8.0")
+    implementation("io.ktor:ktor-client-android:2.0.1")
+
 }
 
