@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Alejandria</string>
+    <string name="app_name">Alejandría</string>
     <string name="drawer_layout_behavior">androidx.drawerlayout.widget.DrawerLayout$DrawerLayoutCompat</string>
 
     <string name="globalAccept">Aceptar</string>
@@ -134,6 +134,11 @@
     <string name="suscripcion_exitosa">Suscripción exitosa!</string>
     <string name="reserva_de_libro">Reserva de libro</string>
     <string name="confirma_la_reserva_de_este_libro">Confirma la reserva de este libro?</string>
+    <string name="no_tengo_una_cuenta">No tengo una cuenta</string>
+    <string name="recuperar_contrase_a">Recuperar contraseña</string>
+    <string name="ingresar">Ingresar</string>
+    <string name="contrasenia">Contraseña</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
 
 
 </resources>
