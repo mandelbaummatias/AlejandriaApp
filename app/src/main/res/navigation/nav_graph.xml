@@ -153,4 +153,11 @@
         android:id="@+id/changePasswordFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofilepw.ChangePasswordFragment"
         android:label="ChangePasswordFragment" />
+
+    <fragment
+        android:id="@+id/changeProfileImageFragment"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofileimage.UserImageFragment"
+        android:label="Cambio de Imagen"
+        tools:layout="@layout/user_profile_picture_change" />
+
 </navigation>

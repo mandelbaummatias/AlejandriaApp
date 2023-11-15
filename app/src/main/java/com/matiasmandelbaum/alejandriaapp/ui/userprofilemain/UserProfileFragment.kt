@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
@@ -47,12 +48,22 @@ class UserProfileFragment : Fragment() {
                         // User document found, you can access its data here.
                         val nombre = document.getString("nombre")
                         val apellido = document.getString("apellido")
+                        val image = document.getString("image")
 
                         Log.d(TAG, "Nombre: $nombre, Apellido: $apellido")
 
                         // Update the edit texts with the retrieved data
                         binding.editNombre.setText(nombre)
                         binding.editApellido.setText(apellido)
+
+                        // Load user image
+                        if (image != null && image.isNotEmpty()) {
+                            val resourceId = resources.getIdentifier(image, "drawable", requireContext().packageName)
+                            binding.profileImage.setImageResource(resourceId)
+                        } else {
+                            // Default image
+                            binding.profileImage.setImageResource(R.drawable.alejandria_logo)
+                        }
 
                         userDocumentReference = document.reference
                     }
@@ -67,6 +78,10 @@ class UserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.profileImage.setOnClickListener {
+            findNavController().navigate(R.id.changeProfileImageFragment)
+        }
 
         binding.overlayFab1.visibility = View.GONE
         binding.overlayFab2.visibility = View.GONE
