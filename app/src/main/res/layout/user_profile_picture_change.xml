@@ -7,28 +7,28 @@
 
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verticalGuideLine"
+        android:id="@+id/vertical_guide_line_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontalGuideLine"
+        android:id="@+id/horizontal_guide_line_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.1"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontalGuideLine2"
+        android:id="@+id/horizontal_guide_line_2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.4"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontalGuideLine3"
+        android:id="@+id/horizontal_guide_line_3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -42,7 +42,7 @@
         android:textColor="?attr/colorPrimary"
         android:gravity="center"
         android:textSize="35dp"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -53,10 +53,10 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="100dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine2"
-        app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_2"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine">
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_1">
 
         <ImageView
             android:id="@+id/image1"
@@ -75,10 +75,10 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="100dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine2"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/verticalGuideLine"
-        app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine">
+        app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_1">
 
         <ImageView
             android:id="@+id/image2"
@@ -97,10 +97,10 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="100dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine3"
-        app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_3"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine2">
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_2">
 
         <ImageView
             android:id="@+id/image3"
@@ -119,10 +119,10 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="100dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine3"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/verticalGuideLine"
-        app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine2">
+        app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_2">
 
         <ImageView
             android:id="@+id/image4"
@@ -142,9 +142,9 @@
         app:cardCornerRadius="100dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine3">
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_3">
 
         <ImageView
             android:id="@+id/image5"
@@ -165,8 +165,8 @@
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/verticalGuideLine"
-        app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine3">
+        app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_3">
 
         <ImageView
             android:id="@+id/image6"

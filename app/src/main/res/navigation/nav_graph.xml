@@ -78,17 +78,6 @@
 
     </fragment>
 
-
-    <fragment
-        android:id="@+id/bookListFragment"
-        android:name="com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListFragment"
-        android:label="@string/bookListTitle"
-        tools:layout="@layout/fragment_book_list" />
-
-    <!-- Agregar la acción que conecta availableBooksFragment con BookListFragment -->
-    <action
-        android:id="@+id/action_availableBooksFragment_to_bookListFragment"
-        app:destination="@id/bookListFragment" />
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.signin.SignInFragment"

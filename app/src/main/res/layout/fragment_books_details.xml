@@ -1,130 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="?attr/colorSecondary"
+    android:orientation="vertical"
     tools:context="com.matiasmandelbaum.alejandriaapp.ui.booksdetails.BooksDetailFragment">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verticalGuideLine"
+        android:id="@+id/vertical_guide_line_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.3" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verticalGuideLine2"
+        android:id="@+id/vertical_guide_line_2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.7" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontalGuideLine"
+        android:id="@+id/horizontal_guide_line_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.01" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontalGuideLine2"
+        android:id="@+id/horizontal_guide_line_2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.30" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontalGuideLine3"
+        android:id="@+id/horizontal_guide_line_3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.32" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
+        android:id="@+id/material_card_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:cardElevation="7dp"
+        app:cardElevation="@dimen/detail_card_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine2">
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="15dp">
+            android:padding="@dimen/book_title_padding">
 
             <TextView
-                android:id="@+id/bookTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:gravity="center"
+                android:id="@+id/book_title"
+                style="@style/book_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/un_libro_para_leer" />
 
             <TextView
-                android:id="@+id/bookAuthor"
+                android:id="@+id/book_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="20dp"
-                android:textColor="?attr/colorSecondary"
+                android:layout_marginTop="@dimen/book_author_margin_top"
                 android:gravity="center"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="@dimen/book_author_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bookTitle"
+                app:layout_constraintTop_toBottomOf="@+id/book_title"
                 tools:text="@string/un_autor" />
 
             <RatingBar
-                android:id="@+id/bookCalification"
+                android:id="@+id/book_calification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/book_calification_margin_top"
                 android:isIndicator="true"
                 android:scaleX="0.5"
                 android:scaleY="0.5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bookAuthor" />
+                app:layout_constraintTop_toBottomOf="@+id/book_author" />
 
             <ScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="15dp"
-                app:layout_constraintBottom_toTopOf="@+id/bookReserveBtn"
+                android:layout_marginTop="@dimen/book_calification_margin"
+                android:layout_marginBottom="@dimen/book_calification_margin"
+                app:layout_constraintBottom_toTopOf="@+id/book_reserve_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bookCalification">
+                app:layout_constraintTop_toBottomOf="@+id/book_calification">
 
                 <TextView
-                    android:id="@+id/bookSynopsis"
+                    android:id="@+id/book_synopsis"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:textSize="18dp"
+                    android:gravity="start"
+                    android:textSize="@dimen/book_synopsis_size"
                     tools:text="@string/sinopsis" />
             </ScrollView>
 
             <Button
-                android:id="@+id/bookReserveBtn"
-                android:layout_width="220dp"
-                android:layout_height="60dp"
-                android:layout_marginBottom="10dp"
+                android:id="@+id/book_reserve_button"
+                android:layout_width="@dimen/book_reserve_button_size"
+                android:layout_height="@dimen/book_reserve_button_height"
+                android:layout_marginBottom="@dimen/book_reserve_margin_bottom"
                 android:text="@string/reserveBtn"
-                android:textSize="20dp"
+                android:textSize="@dimen/book_reserve_button_size_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -134,12 +127,12 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="25dp"
-                app:layout_constraintBottom_toBottomOf="@+id/bookReserveBtn"
-                app:layout_constraintEnd_toEndOf="@+id/bookReserveBtn"
-                app:layout_constraintStart_toStartOf="@+id/bookReserveBtn"
-                app:layout_constraintTop_toTopOf="@+id/bookReserveBtn"
-                android:visibility="invisible" />
+                android:layout_marginTop="@dimen/progress_bar_margin_top"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/book_reserve_button"
+                app:layout_constraintEnd_toEndOf="@+id/book_reserve_button"
+                app:layout_constraintStart_toStartOf="@+id/book_reserve_button"
+                app:layout_constraintTop_toTopOf="@+id/book_reserve_button" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -147,31 +140,30 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="165dp"
+        android:layout_width="@dimen/card_view_detail_width"
         android:layout_height="0dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine3"
-        app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine2"
-        app:layout_constraintStart_toStartOf="@+id/verticalGuideLine"
-        app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine">
+        app:cardElevation="@dimen/card_view_detail_elevation"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_3"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_2"
+        app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_1">
 
         <ImageView
-            android:id="@+id/bookCover"
-            android:layout_width="153dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:id="@+id/book_cover"
+            android:layout_width="@dimen/book_cover_width"
+            android:layout_height="@dimen/book_cover_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/book_cover_margin_top"
+            android:layout_marginBottom="@dimen/book_cover_margin_bottom"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_menu_book"
-            android:layout_gravity="center"
-            app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine3"
-            app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine2"
-            app:layout_constraintStart_toStartOf="@+id/verticalGuideLine"
-            app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine"/>
+            app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_3"
+            app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_2"
+            app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
+            app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_1" />
 
 
     </com.google.android.material.card.MaterialCardView>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,7 +17,7 @@ import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
 import com.matiasmandelbaum.alejandriaapp.databinding.UserMailBinding
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewModel
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfileFragmentDirections
+
 
 
 import dagger.hilt.android.AndroidEntryPoint
