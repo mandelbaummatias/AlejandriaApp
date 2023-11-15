@@ -21,7 +21,7 @@ class SplashScreen : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        val progressBar = findViewById<ProgressBar>(R.id.progress_bar_splash_screen)
         val progressAnimator = ValueAnimator.ofInt(0, 100)
         progressAnimator.duration = 3000
         progressAnimator.addUpdateListener { animation ->

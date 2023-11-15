@@ -59,30 +59,32 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     }
 
     private fun initObservers() {
-        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { user ->
-            handleAuthState(user)
-        }
-
-        viewModel.subscriptionState.observe(viewLifecycleOwner) { result ->
-            handleSubscriptionState(result)
-        }
-
-        viewModel.user.observe(viewLifecycleOwner) { result ->
-            if (result != null) {
-                handleUserState(result)
+        with(viewModel) {
+            AuthManager.authStateLiveData.observe(viewLifecycleOwner) { user ->
+                handleAuthState(user)
             }
-        }
 
-        viewModel.subscriptionExists.observe(viewLifecycleOwner) {
-            handleSubscriptionExists(it)
-        }
+            subscriptionState.observe(viewLifecycleOwner) { result ->
+                handleSubscriptionState(result)
+            }
 
-        viewModel.isEnabledToReserve.observe(viewLifecycleOwner) {
-            handleReserveButtonVisibility(it)
-        }
+            user.observe(viewLifecycleOwner) { result ->
+                if (result != null) {
+                    handleUserState(result)
+                }
+            }
 
-        viewModel.onSuccessfulReservation.observe(viewLifecycleOwner) {
-            handleReservationResult(it)
+            subscriptionExists.observe(viewLifecycleOwner) {
+                handleSubscriptionExists(it)
+            }
+
+            isEnabledToReserve.observe(viewLifecycleOwner) {
+                handleReserveButtonVisibility(it)
+            }
+
+            onSuccessfulReservation.observe(viewLifecycleOwner) {
+                handleReservationResult(it)
+            }
         }
     }
 
@@ -94,7 +96,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
             }
         } else {
             Log.d(TAG, "user not logged")
-            binding.bookReserveBtn.isEnabled = false
+            binding.bookReserveButton.isEnabled = false
         }
     }
 
@@ -136,7 +138,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     }
 
     private fun handleReserveButtonVisibility(isEnabled: Boolean) {
-        binding.bookReserveBtn.visibility = if (isEnabled) View.VISIBLE else View.INVISIBLE
+        binding.bookReserveButton.visibility = if (isEnabled) View.VISIBLE else View.INVISIBLE
     }
 
     private fun handleReservationResult(result: Result<ReservationResult>?) {
@@ -158,10 +160,10 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     private fun handleLoading(isLoading: Boolean) {
         with(binding) {
             if (isLoading) {
-                bookReserveBtn.visibility = View.GONE
+                bookReserveButton.visibility = View.GONE
                 progressBar.visibility = View.VISIBLE
             } else {
-                bookReserveBtn.visibility = View.VISIBLE
+                bookReserveButton.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             }
         }
@@ -182,7 +184,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
     private fun handleNoBooksAvailable() {
         with(binding) {
-            bookReserveBtn.visibility = View.INVISIBLE
+            bookReserveButton.visibility = View.INVISIBLE
             Toast.makeText(
                 requireContext(),
                 getString(R.string.no_hay_libros_disponibles_para_reservar),
@@ -203,7 +205,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        binding.bookReserveBtn.isEnabled = true
+        binding.bookReserveButton.isEnabled = true
     }
 
     private fun handleBlankSubscriptionId() {
@@ -219,7 +221,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
     private fun handleButtonClick(type: DialogType, subscriptionId: String? = null) {
         Log.d(TAG, "handling button click...")
-        binding.bookReserveBtn.setOnClickListener {
+        binding.bookReserveButton.setOnClickListener {
             val dialogProvider = dialogFragmentFactory.createDialogFragment(type, subscriptionId)
             dialogProvider.setDialogClickListener(this@BooksDetailFragment)
             val dialog = dialogProvider as DialogFragment
@@ -233,7 +235,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
     private fun handleOtherStatus() {
         Log.d(TAG, "handleOtherStatus()")
-        binding.bookReserveBtn.isEnabled = false
+        binding.bookReserveButton.isEnabled = false
     }
 
 
