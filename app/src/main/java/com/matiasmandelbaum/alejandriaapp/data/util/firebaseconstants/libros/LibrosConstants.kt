@@ -5,4 +5,5 @@ object LibrosConstants {
     const val BOOKS_COLLECTION = "libros"
     const val AVAILABLE_QUANTITY = "cantidad_disponible"
     const val TITLE = "titulo"
+    const val DATE = "fecha_ingreso"
 }

@@ -2,13 +2,16 @@ package com.matiasmandelbaum.alejandriaapp.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.response.BookFirestore
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.GoogleBooksResponse
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.ImageLinks
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.GoogleBooksService
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.AVAILABLE_QUANTITY
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.BOOKS_COLLECTION
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.DATE
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.TITLE
 import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
@@ -22,11 +25,16 @@ import kotlin.coroutines.suspendCoroutine
 
 
 private const val TAG = "BooksRepositoryImpl"
+
 class BooksRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val googleBooksService: GoogleBooksService
 ) : BooksRepository {
-    override suspend fun reserveBook(isbn: String, userEmail: String, quantity: Int): Result<ReservationResult> {
+    override suspend fun reserveBook(
+        isbn: String,
+        userEmail: String,
+        quantity: Int
+    ): Result<ReservationResult> {
         return try {
             val result = suspendCoroutine { continuation ->
                 val booksCollection = firestore.collection(BOOKS_COLLECTION)
@@ -102,19 +110,16 @@ class BooksRepositoryImpl @Inject constructor(
             Log.d(TAG, "libros google getAll : $booksFirestore")
 
             if (booksFirestore.size != booksGoogle.size) {
-                throw IllegalArgumentException("Input lists must have the same size") //Revisar
-                //En general siempre van a ser iguales la lista de firestore y gbooks porque el isbn es uno
-                //Pero contemplar un caso donde esta excepción sea un problema, o al menos sea controlada
+                throw IllegalArgumentException("Input lists must have the same size")
             }
 
             for (i in booksFirestore.indices) {
                 val bookFirestore = booksFirestore[i]
                 val bookGoogle = booksGoogle[i]
                 val book = createBookFromRemoteData(bookFirestore, bookGoogle)
-                Log.d(TAG, "Viendo mi book final $book")
                 books.add(book)
             }
-            Result.Success(books) // Return the list of books
+            Result.Success(books)
         } catch (e: Exception) {
             Result.Error(e.message.toString())
         }
@@ -139,37 +144,13 @@ class BooksRepositoryImpl @Inject constructor(
         return querySnapshot.toObjects(BookFirestore::class.java)
     }
 
-//    private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
-//        index = client.initIndex(indexName)
-//        var libros: List<BookFirestore> = emptyList()
-//
-//        try {
-//            val response = index.search(Query(title))
-//            libros = response.hits.deserialize(BookFirestore.serializer())
-//            Log.d(TAG, "mi response $response")
-//            Log.d(TAG, "mis libros $libros")
-//        } catch (e: Exception) {
-//            Log.e(TAG, "Error during Algolia search", e)
-//        }
-//
-//        return libros
-//    }
-    
-
-    private suspend fun getBooksFromFirestoreByIsbn(isbn: String): List<BookFirestore> {
-        val querySnapshot =
-            firestore.collection(BOOKS_COLLECTION)
-                .orderBy("isbn_13") //Ver para no hardcodearlo
-                .startAt(isbn)
-                .get()
-                .await()
-        return querySnapshot.toObjects(BookFirestore::class.java)
-    }
-
     private suspend fun getAllBooksFromFirestore(): List<BookFirestore> {
         val querySnapshot =
             firestore.collection(BOOKS_COLLECTION)
-                .orderBy(TITLE) //Ver para no hardcodearlo
+                .orderBy(
+                    DATE,
+                    Query.Direction.DESCENDING
+                )
                 .get()
                 .await()
         return querySnapshot.toObjects(BookFirestore::class.java)
@@ -189,6 +170,4 @@ class BooksRepositoryImpl @Inject constructor(
             cantidadDisponible = bookFirestore.cantidad_disponible
         )
     }
-
-
 }

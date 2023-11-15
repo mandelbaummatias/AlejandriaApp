@@ -65,8 +65,8 @@ class SubscriptionListViewModel @Inject constructor(
             Log.d(TAG, "subscription fetch")
             val result = fetchSubscriptionUseCase(id)
             Log.d(TAG, "a ver $result")
-            // _subscriptionExists.postValue(result)
-            _subscriptionExists.value = result
+             _subscriptionExists.postValue(result)
+           // _subscriptionExists.value = result
 
         }
     }
@@ -76,15 +76,15 @@ class SubscriptionListViewModel @Inject constructor(
         // _user.value = Result.Loading
         viewModelScope.launch {
             val result = getUserByIdUseCase(userId)
-              _user.postValue(result)
-           // _user.value = result
+            _user.postValue(result)
+            // _user.value = result
         }
     }
 
     fun resetUser() {
         Log.d(TAG, "resetUser()")
         //_user.postValue(null)
-       // _user.value = null
+        // _user.value = null
     }
 
     fun addSubscriptionIdToUser(subscriptionId: String, userId: String) {
