@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksdetails
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -32,79 +31,89 @@ class BooksDetailViewModel @Inject constructor(
     private val createReservationUseCase: CreateReservationUseCase
 ) : ViewModel() {
 
-    private val _subscriptionExists: MutableLiveData<Result<Subscription>> = MutableLiveData()
-    val subscriptionExists: LiveData<Result<Subscription>> = _subscriptionExists
+    private val _subscriptionState: MutableLiveData<Result<Subscription>> = MutableLiveData()
+    val subscriptionState: LiveData<Result<Subscription>> = _subscriptionState
+
+    private val _subscriptionExists: MutableLiveData<Boolean> = MutableLiveData()
+    val subscriptionExists: LiveData<Boolean> = _subscriptionExists
 
     private val _user: MutableLiveData<Result<User>?> = MutableLiveData()
-    val user: MutableLiveData<Result<User>?> = _user
+    val user: LiveData<Result<User>?> = _user
 
     private val _isEnabledToReserve = MutableLiveData<Boolean>()
     val isEnabledToReserve: LiveData<Boolean> = _isEnabledToReserve
 
-    val book: Book = savedStateHandle["book"]!!
-
-    private val _reservationState = MutableLiveData<ReservationState>()
-    val reservationState: LiveData<ReservationState> = _reservationState
-
-    private val _hasReservedBook = MutableLiveData<Boolean>()
-    val hasReservedBook: LiveData<Boolean> = _hasReservedBook
-
-    private val _dialogResult = MutableLiveData<Boolean>()
-    val dialogResult: LiveData<Boolean> get() = _dialogResult
-
     private val _onSuccessfulReservation = MutableLiveData<Result<ReservationResult>?>()
     val onSuccessfulReservation: LiveData<Result<ReservationResult>?> = _onSuccessfulReservation
 
+    val book: Book = savedStateHandle["book"]!!
+
     fun reserveBook(userEmail: String) {
-        _onSuccessfulReservation.value = Result.Loading
         viewModelScope.launch {
             when (val result = reserveBookUseCase(book.isbn, userEmail, book.cantidadDisponible)) {
                 is Result.Success -> {
-                    updateUserReservationStateUseCase(userEmail)
-                    createReservationUseCase(book.isbn, userEmail)
-                    _onSuccessfulReservation.postValue(result)
+                    handleSuccessfulReservation(result, userEmail)
                 }
-
-                is Result.Error -> _onSuccessfulReservation.postValue(result)
-                else -> {
-                    Unit
-                }
+                is Result.Error -> postOnSuccessfulReservation(result)
+                else -> Unit
             }
         }
     }
 
-    fun fetchSubscription(id: String) {
-        Log.d(TAG, "ejecutando fetchSubscription")
-        _subscriptionExists.value = Result.Loading
+    private fun handleSuccessfulReservation(result: Result.Success<ReservationResult>, userEmail: String) {
         viewModelScope.launch {
-            Log.d(TAG, "subscription fetch")
-            val result = fetchSubscriptionUseCase(id)
-            Log.d(TAG, "a ver $result")
-            _subscriptionExists.postValue(result)
+            postOnSuccessfulReservation(result)
+            _isEnabledToReserve.postValue(false)
+            updateUserReservationStateUseCase(userEmail)
+            createReservationUseCase(book.isbn, userEmail)
+        }
+    }
 
+    private fun postOnSuccessfulReservation(result: Result<ReservationResult>) {
+        _onSuccessfulReservation.postValue(result)
+    }
+
+    private fun fetchSubscription(id: String) {
+        _subscriptionState.value = Result.Loading
+        viewModelScope.launch {
+            val result = fetchSubscriptionUseCase(id)
+            _subscriptionState.postValue(result)
         }
     }
 
     fun getUserById(userId: String) {
-        Log.d(TAG, "getUserById")
         _user.value = Result.Loading
         viewModelScope.launch {
             val result = getUserByIdUseCase(userId)
-            _user.value = result
+            handleUserResult(result)
         }
     }
 
-    fun updateReservationState(isEnabled: Boolean) {
-        Log.d(TAG, "updateReservationState $isEnabled")
-        _isEnabledToReserve.value = isEnabled
+    private fun handleUserResult(result: Result<User>) {
+        when (result) {
+            is Result.Success -> handleSuccess(result.data)
+            else -> _user.value = result
+        }
+    }
+
+    private fun handleSuccess(user: User) {
+        if (user.hasReservedBook != false) {
+            _isEnabledToReserve.postValue(!user.hasReservedBook!!)
+        } else {
+            _isEnabledToReserve.postValue(true)
+        }
+
+        val subscriptionId = user.subscriptionId
+
+        if (subscriptionId.isNotBlank()) {
+            fetchSubscription(subscriptionId)
+        } else {
+            _subscriptionExists.postValue(false)
+        }
+        _user.value = Result.Success(user)
     }
 
     fun resetUser() {
-        Log.d(TAG, "resetUser()")
         _user.value = null
     }
 }
-
-
-
-
