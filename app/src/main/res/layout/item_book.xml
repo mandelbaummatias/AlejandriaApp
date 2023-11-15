@@ -10,7 +10,7 @@
             type="com.matiasmandelbaum.alejandriaapp.domain.model.book.Book" />
         <variable
             name="clickListener"
-            type="com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListener" />
+            type="com.matiasmandelbaum.alejandriaapp.ui.adapter.BookListener" />
     </data>
 
     <LinearLayout

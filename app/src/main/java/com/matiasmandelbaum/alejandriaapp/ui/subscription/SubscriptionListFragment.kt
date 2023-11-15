@@ -33,8 +33,9 @@ class SubscriptionListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-     //   viewModel.resetUser()
+        //   viewModel.resetUser()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,31 +77,6 @@ class SubscriptionListFragment : Fragment() {
             user.observe(viewLifecycleOwner) {
                 it?.let { handleUserResult(it) }
             }
-
-            //data class sloo para json
-            // -> luego otra capa VM . Listener que recibo de la data class -> info del back pura (NetworkModel)
-            //instancia de vm con nueva información. ESE objeto / ref. file ES la info que consume
-            //el componente de la v.
-
-            /* caso crítico: fetch
-            medio -> inter usuario - app. EVENTOS de adopcion de perro, sobre un objeto mutando
-
-            a nivel padre -> modificación -> observer . Reduzco la cantidad de llamados
-            en vez de ir obj por obj, "disparar" obs -> activity parte de observadores de ese evento
-            cuestión de reducir interacción -> POR EVENTO, por ciclo de vida
-
-            ... Otro caso: cambia mi obj. Otra parte de la aplicacion pre fetch tenga otro comportamiento,
-            a nivel general... (ojo).
-
-            delay -> pegarle a la api -> cambio la info?    ||  quien sabe . O no devuelve callback...pero si hago una llamada?
-            repeat() -> llega -> qué pasa? || Cambiar estado al botón . Suscribirme...rechazo...confirmación
-
-
-            Si espero la llamada..camb ia el evento final ...concurrencia
-
-            * */
-
-
         }
 
     }
@@ -205,89 +181,8 @@ class SubscriptionListFragment : Fragment() {
         }
     }
 
-    private fun initObservers() {
-        viewModel.subscription.observe(viewLifecycleOwner) {
-            when (it) {
-                is Result.Success -> {
-                    Log.d(TAG, "subscription is Result.Success")
-                    handleLoading(false) //autorizado reserva
-                }
-
-                is Result.Loading -> handleLoading(true)
-                is Result.Error -> handleLoading(false)
-                else -> {}
-            }
-        }
-
-        viewModel.subscriptionExists.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Success -> {
-                    Log.d(TAG, "subscriptionExists is Result.Success")
-                    if (result.data.status == "pending") {
-                        Log.d(TAG, "consegui usuario (sub pending)")
-                        //si consiguió usuario al princi
-                        binding.basicPlanSubscribeBtn.setOnClickListener {
-                            viewModel.continueSubscription(result.data.id)
-
-                        }
-                    } else if (result.data.status == "authorized") {
-                        Log.d(TAG, "authorized from subscriptionExists")
-                        binding.basicPlanSubscribeBtn.visibility = View.GONE
-                        showSuccessfulSubscriptionSnackbar()
-                    }
-                }
-
-                is Result.Error -> {
-                    Unit
-                }
-
-                else -> {
-                    Unit
-                }
-            }
-        }
-
-        viewModel.user.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Success -> {
-                    Log.d(TAG, "user is Result.Success")
-                    if (result.data.subscriptionId.isNotBlank()) {
-                        Log.d(TAG, "is not blank ${result.data.subscriptionId}")
-                        viewModel.fetchSubscription(result.data.subscriptionId)
-                    } else {
-                        Log.d(TAG, "is blank ${result.data.subscriptionId}")
-                    }
-                }
-
-                is Result.Error -> {
-                    Log.d(TAG, "error ${result.message}")
-                }
-
-                is Result.Finished -> Unit
-                Result.Loading -> Unit
-                else -> {}
-            }
-        }
-
-        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                Log.d(TAG, "user logged $user")
-                val userUid = AuthManager.getCurrentUser()?.uid
-                userUid?.let {
-                    viewModel.getUserById(it)
-                }
-            } else {
-                Log.d(TAG, "user not logged: button visible")
-                binding.basicPlanSubscribeBtn.visibility = View.VISIBLE
-                binding.basicPlanSubscribeBtn.setOnClickListener {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.solicitud_iniciar_sesion), Snackbar.LENGTH_SHORT
-                    ).show()
-
-                }
-            }
-        }
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.resetUser()
     }
 }
