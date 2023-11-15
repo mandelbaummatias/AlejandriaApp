@@ -53,35 +53,13 @@ class HomeListFragment : Fragment() {
             )
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
-
-
-
         return binding.root
     }
 
 
-    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-        val user = auth.currentUser
-        if (user != null) {
-            Log.d(TAG, "Mi user logueado ${user.uid}")
-        } else {
-            Log.d(TAG, "user is null")
-        }
-    }
-
     override fun onResume() {
         Log.d(TAG, "onResume()")
         super.onResume()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        addAuthStateListener(authStateListener)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        removeAuthStateListener(authStateListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -124,7 +102,6 @@ class HomeListFragment : Fragment() {
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onPrepareMenu(menu: Menu) {
-                // Handle for example visibility of menu items
             }
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
