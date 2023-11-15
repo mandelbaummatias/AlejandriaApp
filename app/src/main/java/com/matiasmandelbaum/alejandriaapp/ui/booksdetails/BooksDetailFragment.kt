@@ -225,7 +225,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
             val dialog = dialogProvider as DialogFragment
             dialog.show(
                 childFragmentManager,
-                type.tag.toString()
+                type.tag
             )
         }
     }

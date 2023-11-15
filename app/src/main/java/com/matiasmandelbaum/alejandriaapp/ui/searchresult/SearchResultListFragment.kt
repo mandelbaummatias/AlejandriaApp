@@ -11,9 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSearchResultListBinding
-import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListAdapter
-import com.matiasmandelbaum.alejandriaapp.ui.booklist.BookListener
+import com.matiasmandelbaum.alejandriaapp.ui.adapter.BookListAdapter
+
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.ui.adapter.BookListener
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "SearchResultListFragment"

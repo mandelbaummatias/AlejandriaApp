@@ -12,22 +12,18 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG = "ConfirmBookReservationDialogFragment"
 
 @AndroidEntryPoint
-class ConfirmBookReservationDialogFragment : DialogFragment(), DialogClickListenerProvider{
+class ConfirmBookReservationDialogFragment : DialogFragment(), DialogClickListenerProvider {
     private var listener: DialogClickListener? = null
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(requireContext())
-            .setTitle("Reserva de libro")
-            .setMessage("Confirma la reserva de este libro?")
+            .setTitle(getString(R.string.reserva_de_libro))
+            .setMessage(getString(R.string.confirma_la_reserva_de_este_libro))
             .setNegativeButton(getString(R.string.no)) { _, _ ->
                 listener?.onFinishClickDialog(false)
-                // User clicked the negative button
-                // booksDetailViewModel.onDialogResult(false) // Notify the ViewModel
                 dismiss()
             }
             .setPositiveButton(getString(R.string.si)) { _, _ ->
                 listener?.onFinishClickDialog(true)
-                // User clicked the positive button
-                //  booksDetailViewModel.onDialogResult(true) // Notify the ViewModel
                 dismiss()
             }
             .create()
