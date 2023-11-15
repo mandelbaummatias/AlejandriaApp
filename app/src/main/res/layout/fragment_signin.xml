@@ -1,30 +1,19 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<data>
-
-    <variable
-        name="viewModel"
-        type="com.matiasmandelbaum.alejandriaapp.ui.signin.SignInViewModel" />
-
-    <variable
-        name="signInFragment"
-        type="com.matiasmandelbaum.alejandriaapp.ui.signin.SignInFragment" />
-</data>
-
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:padding="30dp"
+        android:padding="@dimen/sign_in_padding"
         android:layout_height="match_parent">
 
         <!-- Titulo -->
         <TextView
-            android:id="@+id/textViewTituloRegistro"
+            android:id="@+id/text_view_titulo_registro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Crear cuenta"
+            android:text="@string/crear_cuenta"
             android:textColor="@color/md_theme_light_primary"
-            android:textSize="32dp"
-            android:layout_gravity="left"
+            android:textSize="@dimen/titulo_registro_text_size"
+            android:layout_gravity="start"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,60 +21,60 @@
 
         <!-- Campo de entrada para el nombre -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutNombre"
+            android:id="@+id/text_input_layout_nombre"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            android:paddingTop="8dp"
+            android:paddingTop="@dimen/sign_in_nombre_text_size"
             android:layout_height="wrap_content"
-            android:hint="Nombre"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTituloRegistro"
+            android:hint="@string/nombre"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_titulo_registro"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="2dp">
+            android:layout_marginTop="@dimen/sign_in_nombre_margin_top">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextNombre"
+                android:id="@+id/edit_text_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:importantForAccessibility="yes"
-                android:contentDescription="Ingrese su nombre" />
+                android:contentDescription="@string/ingrese_su_nombre" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Campo de entrada para el apellido -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutApellido"
+            android:id="@+id/text_input_layout_apellido"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            android:paddingTop="8dp"
+            android:paddingTop="@dimen/input_apellido_padding_top"
             android:layout_height="wrap_content"
-            android:hint="Apellido"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutNombre"
+            android:hint="@string/apellido"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_nombre"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="2dp">
+            android:layout_marginTop="@dimen/input_apellido_margin_top">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextApellido"
+                android:id="@+id/edit_text_apellido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:importantForAccessibility="yes"
-                android:contentDescription="Ingrese su apellido" />
+                android:contentDescription="@string/ingrese_su_apellido" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- fecha de nacimiento -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutFechaNacimiento"
+            android:id="@+id/text_input_layout_fecha_nacimiento"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            android:paddingTop="8dp"
+            android:paddingTop="@dimen/input_layout_fecha_nacimiento_padding_top"
             android:layout_height="wrap_content"
-            android:hint="Fecha de Nacimiento"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutApellido"
+            android:hint="@string/fecha_de_nacimiento"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_apellido"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="2dp">
+            android:layout_marginTop="@dimen/input_layout_fecha_nacimiento_margin_top">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextFechaNacimiento"
@@ -105,13 +94,13 @@
             android:layout_height="wrap_content"
             android:hint="Email"
             android:paddingTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutFechaNacimiento"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_fecha_nacimiento"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="2dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextEmail"
+                android:id="@+id/edit_text_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"

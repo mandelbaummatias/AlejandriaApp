@@ -45,7 +45,7 @@ class BooksReservedFragment : Fragment() {
 
         getReservesForCurrentUser()
 
-        recyclerView = view.findViewById(R.id.reservesRecyclerView)
+        recyclerView = view.findViewById(R.id.reserves_recycler_view)
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
         adapter = ReserveAdapter(reserveList)
@@ -60,7 +60,7 @@ class BooksReservedFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
-        val reserveListEmptyTextView = view?.findViewById<TextView>(R.id.reserveListEmpty)
+        val reserveListEmptyTextView = view?.findViewById<TextView>(R.id.reserve_list_empty)
 
         if (currentUser != null) {
             val userEmail = currentUser.email
