@@ -4,16 +4,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:padding="@dimen/padding_login"
-    android:layout_marginTop="-20dp"
+    android:layout_marginTop="@dimen/login_negative_margin_top"
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewTituloInicioSesion"
+        android:id="@+id/text_view_titulo_inicio_sesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/iniciar_sesion"
         android:textColor="@color/md_theme_light_primary"
-        android:textSize="32sp"
+        android:textSize="@dimen/inicio_sesion_text_size"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,40 +21,40 @@
 
     <!-- Email -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputEmail"
+        android:id="@+id/text_input_email"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/email"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTituloInicioSesion"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_titulo_inicio_sesion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="2dp">
+        android:layout_marginTop="@dimen/input_email_margin_top">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/edit_text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:importantForAccessibility="yes"
             android:inputType="textEmailAddress"
-            android:textColorHint="#8D6E63"
+            android:textColorHint="@color/edit_email_login_color_hint"
             tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Contraseña -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutContraseniaLogin"
+        android:id="@+id/text_input_layout_contrasenia_login"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/contrasenia"
-        app:layout_constraintTop_toBottomOf="@+id/textInputEmail"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="2dp">
+        android:layout_marginTop="@dimen/contrasenia_layout_margin_top">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextContraseniaLogin"
+            android:id="@+id/edit_text_contrasenia_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:importantForAccessibility="yes"
@@ -64,44 +64,44 @@
 
     <!-- Botón de Registro -->
     <Button
-        android:id="@+id/btnIngreso"
+        android:id="@+id/btn_ingreso"
         android:layout_width="0dp"
-        android:textSize="20sp"
-        android:layout_height="60dp"
-        android:layout_marginTop="16dp"
+        android:textSize="@dimen/btn_ingreso_text_size"
+        android:layout_height="@dimen/btn_ingreso_height"
+        android:layout_marginTop="@dimen/btn_ingreso_margin_top"
         android:text="@string/ingresar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutContraseniaLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_contrasenia_login" />
 
     <!-- "Recuperar Contraseña" -->
     <TextView
-        android:id="@+id/textViewRecuperarCuenta"
+        android:id="@+id/text_view_recuperar_cuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/recuperar_cuenta_margin_top"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:minHeight="48dp"
+        android:minHeight="@dimen/recuperar_cuenta_min_height"
         android:text="@string/recuperar_contrase_a"
-        android:textSize="16sp"
+        android:textSize="@dimen/recuperar_cuenta_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnIngreso" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_ingreso" />
 
     <!-- "No tengo una cuenta" -->
     <TextView
-        android:id="@+id/textViewRegistro"
+        android:id="@+id/text_view_registro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="@dimen/registro_margin_top"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:minHeight="48dp"
+        android:minHeight="@dimen/registro_min_height"
         android:text="@string/no_tengo_una_cuenta"
-        android:textSize="16sp"
+        android:textSize="@dimen/registro_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

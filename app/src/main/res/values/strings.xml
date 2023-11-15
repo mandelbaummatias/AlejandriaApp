@@ -139,6 +139,13 @@
     <string name="ingresar">Ingresar</string>
     <string name="contrasenia">Contraseña</string>
     <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="mis_reservas">Mis Reservas</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="nombre">Nombre</string>
+    <string name="ingrese_su_nombre">Ingrese su nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="ingrese_su_apellido">Ingrese su apellido</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
 
 
 </resources>
