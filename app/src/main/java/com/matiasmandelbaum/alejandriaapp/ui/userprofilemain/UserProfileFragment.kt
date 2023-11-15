@@ -146,7 +146,7 @@ class UserProfileFragment : Fragment() {
         binding.editNombre.requestFocus()
         binding.editNombre.text?.let { binding.editNombre.setSelection(it.length) }
 
-        binding.overlayFab1.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_save)
+        binding.overlayFab1.setImageResource(R.drawable.ic_save)
     }
 
     private fun saveChanges() {
@@ -172,7 +172,7 @@ class UserProfileFragment : Fragment() {
 
         binding.editNombre.isEnabled = false
         binding.editApellido.isEnabled = false
-        binding.overlayFab1.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_profile)
+        binding.overlayFab1.setImageResource(R.drawable.ic_profile)
         binding.userMailHeader.text = getString(com.matiasmandelbaum.alejandriaapp.R.string.personalInfo)
 
         isInEditMode = false

@@ -21,6 +21,7 @@ class UserImageFragment : Fragment() {
     private lateinit var image4: ImageView
     private lateinit var image5: ImageView
     private lateinit var image6: ImageView
+    private var cambiandoImagen = false
 
 
     override fun onCreateView(
@@ -37,27 +38,45 @@ class UserImageFragment : Fragment() {
         image6 = view.findViewById(R.id.image6)
 
         image1.setOnClickListener {
-            changeProfilePicture("alejandria_logo")
+            if (!cambiandoImagen) {
+                cambiandoImagen = true
+                changeProfilePicture("alejandria_logo")
+            }
         }
 
         image2.setOnClickListener {
-            changeProfilePicture("ic_profile")
+            if (!cambiandoImagen) {
+                cambiandoImagen = true
+                changeProfilePicture("ic_profile")
+            }
         }
 
         image3.setOnClickListener {
-            changeProfilePicture("ic_menu_book")
+            if (!cambiandoImagen) {
+                cambiandoImagen = true
+                changeProfilePicture("ic_menu_book")
+            }
         }
 
         image4.setOnClickListener {
-            changeProfilePicture("ic_book")
+            if (!cambiandoImagen) {
+                cambiandoImagen = true
+                changeProfilePicture("ic_book")
+            }
         }
 
         image5.setOnClickListener {
-            changeProfilePicture("ic_face")
+            if (!cambiandoImagen) {
+                cambiandoImagen = true
+                changeProfilePicture("ic_face")
+            }
         }
 
         image6.setOnClickListener {
-            changeProfilePicture("ic_temple")
+            if (!cambiandoImagen) {
+                cambiandoImagen = true
+                changeProfilePicture("ic_temple")
+            }
         }
 
         return view
