@@ -53,7 +53,6 @@ class SignInFragment : Fragment() {
     ): View {
         Log.d(TAG, "onCreate")
         binding = FragmentSigninBinding.inflate(inflater, container, false)
-        binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         initUI()
         setupDatePicker()
@@ -72,7 +71,6 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.signInFragment = this
     }
 
     private fun initUI() {
