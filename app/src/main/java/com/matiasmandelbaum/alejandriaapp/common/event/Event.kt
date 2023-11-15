@@ -4,10 +4,10 @@ import android.util.Log
 
 
 private const val TAG = "Event"
+
 open class Event<out T>(private val content: T) {
 
-    var hasBeenHandled = false
-        private set
+    private var hasBeenHandled = false
 
     fun getContentIfNotHandled(): T? {
         return if (hasBeenHandled) {
@@ -19,11 +19,4 @@ open class Event<out T>(private val content: T) {
             content
         }
     }
-
-    fun getContent(): T? {
-        return content
-    }
-
-
-    fun peekContent(): T = content
 }

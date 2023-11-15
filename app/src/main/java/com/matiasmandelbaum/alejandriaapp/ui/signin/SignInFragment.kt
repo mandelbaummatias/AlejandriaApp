@@ -19,7 +19,6 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.matiasmandelbaum.alejandriaapp.R
-import com.matiasmandelbaum.alejandriaapp.common.dialog.DialogFragmentLauncher
 import com.matiasmandelbaum.alejandriaapp.common.ex.dismissKeyboard
 import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
@@ -46,9 +45,6 @@ class SignInFragment : Fragment() {
     private lateinit var datePicker: MaterialDatePicker<Long>
 
     private val viewModel: SignInViewModel by viewModels()
-
-    @Inject
-    lateinit var dialogLauncher: DialogFragmentLauncher
 
     override fun onCreateView(
         inflater: LayoutInflater,
