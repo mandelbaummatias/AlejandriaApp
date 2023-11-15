@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         AuthManager.removeAuthStateListener(authStateListener)
         Log.d(TAG, "onStop")
     }
+
     private fun updateMenuItemVisibility(itemId: Int, isVisible: Boolean) {
         val navView: NavigationView = binding.navView
         val menu = navView.menu
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateAuthState(user: FirebaseUser?) {
         updateMenuItemVisibility(R.id.logout, user != null)
-        updateMenuItemVisibility(R.id.booksReadListFragment, user != null)
+        //updateMenuItemVisibility(R.id.booksReadListFragment, user != null)
     }
 
     private fun hideMenuItem(itemId: Int) {
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.homeListFragment, R.id.booksReadListFragment, R.id.subscriptionListFragment,
+                R.id.homeListFragment, R.id.subscriptionListFragment,
             ), drawerLayout
         )
 

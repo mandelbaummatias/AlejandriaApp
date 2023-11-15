@@ -60,5 +60,6 @@
     <color name="md_theme_dark_surfaceTint">#4EDAD3</color>
     <color name="md_theme_dark_outlineVariant">#3F4948</color>
     <color name="md_theme_dark_scrim">#000000</color>
+    <color name="edit_email_login_color_hint">#8D6E63</color>
 
 </resources>
