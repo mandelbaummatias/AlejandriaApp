@@ -132,7 +132,7 @@ class SignInFragment : Fragment() {
             showDatePicker()
         }
 
-        binding.textViewLogin.setOnClickListener {
+        binding.alreadyHaveAccount.setOnClickListener {
             viewModel.onLoginSelected()
         }
 

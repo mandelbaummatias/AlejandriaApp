@@ -5,4 +5,5 @@
     <attr name="colorAlejandriaTealContainer" format="color" />
     <attr name="colorOnAlejandriaTealContainer" format="color" />
     <attr name="harmonizeAlejandriaTeal" format="boolean" />
+    <attr name="colorAlejandriaSecondary" format="color"></attr>
 </resources>
