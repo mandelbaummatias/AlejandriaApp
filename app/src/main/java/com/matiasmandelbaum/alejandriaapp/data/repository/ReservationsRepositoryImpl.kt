@@ -27,23 +27,6 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
 
     private val db = firestore
     private val reservationsCollection = db.collection(RESERVATIONS_COLLECTION)
-    override suspend fun getReservationByUserEmail(email: String): Reservation {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getAllReservations(): Result<List<Reservation>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun createReservation(reservation: Reservation): Boolean {
-        return try {
-            reservationsCollection.add(reservation).await()
-            true // reserva creada
-        } catch (e: Exception) {
-            Log.e(TAG, "error al crear la reserva: ${e.message}")
-            false // error al crear la reserva
-        }
-    }
 
     override suspend fun createReservation(isbn: String, userEmail: String): Result<Unit> =
         suspendCoroutine { continuation ->
@@ -82,4 +65,23 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
                     continuation.resume(Result.Error("Reservation failed: ${e.message}"))
                 }
         }
+    override suspend fun getReservationByUserEmail(email: String): Reservation {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAllReservations(): Result<List<Reservation>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createReservation(reservation: Reservation): Boolean {
+        return try {
+            reservationsCollection.add(reservation).await()
+            true // reserva creada
+        } catch (e: Exception) {
+            Log.e(TAG, "error al crear la reserva: ${e.message}")
+            false // error al crear la reserva
+        }
+    }
+
+
 }

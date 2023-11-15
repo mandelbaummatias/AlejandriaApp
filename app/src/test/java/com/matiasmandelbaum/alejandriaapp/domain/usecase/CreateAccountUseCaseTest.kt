@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.domain.usecase
 
-import android.text.TextUtils
 import android.util.Log
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -18,67 +17,8 @@ import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
-
-
-//class CreateAccountUseCaseTest {
-//
-//    @RelaxedMockK
-//    private lateinit var authenticationService: AuthenticationService
-//
-//    @RelaxedMockK
-//    private lateinit var userService: UserService
-//
-//    lateinit var createAccountUseCase: CreateAccountUseCase
-//
-//    @Before
-//    fun onBefore() {
-//        MockKAnnotations.init(this)
-//        createAccountUseCase = CreateAccountUseCase(authenticationService, userService)
-//    }
-//
-//    @Test
-//    fun `when account creation is successful, return true`() = runBlocking {
-//        // Given: Simulate successful account creation
-//        val userSignIn = UserSignIn("test@example.com", "password")
-//        coEvery { authenticationService.createAccount(userSignIn.email, userSignIn.password) } returns AuthResultFake
-//
-//        // When
-//        val result = createAccountUseCase(userSignIn)
-//
-//        // Then
-//        assertTrue(result)
-//    }
-//
-//    @Test
-//    fun `when account creation fails, return false`() = runBlocking {
-//        // Given: Simulate failed account creation
-//        val userSignIn = UserSignIn("test@example.com", "password")
-//        coEvery { authenticationService.createAccount(userSignIn.email, userSignIn.password) } returns null
-//
-//        // When
-//        val result = createAccountUseCase(userSignIn)
-//
-//        // Then
-//        assertFalse(result)
-//    }
-//
-//    @Test
-//    fun `when account creation throws FirebaseAuthUserCollisionException, return false`() = runBlocking {
-//        // Given: Simulate FirebaseAuthUserCollisionException
-//        val userSignIn = UserSignIn("test@example.com", "password")
-//        coEvery { authenticationService.createAccount(userSignIn.email, userSignIn.password) } throws FirebaseAuthUserCollisionException("User already exists")
-//
-//        // When
-//        val result = createAccountUseCase(userSignIn)
-//
-//        // Then
-//        assertFalse(result)
-//    }
-//
-//    // Mock AuthResult for successful account creation
-//   !
-//}
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class CreateAccountUseCaseTest {
 
