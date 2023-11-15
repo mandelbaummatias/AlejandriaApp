@@ -25,6 +25,16 @@ class UsersRepositoryImpl @Inject constructor(
     private val userService: UserService
 ) : UsersRepository {
 
+    override suspend fun addSubscriptionId(subscriptionId: String, userId: String): Boolean {
+        return try {
+            userService.addSubscriptionId(subscriptionId, userId)
+            true
+        } catch (e: Exception) {
+            Log.d(TAG, "failure on update MP ${e.message}")
+            false
+        }
+    }
+
     override suspend fun updateUserReservationState(userEmail: String): Result<Unit> =
         suspendCoroutine { continuation ->
             val usersCollection = firestore.collection(USERS_COLLECTION)
