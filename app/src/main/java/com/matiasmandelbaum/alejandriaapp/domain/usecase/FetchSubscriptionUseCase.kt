@@ -9,7 +9,4 @@ class FetchSubscriptionUseCase @Inject constructor(private val mercadoPagoReposi
     suspend operator fun invoke(id: String): Result<Subscription> {
         return mercadoPagoRepository.fetchSubscription(id)
     }
-//    suspend operator fun invoke(id: String): Result<String> {
-//        return mercadoPagoRepository.fetchSubscription(id)
-//    }
 }

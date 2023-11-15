@@ -6,7 +6,7 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.user.User
 
 interface UsersRepository {
 
-    suspend fun getUserById(userId: String) : Result<com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User>
+    suspend fun getUserById(userId: String): Result<com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User>
     suspend fun getUserByEmail(email: String): User
 
     suspend fun getAllUsers(): Result<List<User>>
