@@ -34,9 +34,12 @@ class MercadoPagoRepositoryImpl @Inject constructor(
         return try {
             val response = remote.fetchSubscription(id)
             val subscriptionResponse = response ?: return Result.Error("Response is null")
+            Log.d(TAG, "result ok")
 
             Result.Success(subscriptionResponseMapperToDomain.mapFrom(subscriptionResponse))
+
         } catch (e: Exception) {
+            Log.d(TAG, "result error")
             Result.Error(e.message.toString())
         }
     }
