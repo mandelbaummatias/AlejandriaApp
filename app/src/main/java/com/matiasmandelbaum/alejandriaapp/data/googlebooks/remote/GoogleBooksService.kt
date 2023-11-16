@@ -16,7 +16,7 @@ class GoogleBooksService @Inject constructor(private val googleBooksApiClient: G
             val booksGoogleResponse = mutableListOf<GoogleBooksResponse>()
             for (book in booksFirestore) {
                 val bookGoogleResponse = withContext(Dispatchers.IO) {
-                    googleBooksApiClient.searchBooksByISBN(book.isbn_13, GoogleBooksConfig.apiKey)
+                    googleBooksApiClient.searchBooksByISBN(book.isbn, GoogleBooksConfig.apiKey)
                 }
                 booksGoogleResponse.add(bookGoogleResponse)
             }

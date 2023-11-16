@@ -155,7 +155,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/book_cover_margin_top"
             android:layout_marginBottom="@dimen/book_cover_margin_bottom"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_menu_book"
             app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_3"
             app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_2"

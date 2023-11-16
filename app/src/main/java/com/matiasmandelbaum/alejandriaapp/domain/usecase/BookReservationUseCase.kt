@@ -42,7 +42,7 @@ class BookReservationUseCase @Inject constructor(
                         val timestampFirebaseActual = Timestamp(tiempoActual, 0)
 
                         val reservation = Reservation(
-                            isbn_13 = firstBook.isbn,
+                            isbn = firstBook.isbn,
                             mail_usuario = user.email,
                             fecha_fin = fechaDespuesUnMes.toString(),
                             fecha_inicio = fechaActual.toString(),
