@@ -34,7 +34,6 @@
         <item name="colorOnAlejandriaTealContainer">#00201E</item>
         <item name="harmonizeAlejandriaTeal">false</item>
         <item name="colorAlejandriaSecondary">#4A6361</item>
-
     </style>
 
     <style name="Theme.AlejandriaApp" parent="Base.Theme.AlejandriaApp" />

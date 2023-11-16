@@ -140,4 +140,8 @@
         android:label="Cambio de Imagen"
         tools:layout="@layout/user_profile_picture_change" />
 
+<fragment
+        android:id="@+id/settings"
+        android:name="com.matiasmandelbaum.alejandriaapp.ui.settings.SettingsFragment"
+        android:label="@string/configuracion" />
 </navigation>
