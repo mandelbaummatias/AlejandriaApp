@@ -12,6 +12,7 @@
     <string name="suscripcion">Suscripción</string>
     <string name="reservas">Reservas</string>
     <string name="perfil">Perfil</string>
+    <string name="configuracion">Configuracion</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
     <string name="search_hint">Buscá por libro o autor...</string>
 
@@ -114,6 +115,8 @@
     <string name="mercadopago_api_base_url">https://api.mercadopago.com/</string>
     <string name="solicitud_iniciar_sesion">Iniciar sesión para suscribirse!</string>
 
+    <string name="generales">Generales</string>
+    <string name="modo_oscuro">Modo oscuro</string>
 
     <!--Reserved Book Card Item-->
     <string name="notLogedReservedBooksMsg">Debes ingresar para ver tus reservas</string>
@@ -146,6 +149,22 @@
     <string name="apellido">Apellido</string>
     <string name="ingrese_su_apellido">Ingrese su apellido</string>
     <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 
 </resources>
