@@ -1,5 +1,7 @@
 package com.matiasmandelbaum.alejandriaapp.ui
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
@@ -42,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var id: String
     private lateinit var navController: NavController
+    private lateinit var sharedPreferences: SharedPreferences
 
     private val viewModel: SubscriptionListViewModel by viewModels()
 
@@ -72,23 +76,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateAuthState(user: FirebaseUser?) {
         updateMenuItemVisibility(R.id.logout, user != null)
-        //updateMenuItemVisibility(R.id.booksReadListFragment, user != null)
-    }
-
-    private fun hideMenuItem(itemId: Int) {
-        val navView: NavigationView = binding.navView
-        val menu = navView.menu
-        menu.findItem(itemId)?.isVisible = false
-    }
-
-    private fun showMenuItem(itemId: Int) {
-        val navView: NavigationView = binding.navView
-        val menu = navView.menu
-        menu.findItem(itemId)?.isVisible = true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
+
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

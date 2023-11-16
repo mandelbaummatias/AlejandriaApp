@@ -59,6 +59,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.firebase:firebase-database-ktx:20.2.2")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.preference:preference:1.2.1")
+    implementation("androidx.preference:preference-ktx:1.2.1")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation ("io.mockk:mockk:1.13.3")
