@@ -8,11 +8,9 @@ import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.response.BookFires
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.GoogleBooksResponse
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.ImageLinks
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.GoogleBooksService
-import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.AVAILABLE_QUANTITY
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.BOOKS_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.DATE
-import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.TITLE
 import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
@@ -163,7 +161,7 @@ class BooksRepositoryImpl @Inject constructor(
         return Book(
             autor = bookFirestore.autor,
             titulo = bookFirestore.titulo,
-            isbn = bookFirestore.isbn_13,
+            isbn = bookFirestore.isbn,
             descripcion = bookGoogle.items[0].volumeInfo.description, //Siempre es uno, al ser un ISBN identificador único
             valoracion = bookGoogle.items[0].volumeInfo.averageRating,
             imageLinks = ImageLinks(bookGoogle.items[0].volumeInfo.imageLinks?.smallThumbnail),

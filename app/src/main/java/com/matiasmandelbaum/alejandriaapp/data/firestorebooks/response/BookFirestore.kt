@@ -1,7 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.data.firestorebooks.response
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 //@Parcelize
@@ -11,5 +9,5 @@ data class BookFirestore(
     val titulo: String = "",
     val cantidad: Int = 0,
     val cantidad_disponible: Int = 0,
-    val isbn_13: String = ""
+    val isbn: String = ""
 )  //: Parcelable//Creating a no-argument constructor indirectly for Firestore.
