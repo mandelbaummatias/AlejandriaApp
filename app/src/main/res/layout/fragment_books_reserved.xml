@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/reserves_label_margin_bottom"
         android:gravity="center"
         android:text="@string/mis_reservas"
-        android:textColor="@color/md_theme_light_primary"
+        android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/reserve_label_text_size" />
 
     <TextView

@@ -58,4 +58,33 @@
     <dimen name="input_apellido_margin_top">2dp</dimen>
     <dimen name="input_layout_fecha_nacimiento_padding_top">8dp</dimen>
     <dimen name="input_layout_fecha_nacimiento_margin_top">2dp</dimen>
+
+
+    <!--Reserved Book Item-->
+    <dimen name="item_reserve_label_size">20sp</dimen>
+    <dimen name="item_reserve_content_size">18sp</dimen>
+    <dimen name="item_reserve_padding">16dp</dimen>
+    <dimen name="item_reserve_margin">16dp</dimen>
+    <dimen name="item_reserve_card_elevation">8dp</dimen>
+
+
+    <!--Guidelines Percents-->
+    <dimen name="guideline_10">0.1</dimen>
+    <dimen name="guideline_15">0.15</dimen>
+    <dimen name="guideline_20">0.2</dimen>
+    <dimen name="guideline_25">0.25</dimen>
+    <dimen name="guideline_30">0.3</dimen>
+    <dimen name="guideline_35">0.35</dimen>
+    <dimen name="guideline_40">0.4</dimen>
+    <dimen name="guideline_45">0.45</dimen>
+    <dimen name="guideline_50">0.5</dimen>
+    <dimen name="guideline_55">0.55</dimen>
+    <dimen name="guideline_60">0.6</dimen>
+    <dimen name="guideline_65">0.65</dimen>
+    <dimen name="guideline_70">0.7</dimen>
+    <dimen name="guideline_75">0.75</dimen>
+    <dimen name="guideline_80">0.8</dimen>
+    <dimen name="guideline_85">0.85</dimen>
+    <dimen name="guideline_90">0.9</dimen>
+    <dimen name="guideline_95">0.95</dimen>
 </resources>
