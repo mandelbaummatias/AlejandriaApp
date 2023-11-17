@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.ui.booksreserved.Reserves
 import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerView.Adapter<ReserveAdapter.MyViewHolder>() {
 
@@ -28,8 +29,14 @@ class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerVi
         holder.author.text = currentReserve.author
 
         val dateFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm")
-        val stringDate = dateFormat.format(currentReserve.reserveDate)
-        holder.reserveDate.text = stringDate
+      //  val stringDate = dateFormat.format(currentReserve.reserveDate)
+       // holder.reserveDate.text = stringDate
+        // Inside your ViewHolder or wherever you set the text
+        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val formattedDate = sdf.format(currentReserve.reserveDate.toDate()) // Assuming reserveDate is a Firebase Timestamp
+
+        holder.reserveDate.text = formattedDate
+       // holder.reserveDate.text = currentReserve.reserveDate.toString()
 
         if (currentReserve.status == "A retirar") {
             holder.status.text = holder.itemView.context.getString(R.string.reservedBookStatusNotRetired)
