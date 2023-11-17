@@ -3,85 +3,134 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/item_reserve_margin">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardView"
+        android:id="@+id/reserve_card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        app:cardElevation="8dp">
+        app:cardElevation="@dimen/item_reserve_card_elevation">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/horizontal_guide_line_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="@dimen/guideline_20"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/horizontal_guide_line_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="@dimen/guideline_40"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/horizontal_guide_line_3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="@dimen/guideline_60"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/horizontal_guide_line_4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="@dimen/guideline_80"/>
 
             <TextView
-                android:id="@+id/reservedBookIsbnLabel"
+                android:id="@+id/reserved_book_isbn_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/md_theme_light_primary"
+                android:padding="@dimen/item_reserve_padding"
                 android:text="@string/reservedBookIsbnLabel"
-                android:textSize="20sp"
-                android:layout_marginTop="16dp"
-                android:padding="16dp"/>
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/item_reserve_label_size"
+                app:layout_constraintTop_toTopOf="parent"/>
             <TextView
-                android:id="@+id/reservedBookIsbn"
+                android:id="@+id/reserved_book_isbn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:padding="16dp"/>
+                android:padding="@dimen/item_reserve_padding"
+                android:textSize="@dimen/item_reserve_content_size"
+                app:layout_constraintTop_toBottomOf="@+id/reserved_book_isbn_label" />
 
             <TextView
-                android:id="@+id/reservedBookTitleLabel"
+                android:id="@+id/reserved_book_title_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/md_theme_light_primary"
+                android:padding="@dimen/item_reserve_padding"
                 android:text="@string/reservedBookTitleLabel"
-                android:textSize="20sp"
-                android:padding="16dp"/>
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/item_reserve_label_size"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_1" />
             <TextView
-                android:id="@+id/reservedBookTitle"
+                android:id="@+id/reserved_book_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:padding="16dp"/>
+                android:padding="@dimen/item_reserve_padding"
+                android:textSize="@dimen/item_reserve_content_size"
+                app:layout_constraintTop_toBottomOf="@+id/reserved_book_title_label" />
 
             <TextView
-                android:id="@+id/reservedBookAuthorLabel"
+                android:id="@+id/reserved_book_author_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/md_theme_light_primary"
+                android:padding="@dimen/item_reserve_padding"
                 android:text="@string/reservedBookAuthorLabel"
-                android:textSize="20sp"
-                android:padding="16dp"/>
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/item_reserve_label_size"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_2" />
             <TextView
-                android:id="@+id/reservedBookAuthor"
+                android:id="@+id/reserved_book_author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:padding="16dp"/>
+                android:padding="@dimen/item_reserve_padding"
+                android:textSize="@dimen/item_reserve_content_size"
+                app:layout_constraintTop_toBottomOf="@+id/reserved_book_author_label" />
 
             <TextView
-                android:id="@+id/reservedBookDateLabel"
+                android:id="@+id/reserved_book_date_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/md_theme_light_primary"
+                android:padding="@dimen/item_reserve_padding"
                 android:text="@string/reservedBookDateLabel"
-                android:textSize="20sp"
-                android:padding="16dp"/>
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/item_reserve_label_size"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_3" />
             <TextView
-                android:id="@+id/reservedBookDate"
+                android:id="@+id/reserved_book_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:padding="16dp"/>
-        </LinearLayout>
+                android:padding="@dimen/item_reserve_padding"
+                android:textSize="@dimen/item_reserve_content_size"
+                app:layout_constraintTop_toBottomOf="@+id/reserved_book_date_label" />
+
+            <TextView
+                android:id="@+id/reserved_book_status_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/item_reserve_padding"
+                android:text="@string/reservedBookStatusLabel"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/item_reserve_label_size"
+                app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_4" />
+            <TextView
+                android:id="@+id/reserved_book_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/item_reserve_padding"
+                android:textSize="@dimen/item_reserve_content_size"
+                app:layout_constraintTop_toBottomOf="@+id/reserved_book_status_label" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 

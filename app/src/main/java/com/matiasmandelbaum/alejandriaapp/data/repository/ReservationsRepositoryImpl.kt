@@ -1,10 +1,13 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
 import android.util.Log
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils.DAY_MONTH_YEAR
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.END_DATE
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.ISBN
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.PENDING_STATUS
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.RESERVATIONS_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.START_DATE
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.STATUS
@@ -36,21 +39,15 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
             // Get the current date
             val currentDate = LocalDate.now()
 
-            // Format the current date as a string in the desired format (28/10/2023)
-            val formattedCurrentDate = currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-
-            // Calculate the fecha_fin by adding a month to fecha_inicio
             val fechaInicio = currentDate
             val fechaFin = fechaInicio.plusMonths(1)
 
-            // Format the fecha_fin as a string in the desired format
-            val formattedFechaInicio = fechaInicio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-            val formattedFechaFin = fechaFin.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+            val formattedFechaFin = fechaFin.format(DateTimeFormatter.ofPattern(DAY_MONTH_YEAR))
 
-            // Create the reservationData hashmap with the formatted dates
             val reservationData = hashMapOf(
-                STATUS to "A retirar",
-                START_DATE to formattedFechaInicio,
+                STATUS to PENDING_STATUS,
+                // START_DATE to formattedFechaInicio,
+                START_DATE to FieldValue.serverTimestamp(),
                 END_DATE to formattedFechaFin,
                 ISBN to isbn,
                 USER_EMAIL to userEmail
@@ -65,6 +62,7 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
                     continuation.resume(Result.Error("Reservation failed: ${e.message}"))
                 }
         }
+
     override suspend fun getReservationByUserEmail(email: String): Reservation {
         TODO("Not yet implemented")
     }
