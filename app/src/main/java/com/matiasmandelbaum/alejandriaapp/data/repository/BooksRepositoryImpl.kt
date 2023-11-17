@@ -15,6 +15,10 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -123,6 +127,43 @@ class BooksRepositoryImpl @Inject constructor(
         }
     }
 
+
+    suspend private fun getAllBooksFromGoogleBooks(){
+
+    }
+
+     suspend fun getAllBooks2(): Result<List<Book>> {
+        return try {
+            val books = mutableListOf<Book>()
+
+            val booksFirestore = withContext(Dispatchers.IO) {
+                getAllBooksFromFirestore()
+            }
+
+            Log.d(TAG, "libros firestore getAll : $booksFirestore")
+
+            val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
+
+            Log.d(TAG, "libros google getAll : $booksFirestore")
+
+            if (booksFirestore.size != booksGoogle.size) {
+                throw IllegalArgumentException("Input lists must have the same size")
+            }
+
+            for (i in booksFirestore.indices) {
+                val bookFirestore = booksFirestore[i]
+                val bookGoogle = booksGoogle[i]
+                val book = createBookFromRemoteData(bookFirestore, bookGoogle)
+                books.add(book)
+            }
+            Result.Success(books)
+        } catch (e: Exception) {
+            Result.Error(e.message.toString())
+        }
+    }
+
+
+
     override suspend fun reserveBook(isbn: String, userEmail: String): Boolean {
         TODO("Not yet implemented")
     }
@@ -152,6 +193,48 @@ class BooksRepositoryImpl @Inject constructor(
                 .get()
                 .await()
         return querySnapshot.toObjects(BookFirestore::class.java)
+    }
+
+
+    override fun getAllItems(): Flow<Result<List<Book>>> = callbackFlow {
+        val itemsReference = firestore.collection(BOOKS_COLLECTION)
+
+        val subscription = itemsReference.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                launch {
+                    // Launch a coroutine to use the suspension function
+                    trySend(Result.Error(error.message.toString())).isSuccess
+                }
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val booksFirestore = snapshot.toObjects(BookFirestore::class.java)
+
+                launch {
+                    // Launch a coroutine to use the suspension function
+                    val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
+                    Log.d(TAG, "libros google getAll : $booksFirestore")
+
+                    if (booksFirestore.size != booksGoogle.size) {
+                        throw IllegalArgumentException("Input lists must have the same size")
+                    }
+
+                    val books = mutableListOf<Book>()
+
+                    for (i in booksFirestore.indices) {
+                        val bookFirestore = booksFirestore[i]
+                        val bookGoogle = booksGoogle[i]
+                        val book = createBookFromRemoteData(bookFirestore, bookGoogle)
+                        books.add(book)
+                    }
+
+                    trySend(Result.Success(books)).isSuccess
+                }
+            }
+        }
+
+        awaitClose { subscription.remove() }
     }
 
     private fun createBookFromRemoteData(

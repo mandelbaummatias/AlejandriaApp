@@ -14,6 +14,8 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +28,7 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.BookListAdapter
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.BookListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "HomeListFragment"
@@ -54,6 +57,36 @@ class HomeListFragment : Fragment() {
             )
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.bookListState2.collect {
+                    when(it){
+                        is Result.Success -> {
+                            val data: List<Book> = it.data
+                            val adapter = binding.recyclerView.adapter as BookListAdapter
+                            adapter.submitList(it.data)// Get the data from the Success Result
+
+                            val firstItem = data.lastOrNull()
+                            Log.d(TAG, "first item $firstItem")
+
+                            Log.d(TAG, "TODA LA data ${it.data}")
+
+                        }
+                        Result.Loading -> Log.d(TAG,"Loading")
+                        is Result.Error -> {
+                            val errorMessage = it.message
+                            Log.d(TAG, "error! : $errorMessage")// Get the error message from the Error Result
+                            // Handle the error message as needed
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+
+
         return binding.root
     }
 
