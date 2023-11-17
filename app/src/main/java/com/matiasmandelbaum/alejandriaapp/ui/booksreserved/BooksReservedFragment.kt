@@ -1,6 +1,7 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksreserved
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +17,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.ReserveAdapter
+import java.time.LocalDate
 import java.util.Date
 
-
+private const val TAG = "BooksReservedFragment"
 class BooksReservedFragment : Fragment() {
     private lateinit var adapter: ReserveAdapter
     private lateinit var recyclerView: RecyclerView
@@ -56,6 +58,7 @@ class BooksReservedFragment : Fragment() {
 
 
     private fun getReservesForCurrentUser() {
+        Log.d(TAG, "getReservesForCurrentUser")
         reserveList = ArrayList()
 
         val db = FirebaseFirestore.getInstance()
@@ -72,9 +75,11 @@ class BooksReservedFragment : Fragment() {
                 .addOnSuccessListener { reserveQuerySnapshot ->
                     for (document in reserveQuerySnapshot) {
                         val isbn = document.getString("isbn")
-
+                        Log.d(TAG, "isbn $isbn")
                         if (isbn != null) {
                             this.getBookDetails(isbn, document)
+                        } else {
+                            Log.d(TAG, "isbn is null")
                         }
                     }
                     if (reserveQuerySnapshot.isEmpty) {
@@ -91,7 +96,7 @@ class BooksReservedFragment : Fragment() {
     }
 
     private fun getBookDetails(isbn: String, reserveDocument: DocumentSnapshot) {
-
+        Log.d(TAG, "getBookDetails")
         val db = FirebaseFirestore.getInstance()
         val bookCollection = db.collection("libros")
 
@@ -100,7 +105,12 @@ class BooksReservedFragment : Fragment() {
                 for (bookDocument in bookQuerySnapshot) {
                     val title = bookDocument.getString("titulo") ?: ""
                     val author = bookDocument.getString("autor") ?: ""
-                    val dateReserve = reserveDocument.getDate("fecha_reserva") ?:  Date()
+
+                   // val dateReserve = reserveDocument.getDate("fecha_reserva") ?:  reserveDocument.getTimestamp("fecha_reserva")
+                    val dateReserve = reserveDocument.getTimestamp("fecha_inicio") ?: Timestamp(Date())
+
+
+                    Log.d(TAG, "dateReserve $dateReserve")
                     val status = reserveDocument.getString("status") ?: ""
                     val reserve = Reserves(isbn, title, author, dateReserve, status)
                     reserveList.add(reserve)
