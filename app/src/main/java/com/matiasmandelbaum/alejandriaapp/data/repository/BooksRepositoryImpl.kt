@@ -194,8 +194,6 @@ class BooksRepositoryImpl @Inject constructor(
                 .await()
         return querySnapshot.toObjects(BookFirestore::class.java)
     }
-
-
     override fun getAllItems(): Flow<Result<List<Book>>> = callbackFlow {
         val itemsReference = firestore.collection(BOOKS_COLLECTION)
 
@@ -209,23 +207,15 @@ class BooksRepositoryImpl @Inject constructor(
             }
 
             if (snapshot != null) {
-                val booksFirestore = snapshot.toObjects(BookFirestore::class.java)
-
                 launch {
                     // Launch a coroutine to use the suspension function
-                    val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
-                    Log.d(TAG, "libros google getAll : $booksFirestore")
-
-                    if (booksFirestore.size != booksGoogle.size) {
-                        throw IllegalArgumentException("Input lists must have the same size")
-                    }
-
+                    val booksFirestore = snapshot.toObjects(BookFirestore::class.java)
                     val books = mutableListOf<Book>()
 
-                    for (i in booksFirestore.indices) {
-                        val bookFirestore = booksFirestore[i]
-                        val bookGoogle = booksGoogle[i]
-                        val book = createBookFromRemoteData(bookFirestore, bookGoogle)
+                    for (bookFirestore in booksFirestore) {
+                        // Fetch Google Books information for each book individually
+                        val bookGoogle = googleBooksService.searchBooksInGoogleBooks(listOf(bookFirestore))
+                        val book = createBookFromRemoteData(bookFirestore, bookGoogle.single())
                         books.add(book)
                     }
 
