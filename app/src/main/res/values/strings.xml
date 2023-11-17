@@ -125,10 +125,13 @@
     <string name="reservedBookTitleLabel">Titulo del Libro</string>
     <string name="reservedBookAuthorLabel">Autor del Libro</string>
     <string name="reservedBookDateLabel">Fecha de la reserva</string>
+    <string name="reservedBookStatusLabel">Estado</string>
+    <string name="reservedBookStatusNotRetired">Retirar en Yatay 240 de 9:00 a 20:00 hs</string>
+
     <string name="un_libro_para_leer">Un libro para leer</string>
     <string name="un_autor">Un autor</string>
     <string name="sinopsis">La sinopsis de un libro es un resumen breve que proporciona una descripción general de la trama, los personajes principales y el tema de la obra. Su propósito es dar a los lectores una idea general de qué trata el libro sin revelar demasiados detalles o spoilers. La sinopsis suele encontrarse en la contraportada del libro o en la solapa interior de la cubierta, y también se utiliza en las descripciones de libros en línea y catálogos de librerías.</string>
-    <string name="reserva_exitosa">Reserva de libro exitosa! Puede retirarla en la Av.Siempreviva 742, de 9:00 a 20:00, planta baja</string>
+    <string name="reserva_exitosa">Reserva de libro exitosa! Puede retirar en Yatay 240 de 9:00 a 20:00 hs</string>
     <string name="no_hay_libros_disponibles_para_reservar">No hay libros disponibles para reservar.</string>
     <string name="ya_se_reservo_este_mes">Ya se reservo este mes!</string>
     <string name="subscriptionid">subscriptionId</string>

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -70,7 +71,7 @@ class BooksReservedFragment : Fragment() {
                 .get()
                 .addOnSuccessListener { reserveQuerySnapshot ->
                     for (document in reserveQuerySnapshot) {
-                        val isbn = document.getString("isbn_13")
+                        val isbn = document.getString("isbn")
 
                         if (isbn != null) {
                             this.getBookDetails(isbn, document)
@@ -94,14 +95,14 @@ class BooksReservedFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         val bookCollection = db.collection("libros")
 
-        bookCollection.whereEqualTo("isbn_13", isbn).get()
+        bookCollection.whereEqualTo("isbn", isbn).get()
             .addOnSuccessListener { bookQuerySnapshot ->
                 for (bookDocument in bookQuerySnapshot) {
                     val title = bookDocument.getString("titulo") ?: ""
                     val author = bookDocument.getString("autor") ?: ""
-                    val dateReserve = reserveDocument.getDate("fecha_reserva")
-
-                    val reserve = Reserves(isbn, title, author, dateReserve ?:  Date())
+                    val dateReserve = reserveDocument.getDate("fecha_reserva") ?:  Date()
+                    val status = reserveDocument.getString("status") ?: ""
+                    val reserve = Reserves(isbn, title, author, dateReserve, status)
                     reserveList.add(reserve)
                 }
                 reserveList.sort()

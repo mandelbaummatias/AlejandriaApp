@@ -30,12 +30,19 @@ class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerVi
         val dateFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm")
         val stringDate = dateFormat.format(currentReserve.reserveDate)
         holder.reserveDate.text = stringDate
+
+        if (currentReserve.status == "A retirar") {
+            holder.status.text = holder.itemView.context.getString(R.string.reservedBookStatusNotRetired)
+        } else {
+            holder.status.text = currentReserve.status
+        }
     }
 
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        val isbn : TextView = itemView.findViewById(R.id.reservedBookIsbn)
-        val title : TextView = itemView.findViewById(R.id.reservedBookTitle)
-        val author : TextView = itemView.findViewById(R.id.reservedBookAuthor)
-        val reserveDate : TextView = itemView.findViewById(R.id.reservedBookDate)
+        val isbn : TextView = itemView.findViewById(R.id.reserved_book_isbn)
+        val title : TextView = itemView.findViewById(R.id.reserved_book_title)
+        val author : TextView = itemView.findViewById(R.id.reserved_book_author)
+        val reserveDate : TextView = itemView.findViewById(R.id.reserved_book_date)
+        val status : TextView = itemView.findViewById(R.id.reserved_book_status)
     }
 }
