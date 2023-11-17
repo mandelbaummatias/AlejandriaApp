@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.ui.booksreserved.Reserves
 import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerView.Adapter<ReserveAdapter.MyViewHolder>() {
 
@@ -28,14 +29,27 @@ class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerVi
         holder.author.text = currentReserve.author
 
         val dateFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm")
-        val stringDate = dateFormat.format(currentReserve.reserveDate)
-        holder.reserveDate.text = stringDate
+      //  val stringDate = dateFormat.format(currentReserve.reserveDate)
+       // holder.reserveDate.text = stringDate
+        // Inside your ViewHolder or wherever you set the text
+        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val formattedDate = sdf.format(currentReserve.reserveDate.toDate()) // Assuming reserveDate is a Firebase Timestamp
+
+        holder.reserveDate.text = formattedDate
+       // holder.reserveDate.text = currentReserve.reserveDate.toString()
+
+        if (currentReserve.status == "A retirar") {
+            holder.status.text = holder.itemView.context.getString(R.string.reservedBookStatusNotRetired)
+        } else {
+            holder.status.text = currentReserve.status
+        }
     }
 
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        val isbn : TextView = itemView.findViewById(R.id.reservedBookIsbn)
-        val title : TextView = itemView.findViewById(R.id.reservedBookTitle)
-        val author : TextView = itemView.findViewById(R.id.reservedBookAuthor)
-        val reserveDate : TextView = itemView.findViewById(R.id.reservedBookDate)
+        val isbn : TextView = itemView.findViewById(R.id.reserved_book_isbn)
+        val title : TextView = itemView.findViewById(R.id.reserved_book_title)
+        val author : TextView = itemView.findViewById(R.id.reserved_book_author)
+        val reserveDate : TextView = itemView.findViewById(R.id.reserved_book_date)
+        val status : TextView = itemView.findViewById(R.id.reserved_book_status)
     }
 }
