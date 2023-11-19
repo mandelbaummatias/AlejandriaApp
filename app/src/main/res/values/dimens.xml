@@ -67,6 +67,27 @@
     <dimen name="item_reserve_margin">16dp</dimen>
     <dimen name="item_reserve_card_elevation">8dp</dimen>
 
+    <!--Subscription-->
+    <dimen name="plan_title_text_size">35sp</dimen>
+    <dimen name="subscription_margin_top">30dp</dimen>
+    <dimen name="subscription_card_width">350dp</dimen>
+    <dimen name="subscription_card_height">500dp</dimen>
+    <dimen name="subscription_card_margin">10dp</dimen>
+    <dimen name="subscription_card_elevation">8dp</dimen>
+    <dimen name="subscription_card_corner_radius">16dp</dimen>
+    <dimen name="subscription_card_content_padding">15dp</dimen>
+
+    <dimen name="subscription_card_plan_title_text_size">40sp</dimen>
+    <dimen name="subscription_card_features_text_size">20sp</dimen>
+    <dimen name="subscription_card_price_text_size">40sp</dimen>
+    <dimen name="subscription_card_button_text_size">20sp</dimen>
+
+    <dimen name="subscription_card_button_width">220dp</dimen>
+    <dimen name="subscription_card_button_height">60dp</dimen>
+    <dimen name="subscription_card_image_size">100dp</dimen>
+    <dimen name="subscription_card_margin_top">10dp</dimen>
+    <dimen name="subscription_card_margin_bottom">20dp</dimen>
+    <dimen name="subscription_card_margin_bottom_larger">40dp</dimen>
 
     <!--Guidelines Percents-->
     <dimen name="guideline_10">0.1</dimen>

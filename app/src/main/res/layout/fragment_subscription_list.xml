@@ -9,16 +9,15 @@
         tools:context=".ui.subscription.SubscriptionListFragment">
 
         <TextView
-            android:id="@+id/planTitle"
+            android:id="@+id/plan_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/subscription_margin_top"
             android:gravity="center"
             android:text="@string/plansTitle"
-            android:textColor="@color/md_theme_light_primary"
-            android:textSize="35dp"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/plan_title_text_size"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,8 +28,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/planTitle"
-            app:layout_constraintVertical_bias="0.2">
+            app:layout_constraintTop_toBottomOf="@+id/plan_title"
+            app:layout_constraintVertical_bias="@dimen/guideline_20">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -38,64 +37,64 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="350dp"
-                    android:layout_height="500dp"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="8dp">
+                    android:layout_width="@dimen/subscription_card_width"
+                    android:layout_height="@dimen/subscription_card_height"
+                    android:layout_margin="@dimen/subscription_card_margin"
+                    app:cardCornerRadius="@dimen/subscription_card_corner_radius"
+                    app:cardElevation="@dimen/subscription_card_elevation">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="15dp">
+                        android:padding="@dimen/subscription_card_content_padding">
 
                         <TextView
-                            android:id="@+id/basicPlanTitle"
+                            android:id="@+id/basic_plan_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="@dimen/subscription_card_margin_top"
+                            android:layout_marginBottom="@dimen/subscription_card_margin_bottom"
                             android:gravity="center"
                             android:text="@string/basicPlanTitle"
-                            android:textColor="@color/md_theme_light_primary"
-                            android:textSize="40dp"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="@dimen/subscription_card_plan_title_text_size"
                             android:textStyle="bold" />
 
                         <ImageView
-                            android:id="@+id/basicPlanIcon"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_marginBottom="20dp"
+                            android:id="@+id/basic_plan_icon"
+                            android:layout_width="@dimen/subscription_card_image_size"
+                            android:layout_height="@dimen/subscription_card_image_size"
+                            android:layout_marginBottom="@dimen/subscription_card_margin_bottom"
                             android:src="@drawable/ic_menu_book"
-                            app:tint="@color/md_theme_light_primary" />
+                            app:tint="?attr/colorPrimary" />
 
                         <TextView
-                            android:id="@+id/basicPlanFeatures"
+                            android:id="@+id/basic_plan_features"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="40dp"
+                            android:layout_marginBottom="@dimen/subscription_card_margin_bottom_larger"
                             android:text="@string/basicPlanFeatures"
-                            android:textSize="20dp" />
+                            android:textSize="@dimen/subscription_card_features_text_size" />
 
                         <TextView
-                            android:id="@+id/basicPlanPrice"
+                            android:id="@+id/basic_plan_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="40dp"
+                            android:layout_marginBottom="@dimen/subscription_card_margin_bottom_larger"
                             android:gravity="center"
                             android:text="@string/basicPlanPrice"
-                            android:textSize="40dp"
+                            android:textSize="@dimen/subscription_card_price_text_size"
                             android:textStyle="bold" />
 
                         <Button
-                            android:id="@+id/basicPlanSubscribeBtn"
-                            android:layout_width="220dp"
-                            android:layout_height="60dp"
-                            android:backgroundTint="@color/md_theme_light_primary"
+                            android:id="@+id/basic_plan_button"
+                            android:layout_width="@dimen/subscription_card_button_width"
+                            android:layout_height="@dimen/subscription_card_button_height"
+                            android:backgroundTint="?attr/colorPrimary"
                             android:text="@string/subscribeBtn"
-                            android:textSize="20dp" />
+                            android:textSize="@dimen/subscription_card_button_text_size" />
 
                         <ProgressBar
                             android:id="@+id/progress_bar"
@@ -108,73 +107,67 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="350dp"
-                    android:layout_height="500dp"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="8dp">
+                    android:layout_width="@dimen/subscription_card_width"
+                    android:layout_height="@dimen/subscription_card_height"
+                    android:layout_margin="@dimen/subscription_card_margin"
+                    app:cardCornerRadius="@dimen/subscription_card_corner_radius"
+                    app:cardElevation="@dimen/subscription_card_elevation">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="15dp">
+                        android:padding="@dimen/subscription_card_content_padding">
 
                         <TextView
-                            android:id="@+id/advancedPlanTitle"
+                            android:id="@+id/advanced_plan_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="@dimen/subscription_card_margin_top"
+                            android:layout_marginBottom="@dimen/subscription_card_margin_bottom"
                             android:gravity="center"
                             android:text="@string/advancedPlanTitle"
-                            android:textColor="@color/md_theme_light_primary"
-                            android:textSize="40dp"
-                            android:textStyle="bold" />
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="@dimen/subscription_card_plan_title_text_size"
+                            android:textStyle="bold"/>
 
                         <ImageView
-                            android:id="@+id/advancedPlanIcon"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_marginBottom="20dp"
+                            android:id="@+id/advanced_plan_icon"
+                            android:layout_width="@dimen/subscription_card_image_size"
+                            android:layout_height="@dimen/subscription_card_image_size"
+                            android:layout_marginBottom="@dimen/subscription_card_margin_bottom"
                             android:src="@drawable/ic_menu_book"
-                            app:tint="@color/md_theme_light_primary" />
+                            app:tint="?attr/colorPrimary"/>
 
                         <TextView
-                            android:id="@+id/advancedPlanFeatures"
+                            android:id="@+id/advanced_plan_features"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="40dp"
+                            android:layout_marginBottom="@dimen/subscription_card_margin_bottom_larger"
                             android:text="@string/advancedPlanFeatures"
-                            android:textSize="20dp" />
+                            android:textSize="@dimen/subscription_card_features_text_size" />
 
                         <TextView
-                            android:id="@+id/advancedPlanPrice"
+                            android:id="@+id/advanced_plan_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="40dp"
+                            android:layout_marginBottom="@dimen/subscription_card_margin_bottom_larger"
                             android:gravity="center"
                             android:text="@string/advancedPlanPrice"
-                            android:textSize="40dp"
+                            android:textSize="@dimen/subscription_card_price_text_size"
                             android:textStyle="bold" />
 
                         <Button
-                            android:id="@+id/advancedPlanSubscribeBtn"
-                            android:layout_width="220dp"
-                            android:layout_height="60dp"
+                            android:id="@+id/advanced_plan_button"
+                            android:layout_width="@dimen/subscription_card_button_width"
+                            android:layout_height="@dimen/subscription_card_button_height"
                             android:enabled="false"
                             android:text="@string/soonBtn"
-                            android:textSize="20dp" />
-
+                            android:textSize="@dimen/subscription_card_button_text_size" />
                     </LinearLayout>
-
                 </com.google.android.material.card.MaterialCardView>
-
             </LinearLayout>
-
         </HorizontalScrollView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>
