@@ -39,6 +39,8 @@ object AuthManager {
         return auth.currentUser
     }
 
+
+
 }
 
 
