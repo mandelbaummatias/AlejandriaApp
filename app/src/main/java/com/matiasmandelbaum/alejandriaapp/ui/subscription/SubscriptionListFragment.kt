@@ -82,7 +82,7 @@ class SubscriptionListFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.basicPlanSubscribeBtn.setOnClickListener {
+        binding.basicPlanButton.setOnClickListener {
             AuthManager.getCurrentUser()?.email?.let { viewModel.createSubscription(it) }
         }
     }
@@ -90,7 +90,7 @@ class SubscriptionListFragment : Fragment() {
     private fun handleSubscriptionResult(result: Result<Subscription>) {
         with(binding) {
             progressBar.visibility = if (result is Result.Loading) View.VISIBLE else View.GONE
-            basicPlanSubscribeBtn.visibility =
+            basicPlanButton.visibility =
                 if (result is Result.Success) View.VISIBLE else View.GONE
         }
     }
@@ -101,7 +101,7 @@ class SubscriptionListFragment : Fragment() {
             (result as? Result.Success)?.let { successResult ->
                 when (successResult.data.status) {
                     SubscriptionStatus.Pending.statusString -> {
-                        basicPlanSubscribeBtn.setOnClickListener {
+                        basicPlanButton.setOnClickListener {
                             viewModel.continueSubscription(successResult.data.id)
                         }
                     }
@@ -115,7 +115,7 @@ class SubscriptionListFragment : Fragment() {
     private fun handleAuthorizedSubscription() {
         Log.d(TAG, "handleAuthorizedSubscription")
         with(binding) {
-            basicPlanSubscribeBtn.visibility = View.GONE
+            basicPlanButton.visibility = View.GONE
             showSuccessfulSubscriptionSnackbar()
         }
     }
@@ -146,7 +146,7 @@ class SubscriptionListFragment : Fragment() {
 
     private fun handleAuthState(user: FirebaseUser?) {
         Log.d(TAG, "handleAuthState")
-        with(binding.basicPlanSubscribeBtn) {
+        with(binding.basicPlanButton) {
             user?.let {
                 viewModel.getUserById(it.uid)
             } ?: run {
@@ -172,10 +172,10 @@ class SubscriptionListFragment : Fragment() {
         Log.d(TAG, "HANDLE loading")
         with(binding) {
             if (isLoading) {
-                basicPlanSubscribeBtn.visibility = View.GONE
+                basicPlanButton.visibility = View.GONE
                 progressBar.visibility = View.VISIBLE
             } else {
-                basicPlanSubscribeBtn.visibility = View.VISIBLE
+                basicPlanButton.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             }
         }
