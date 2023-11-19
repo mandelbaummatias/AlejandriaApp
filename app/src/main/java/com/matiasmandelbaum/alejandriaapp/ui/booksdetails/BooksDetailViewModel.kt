@@ -1,5 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksdetails
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -48,6 +49,8 @@ class BooksDetailViewModel @Inject constructor(
 
     val book: Book = savedStateHandle["book"]!!
 
+
+
     fun reserveBook(userEmail: String) {
         viewModelScope.launch {
             when (val result = reserveBookUseCase(book.isbn, userEmail, book.cantidadDisponible)) {
@@ -82,6 +85,7 @@ class BooksDetailViewModel @Inject constructor(
     }
 
     fun getUserById(userId: String) {
+        Log.d(TAG, "book $book")
         _user.value = Result.Loading
         viewModelScope.launch {
             val result = getUserByIdUseCase(userId)

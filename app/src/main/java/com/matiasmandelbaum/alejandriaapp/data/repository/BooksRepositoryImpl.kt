@@ -15,6 +15,13 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -28,6 +35,57 @@ class BooksRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val googleBooksService: GoogleBooksService
 ) : BooksRepository {
+    override fun getAllItems(): Flow<Result<List<Book>>> = callbackFlow {
+        val itemsReference = firestore.collection(BOOKS_COLLECTION).orderBy(
+            DATE,
+            Query.Direction.DESCENDING
+        )
+
+        val subscription = itemsReference.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                launch {
+                    trySend(Result.Error(error.message.toString())).isSuccess
+                }
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                launch {
+                    val booksFirestore = snapshot.toObjects(BookFirestore::class.java)
+
+                    val resultBooks = try {
+                        coroutineScope {
+                            // Use async to perform Google Books search for each book concurrently
+                            val deferredBooks = booksFirestore.map { bookFirestore ->
+                                async(Dispatchers.IO) {
+                                    val bookGoogle = googleBooksService.searchBooksInGoogleBooks(
+                                        listOf(bookFirestore)
+                                    )
+                                    createBookFromRemoteData(
+                                        bookFirestore,
+                                        bookGoogle.singleOrNull()
+                                    )
+                                }
+                            }
+
+                            // Await all deferred results
+                            deferredBooks.awaitAll()
+                        }
+                    } catch (e: Exception) {
+                        // Handle exceptions that might occur during the asynchronous processing
+                        Log.e(TAG, "Error processing books", e)
+                        emptyList<Book>()
+                    }
+
+                    Log.d(TAG, "size ${resultBooks.size}")
+                    trySend(Result.Success(resultBooks)).isSuccess
+                }
+            }
+        }
+
+        awaitClose { subscription.remove() }
+    }
+
     override suspend fun reserveBook(
         isbn: String,
         userEmail: String,
@@ -123,6 +181,42 @@ class BooksRepositoryImpl @Inject constructor(
         }
     }
 
+
+    suspend private fun getAllBooksFromGoogleBooks() {
+
+    }
+
+    suspend fun getAllBooks2(): Result<List<Book>> {
+        return try {
+            val books = mutableListOf<Book>()
+
+            val booksFirestore = withContext(Dispatchers.IO) {
+                getAllBooksFromFirestore()
+            }
+
+            Log.d(TAG, "libros firestore getAll : $booksFirestore")
+
+            val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
+
+            Log.d(TAG, "libros google getAll : $booksFirestore")
+
+            if (booksFirestore.size != booksGoogle.size) {
+                throw IllegalArgumentException("Input lists must have the same size")
+            }
+
+            for (i in booksFirestore.indices) {
+                val bookFirestore = booksFirestore[i]
+                val bookGoogle = booksGoogle[i]
+                val book = createBookFromRemoteData(bookFirestore, bookGoogle)
+                books.add(book)
+            }
+            Result.Success(books)
+        } catch (e: Exception) {
+            Result.Error(e.message.toString())
+        }
+    }
+
+
     override suspend fun reserveBook(isbn: String, userEmail: String): Boolean {
         TODO("Not yet implemented")
     }
@@ -154,18 +248,33 @@ class BooksRepositoryImpl @Inject constructor(
         return querySnapshot.toObjects(BookFirestore::class.java)
     }
 
-    private fun createBookFromRemoteData(
+
+    private suspend fun createBookFromRemoteData(
         bookFirestore: BookFirestore,
-        bookGoogle: GoogleBooksResponse
+        bookGoogle: GoogleBooksResponse?
     ): Book {
         return Book(
             autor = bookFirestore.autor,
             titulo = bookFirestore.titulo,
             isbn = bookFirestore.isbn,
-            descripcion = bookGoogle.items[0].volumeInfo.description, //Siempre es uno, al ser un ISBN identificador único
-            valoracion = bookGoogle.items[0].volumeInfo.averageRating,
-            imageLinks = ImageLinks(bookGoogle.items[0].volumeInfo.imageLinks?.smallThumbnail),
+            descripcion = bookGoogle?.items?.getOrNull(0)?.volumeInfo?.description.orEmpty(),
+            valoracion = bookGoogle?.items?.getOrNull(0)?.volumeInfo?.averageRating ?: 0.0,
+            imageLinks = ImageLinks(bookGoogle?.items?.getOrNull(0)?.volumeInfo?.imageLinks?.smallThumbnail),
             cantidadDisponible = bookFirestore.cantidad_disponible
         )
     }
+
+//    private suspend fun createBookFromRemoteData(
+//        bookFirestore: BookFirestore,
+//        bookGoogle: GoogleBooksResponse
+//    ): Book {
+//        return Book(
+//            autor = bookFirestore.autor,
+//            titulo = bookFirestore.titulo,
+//            isbn = bookFirestore.isbn,
+//            descripcion = bookGoogle.items[0].volumeInfo.description, //Siempre es uno, al ser un ISBN identificador único
+//            valoracion = bookGoogle.items[0].volumeInfo.averageRating,
+//            imageLinks = ImageLinks(bookGoogle.items[0].volumeInfo.imageLinks?.smallThumbnail),
+//            cantidadDisponible = bookFirestore.cantidad_disponible
+//        )
 }

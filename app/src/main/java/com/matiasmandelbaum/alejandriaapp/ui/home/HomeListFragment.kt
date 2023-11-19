@@ -14,26 +14,24 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
-import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager.addAuthStateListener
-import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager.removeAuthStateListener
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentHomeListBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.BookListAdapter
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.BookListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "HomeListFragment"
 
 @AndroidEntryPoint
 class HomeListFragment : Fragment() {
-    private var currentBookList: List<Book> = emptyList()
-    private var isFirstLoad = true
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding: FragmentHomeListBinding
 
@@ -54,6 +52,35 @@ class HomeListFragment : Fragment() {
             )
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.bookListState.collect {
+                    when(it){
+                        is Result.Success -> {
+                            handleLoading(false)
+                            val data: List<Book> = it.data
+                            val adapter = binding.recyclerView.adapter as BookListAdapter
+                          //  if (adapter.currentList.size != data.size) {
+                                adapter.submitList(data)
+                            //}
+
+                        }
+                        Result.Loading -> handleLoading(true)
+                        is Result.Error -> {
+                            handleLoading(false)
+                            val errorMessage = it.message
+                            Log.d(TAG, "error! : $errorMessage")// Get the error message from the Error Result
+                            // Handle the error message as needed
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+
+
         return binding.root
     }
 
@@ -66,38 +93,38 @@ class HomeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (currentBookList.isNotEmpty()) {
-            val adapter = binding.recyclerView.adapter as BookListAdapter
-            adapter.submitList(currentBookList)
-            Log.d(TAG, "Using existing data. Size: ${currentBookList.size}")
-        } else {
-            viewModel.getAllBooks()
-        }
+//        if (currentBookList.isNotEmpty()) {
+//            val adapter = binding.recyclerView.adapter as BookListAdapter
+//            adapter.submitList(currentBookList)
+//            Log.d(TAG, "Using existing data. Size: ${currentBookList.size}")
+//        } else {
+//            viewModel.getAllBooks()
+//        }
         setupMenu()
-
-        viewModel.bookListState.observe(viewLifecycleOwner) {
-            when (it) {
-                is Result.Success -> {
-
-                    handleLoading(false)
-                    val newBookList = it.data
-                    if (isFirstLoad) {
-                        isFirstLoad = false
-                        currentBookList = newBookList
-                        val adapter = binding.recyclerView.adapter as BookListAdapter
-                        adapter.submitList(newBookList)
-                        Log.d(TAG, "New data loaded. Size: ${newBookList.size}")
-                    } else {
-                        Log.d(TAG, "Data is the same. Not updating the RecyclerView.")
-                    }
-                }
-
-                is Result.Loading -> handleLoading(true)
-                is Result.Error -> handleLoading(false)
-                else -> {
-                }
-            }
-        }
+//
+//        viewModel.bookListState.observe(viewLifecycleOwner) {
+//            when (it) {
+//                is Result.Success -> {
+//
+//                    handleLoading(false)
+//                    val newBookList = it.data
+//                    if (isFirstLoad) {
+//                        isFirstLoad = false
+//                        currentBookList = newBookList
+//                        val adapter = binding.recyclerView.adapter as BookListAdapter
+//                        adapter.submitList(newBookList)
+//                        Log.d(TAG, "New data loaded. Size: ${newBookList.size}")
+//                    } else {
+//                        Log.d(TAG, "Data is the same. Not updating the RecyclerView.")
+//                    }
+//                }
+//
+//                is Result.Loading -> handleLoading(true)
+//                is Result.Error -> handleLoading(false)
+//                else -> {
+//                }
+//            }
+//        }
     }
 
     private fun setupMenu() {
