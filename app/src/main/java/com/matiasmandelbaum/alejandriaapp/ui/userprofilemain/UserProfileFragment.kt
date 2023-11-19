@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
@@ -20,6 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.EMAIL
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.IMAGE
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.LAST_NAME
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.NAME
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,6 +36,7 @@ class UserProfileFragment : Fragment() {
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
     private var previousEmail: String? = null
+    private val viewModel : UserProfileViewModel by viewModels()
 
     private lateinit var binding: UserProfileBinding
     private val firestore = FirebaseFirestore.getInstance()
@@ -43,7 +49,7 @@ class UserProfileFragment : Fragment() {
 
             // Query the Firestore collection to find a user with the matching email.
             firestore.collection(USER_COLLECTION)
-                .whereEqualTo("email", userEmail)
+                .whereEqualTo(EMAIL, userEmail)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     if (!querySnapshot.isEmpty) {
@@ -51,9 +57,9 @@ class UserProfileFragment : Fragment() {
                             querySnapshot.documents[0] // Access the first (and only) document
 
                         // User document found, you can access its data here.
-                        val nombre = document.getString("nombre")
-                        val apellido = document.getString("apellido")
-                        val image = document.getString("image")
+                        val nombre = document.getString(NAME)
+                        val apellido = document.getString(LAST_NAME)
+                        val image = document.getString(IMAGE)
 
                         Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $userEmail")
 
@@ -158,8 +164,8 @@ class UserProfileFragment : Fragment() {
         userDocumentReference?.update(
 
             mapOf(
-                "nombre" to newNombre,
-                "apellido" to newApellido
+                NAME to newNombre,
+                LAST_NAME to newApellido
             )
         )
 
@@ -192,7 +198,7 @@ class UserProfileFragment : Fragment() {
 
             userDocumentReference?.update(
                 mapOf(
-                    "email" to newEmail
+                    EMAIL to newEmail
                 )
             )
 
@@ -227,7 +233,7 @@ class UserProfileFragment : Fragment() {
             val pass = password.text.toString()
 
             Log.d(TAG, "current user in showChangeEmail $user")
-         //   val credential = EmailAuthProvider.getCredential(user?.email ?: "", pass)
+            //   val credential = EmailAuthProvider.getCredential(user?.email ?: "", pass)
 
             val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
 
@@ -241,10 +247,10 @@ class UserProfileFragment : Fragment() {
                             user.updateEmail(newEmail)
                             userDocumentReference?.update(
                                 mapOf(
-                                    "email" to newEmail
+                                    EMAIL to newEmail
                                 )
                             )
-                           // saveEmail(user)
+                            // saveEmail(user)
                             bottomSheetDialog.dismiss()
                         } else {
                             Log.d(TAG, "La reautenticación falló")
@@ -253,7 +259,4 @@ class UserProfileFragment : Fragment() {
             }
         }
     }
-
-
-
 }

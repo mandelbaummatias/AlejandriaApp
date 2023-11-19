@@ -1,5 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.userMainmail
 
+
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,21 +9,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.EMAIL
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.LAST_NAME
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.NAME
 import com.matiasmandelbaum.alejandriaapp.databinding.UserMailBinding
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewModel
-
-
-
 import dagger.hilt.android.AndroidEntryPoint
-import org.checkerframework.checker.units.qual.A
-import kotlin.reflect.jvm.internal.impl.types.checker.NewCapturedType
 
 
 private const val TAG = "UserMailFragment"
@@ -33,7 +31,7 @@ class UserMailFragment : Fragment() {
     private var userDocumentReference: DocumentReference? = null
     private var previousEmail: String? = null
 
-    private val viewModel : UserEmailViewModel by viewModels()
+    private val viewModel: UserEmailViewModel by viewModels()
 
 
     private lateinit var binding: UserMailBinding
@@ -47,7 +45,7 @@ class UserMailFragment : Fragment() {
 
             // Query the Firestore collection to find a user with the matching email.
             firestore.collection(UserService.USER_COLLECTION)
-                .whereEqualTo("email", userEmail)
+                .whereEqualTo(EMAIL, userEmail)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     if (!querySnapshot.isEmpty) {
@@ -55,9 +53,9 @@ class UserMailFragment : Fragment() {
                             querySnapshot.documents[0] // Access the first (and only) document
 
                         // User document found, you can access its data here.
-                        val nombre = document.getString("nombre")
-                        val apellido = document.getString("apellido")
-                        val email = document.getString("email")
+                        val nombre = document.getString(NAME)
+                        val apellido = document.getString(LAST_NAME)
+                        val email = document.getString(EMAIL)
 
                         Log.d(TAG, "$nombre")
                         Log.d(TAG, "$apellido")
@@ -162,7 +160,7 @@ class UserMailFragment : Fragment() {
                     user.updateEmail(newEmail)
                     userDocumentReference?.update(
                         mapOf(
-                            "email" to newEmail
+                            EMAIL to newEmail
                         )
                     )
 
@@ -172,10 +170,15 @@ class UserMailFragment : Fragment() {
                     binding.password.setText("")
                     isInEditMode = false
 
-                    Toast.makeText(context, "Correo electrónico actualizado con éxito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Correo electrónico actualizado con éxito",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                 } else {
-                    Toast.makeText(context, "La contraseña es incorrecta", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "La contraseña es incorrecta", Toast.LENGTH_SHORT)
+                        .show()
 
                     // restablecer los campos y el estado
                     resetView()
@@ -189,11 +192,6 @@ class UserMailFragment : Fragment() {
         binding.editFab.setImageResource(com.matiasmandelbaum.alejandriaapp.R.drawable.ic_edit)
         binding.editEmail.isEnabled = false
         isInEditMode = false
-    }
-
-    private fun goToVerifyEmail(newEmail:String) {
-//        val action = UserMailFragmentDirections.actionUserMailFragmentToVerificationBeforeUpdateFragment(newEmail)
-//        findNavController().navigate(action)
     }
 }
 
