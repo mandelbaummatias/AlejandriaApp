@@ -20,13 +20,13 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
-import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.EMAIL
-import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.IMAGE
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.LAST_NAME
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.NAME
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
+
 
 private const val TAG = "UserProfileFragment"
 
@@ -40,6 +40,8 @@ class UserProfileFragment : Fragment() {
 
     private lateinit var binding: UserProfileBinding
     private val firestore = FirebaseFirestore.getInstance()
+
+
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
         if (user != null) {
@@ -47,46 +49,9 @@ class UserProfileFragment : Fragment() {
             previousEmail = userEmail
             Log.d(TAG, "Email of the logged-in user: $userEmail")
 
-            // Query the Firestore collection to find a user with the matching email.
-            firestore.collection(USER_COLLECTION)
-                .whereEqualTo(EMAIL, userEmail)
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    if (!querySnapshot.isEmpty) {
-                        val document =
-                            querySnapshot.documents[0] // Access the first (and only) document
-
-                        // User document found, you can access its data here.
-                        val nombre = document.getString(NAME)
-                        val apellido = document.getString(LAST_NAME)
-                        val image = document.getString(IMAGE)
-
-                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $userEmail")
-
-                        // Update the edit texts with the retrieved data
-                        binding.editNombre.setText(nombre)
-                        binding.editApellido.setText(apellido)
-                        binding.editEmail.setText(userEmail)
-
-                        // Load user image
-                        if (!image.isNullOrEmpty()) {
-                            val resourceId = resources.getIdentifier(
-                                image,
-                                "drawable",
-                                requireContext().packageName
-                            )
-                            binding.profileImage.setImageResource(resourceId)
-                        } else {
-                            // Default image
-                            binding.profileImage.setImageResource(R.drawable.alejandria_logo)
-                        }
-
-                        userDocumentReference = document.reference
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e(TAG, "Error querying Firestore: $exception")
-                }
+            if (userEmail != null) {
+                viewModel.getUserByEmail(userEmail)
+            } // Notify ViewModel about the user's email
         } else {
             Log.d(TAG, "User is null")
         }
@@ -101,14 +66,136 @@ class UserProfileFragment : Fragment() {
 
         binding.editFab.setOnClickListener {
             if (!isInEditMode) {
+                Log.d(TAG, "in edit mode from click listener")
                 // Enter edit mode
                 enterEditMode()
             } else {
+                Log.d(TAG, "to save changes from click listener ")
                 // Save the changes
                 saveChanges()
             }
         }
+
+        // Observe user data
+        viewModel.user.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Success -> {
+                    val user = result.data
+                    // Update UI with user data
+                    updateUI(user)
+                    userDocumentReference = result.data.documentReference
+                }
+
+                is Result.Error -> {
+                    // Handle error
+                    Log.e(TAG, "Error retrieving user data: ${result.message}")
+                }
+
+                is Result.Loading -> {
+                    // Show loading indicator if needed
+                }
+
+                else -> {}
+            }
+        }
     }
+
+    private fun updateUI(user: User) {
+        // Update UI elements with user data
+        binding.editNombre.setText(user.name)
+        binding.editApellido.setText(user.lastName)
+        binding.editEmail.setText(user.email)
+
+        if (!user.image.isNullOrEmpty()) {
+            val resourceId = resources.getIdentifier(
+                user.image,
+                "drawable",
+                requireContext().packageName
+            )
+            binding.profileImage.setImageResource(resourceId)
+        } else {
+            // Default image
+            binding.profileImage.setImageResource(R.drawable.alejandria_logo)
+        }
+    }
+
+
+//    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+//        val user = auth.currentUser
+//        if (user != null) {
+//            val userEmail = user.email
+//            previousEmail = userEmail
+//            Log.d(TAG, "Email of the logged-in user: $userEmail")
+//
+//            // Query the Firestore collection to find a user with the matching email.
+//            firestore.collection(USER_COLLECTION)
+//                .whereEqualTo(EMAIL, userEmail)
+//                .get()
+//                .addOnSuccessListener { querySnapshot ->
+//                    if (!querySnapshot.isEmpty) {
+//                        val document =
+//                            querySnapshot.documents[0] // Access the first (and only) document
+//
+//                        // User document found, you can access its data here.
+//                        val nombre = document.getString(NAME)
+//                        val apellido = document.getString(LAST_NAME)
+//                        val image = document.getString(IMAGE)
+//
+//                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $userEmail")
+//
+//                        // Update the edit texts with the retrieved data
+//                        binding.editNombre.setText(nombre)
+//                        binding.editApellido.setText(apellido)
+//                        binding.editEmail.setText(userEmail)
+//
+//                        // Load user image
+//                        if (!image.isNullOrEmpty()) {
+//                            val resourceId = resources.getIdentifier(
+//                                image,
+//                                "drawable",
+//                                requireContext().packageName
+//                            )
+//                            binding.profileImage.setImageResource(resourceId)
+//                        } else {
+//                            // Default image
+//                            binding.profileImage.setImageResource(R.drawable.alejandria_logo)
+//                        }
+//
+//                        userDocumentReference = document.reference
+//                    }
+//                }
+//                .addOnFailureListener { exception ->
+//                    Log.e(TAG, "Error querying Firestore: $exception")
+//                }
+//        } else {
+//            Log.d(TAG, "User is null")
+//        }
+//    }
+
+
+
+
+
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        binding.profileImage.setOnClickListener {
+//            findNavController().navigate(R.id.changeProfileImageFragment)
+//        }
+//
+//        binding.editFab.setOnClickListener {
+//            if (!isInEditMode) {
+//                // Enter edit mode
+//                enterEditMode()
+//            } else {
+//                // Save the changes
+//                saveChanges()
+//            }
+//        }
+//    }
+
+
 
     override fun onStart() {
         super.onStart()
