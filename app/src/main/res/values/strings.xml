@@ -178,6 +178,9 @@
     <string name="cambio_de_imagen">Cambio de Imagen</string>
     <string name="Perfil">Perfil</string>
     <string name="registro">Registro</string>
+    <string name="nombre_invalido">El nombre no es valido\n</string>
+    <string name="apellido_invalido">El apellido no es valido</string>
+    <string name="email_invalido">El mail no es valido</string>
 
 
 </resources>

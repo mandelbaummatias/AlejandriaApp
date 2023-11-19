@@ -12,6 +12,7 @@ import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.User
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.NAME
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.USERS_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.domain.model.user.User
+import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
 import com.matiasmandelbaum.alejandriaapp.domain.repository.UsersRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -62,11 +63,49 @@ class UsersRepositoryImpl @Inject constructor(
                 }
         }
 
+    override suspend fun updateUserProfile(
+        name: String,
+        lastName: String,
+        email: String
+    ): Result<Unit> =
+        suspendCoroutine { continuation ->
+
+            val usersCollection = firestore.collection(USERS_COLLECTION)
+
+            usersCollection
+                .whereEqualTo(EMAIL, email)
+                .get()
+                .addOnSuccessListener { userDocuments ->
+                    if (userDocuments.size() > 0) {
+                        val userDocument = userDocuments.documents[0]
+                        val userReference = userDocument.reference
+                        userReference.update(
+                            mapOf(
+                                NAME to name,
+                                LAST_NAME to lastName
+                            )
+                        ).addOnSuccessListener {
+                            continuation.resume(Result.Success(Unit))
+                        }
+                            .addOnFailureListener {
+                                continuation.resume(Result.Error(it.toString()))
+                            }
+                    } else {
+                        Log.d(TAG, "User not found")
+                        continuation.resume(Result.Error("User not found"))
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.d(TAG, "User query or update failed $e")
+                    continuation.resume(Result.Error("User query or update failed: ${e.message}"))
+                }
+        }
+
     override suspend fun getUserById(userId: String): Result<com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User> {
         return userService.getUserById(userId)
     }
 
-    override suspend fun getUserByEmail(email: String): Result<com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.User> =
+    override suspend fun getUserByEmail(email: String): Result<UserProfile> =
         suspendCoroutine { continuation ->
             firestore.collection(USER_COLLECTION)
                 .whereEqualTo(EMAIL, email)
@@ -78,14 +117,15 @@ class UsersRepositoryImpl @Inject constructor(
                         val nombre = document.getString(NAME)
                         val apellido = document.getString(LAST_NAME)
                         val image = document.getString(IMAGE)
-                        val user = com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.User(nombre!!,apellido!!,email,image, document.reference)
+                        val userProfile =
+                            UserProfile(nombre!!, apellido!!, email, image, document.reference)
 
                         Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $email")
 
-                     //   val user = document.toObject(com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.User::class.java())
+                        //   val user = document.toObject(com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.User::class.java())
 
-                        Log.d(TAG, "mi usuaro desde UserRepo $user")
-                        continuation.resume(Result.Success(user))
+                        Log.d(TAG, "mi usuaro desde UserRepo $userProfile")
+                        continuation.resume(Result.Success(userProfile))
                     } else {
                         continuation.resume(Result.Error("User not found"))
                     }
