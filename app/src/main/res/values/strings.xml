@@ -81,6 +81,13 @@
     <string name="si">Sí</string>
     <string name="no">No</string>
 
+    <!--Password Recovery-->
+    <string name="pw_recovery_title">Recuperar contraseña</string>
+    <string name="pw_recovery_message">Se te enviará un enlace para restablecer tu contraseña</string>
+    <string name="pw_recovery_email_label">Email</string>
+    <string name="pw_recovery_content_description">Ingrese su dirección de correo electrónico</string>
+    <string name="pw_recovery_send_btn">Enviar</string>
+
     <!--User profile-->
     <string name="personalInfo">Información personal</string>
     <string name="domicilio">Domicilio</string>

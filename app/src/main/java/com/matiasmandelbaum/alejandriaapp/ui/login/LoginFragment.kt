@@ -1,5 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.login
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -246,11 +247,12 @@ class LoginFragment : Fragment() {
 //        return view
 //    }
 
+    @SuppressLint("MissingInflatedId")
     private fun showPasswordRecovery() {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val view = layoutInflater.inflate(R.layout.fragment_password_recovery, null)
-        val btnPasswordRecovery = view.findViewById<Button>(R.id.btnPasswordRecovery)
-        val email = view.findViewById<TextInputEditText>(R.id.passwordRecoveryEmail)
+        val btnPasswordRecovery = view.findViewById<Button>(R.id.pw_recovery_send_button)
+        val email = view.findViewById<TextInputEditText>(R.id.pw_recovery_email)
 
         bottomSheetDialog.setContentView(view)
         bottomSheetDialog.show()
