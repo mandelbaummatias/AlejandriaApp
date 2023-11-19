@@ -2,12 +2,17 @@ package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
 
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,7 +20,6 @@ import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
-import com.matiasmandelbaum.alejandriaapp.ui.signin.SignInFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "UserProfileFragment"
@@ -50,15 +54,20 @@ class UserProfileFragment : Fragment() {
                         val apellido = document.getString("apellido")
                         val image = document.getString("image")
 
-                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido")
+                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $userEmail")
 
                         // Update the edit texts with the retrieved data
                         binding.editNombre.setText(nombre)
                         binding.editApellido.setText(apellido)
+                        binding.editEmail.setText(userEmail)
 
                         // Load user image
                         if (image != null && image.isNotEmpty()) {
-                            val resourceId = resources.getIdentifier(image, "drawable", requireContext().packageName)
+                            val resourceId = resources.getIdentifier(
+                                image,
+                                "drawable",
+                                requireContext().packageName
+                            )
                             binding.profileImage.setImageResource(resourceId)
                         } else {
                             // Default image
@@ -83,22 +92,7 @@ class UserProfileFragment : Fragment() {
             findNavController().navigate(R.id.changeProfileImageFragment)
         }
 
-        binding.overlayFab1.visibility = View.GONE
-        binding.overlayFab2.visibility = View.GONE
-
         binding.editFab.setOnClickListener {
-            if (binding.overlayFab1.visibility == View.VISIBLE) {
-                // Hide overlay_fab_1 and overlay_fab_2
-                binding.overlayFab1.visibility = View.GONE
-                binding.overlayFab2.visibility = View.GONE
-            } else {
-                // Show overlay_fab_1 and overlay_fab_2
-                binding.overlayFab1.visibility = View.VISIBLE
-                binding.overlayFab2.visibility = View.VISIBLE
-            }
-        }
-
-        binding.overlayFab1.setOnClickListener {
             if (!isInEditMode) {
                 // Enter edit mode
                 enterEditMode()
@@ -106,11 +100,6 @@ class UserProfileFragment : Fragment() {
                 // Save the changes
                 saveChanges()
             }
-        }
-
-        binding.overlayFab2.setOnClickListener {
-            // Aquí navegamos al fragmento userMailFragment
-            findNavController().navigate(com.matiasmandelbaum.alejandriaapp.R.id.userMailFragment)
         }
     }
 
@@ -139,6 +128,7 @@ class UserProfileFragment : Fragment() {
         // Set TextInputEditText fields as editable
         binding.editNombre.isEnabled = true
         binding.editApellido.isEnabled = true
+        binding.editEmail.isEnabled = true
 
         // Cambiar el texto del encabezado
         binding.userMailHeader.text = "Cambio de nombre"
@@ -146,7 +136,7 @@ class UserProfileFragment : Fragment() {
         binding.editNombre.requestFocus()
         binding.editNombre.text?.let { binding.editNombre.setSelection(it.length) }
 
-        binding.overlayFab1.setImageResource(R.drawable.ic_save)
+        binding.editFab.setImageResource(R.drawable.ic_save)
     }
 
     private fun saveChanges() {
@@ -154,13 +144,24 @@ class UserProfileFragment : Fragment() {
         val newNombre = binding.editNombre.text.toString()
         val newApellido = binding.editApellido.text.toString()
 
+        if (previousEmail != binding.editEmail.text.toString()) {
+            Toast.makeText(
+                requireContext(),
+                "El email es distinto",
+                Toast.LENGTH_LONG
+            ).show()
+            showChangeEmailVerification()
+        }
+
         // Get the current user's email
         userDocumentReference?.update(
+
             mapOf(
                 "nombre" to newNombre,
                 "apellido" to newApellido
             )
         )
+
             ?.addOnSuccessListener {
                 // Document updated successfully
                 Log.d(TAG, "Document updated successfully")
@@ -172,9 +173,71 @@ class UserProfileFragment : Fragment() {
 
         binding.editNombre.isEnabled = false
         binding.editApellido.isEnabled = false
-        binding.overlayFab1.setImageResource(R.drawable.ic_profile)
-        binding.userMailHeader.text = getString(com.matiasmandelbaum.alejandriaapp.R.string.personalInfo)
+        binding.editEmail.isEnabled = false
+        binding.editFab.setImageResource(R.drawable.ic_profile)
+        binding.userMailHeader.text = getString(R.string.personalInfo)
 
         isInEditMode = false
     }
+
+    private fun saveEmail() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val newEmail = binding.editEmail.text.toString()
+
+        val validEmail = Patterns.EMAIL_ADDRESS.matcher(newEmail).matches() || newEmail.isEmpty()
+
+        if (validEmail) {
+
+            userDocumentReference?.update(
+                mapOf(
+                    "email" to newEmail
+                )
+            )
+
+                ?.addOnSuccessListener {
+
+                    Log.d(TAG, "Actualizado")
+                }
+                ?.addOnFailureListener { exception ->
+                    Log.e(TAG, "Error: $exception")
+                }
+            bottomSheetDialog.dismiss()
+
+        } else {
+            Toast.makeText(context, "El correo es inválido", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showChangeEmailVerification() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val view = layoutInflater.inflate(R.layout.fragment_pw_confirmation, null)
+        val btnEmailChangeConfirmation = view.findViewById<Button>(R.id.btnChangeConfirmation)
+        val password = view.findViewById<TextInputEditText>(R.id.passwordEmailChange)
+
+        bottomSheetDialog.setContentView(view)
+        bottomSheetDialog.show()
+
+        btnEmailChangeConfirmation.setOnClickListener {
+
+            val user = FirebaseAuth.getInstance().currentUser
+            val pass = password.text.toString()
+
+            val credential = EmailAuthProvider.getCredential(user?.email ?: "", pass)
+
+            if (pass.isNotEmpty()) {
+                user?.reauthenticate(credential)
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            saveEmail()
+                            bottomSheetDialog.dismiss()
+                        } else {
+                            Log.d(TAG, "La reautenticación falló")
+                        }
+                    }
+            }
+        }
+    }
+
+
+
 }
