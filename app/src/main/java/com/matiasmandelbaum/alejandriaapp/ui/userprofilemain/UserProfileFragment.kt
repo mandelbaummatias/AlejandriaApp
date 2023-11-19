@@ -174,7 +174,7 @@ class UserProfileFragment : Fragment() {
         binding.editNombre.isEnabled = false
         binding.editApellido.isEnabled = false
         binding.editEmail.isEnabled = false
-        binding.editFab.setImageResource(R.drawable.ic_profile)
+        binding.editFab.setImageResource(R.drawable.ic_edit)
         binding.userMailHeader.text = getString(R.string.personalInfo)
 
         isInEditMode = false
