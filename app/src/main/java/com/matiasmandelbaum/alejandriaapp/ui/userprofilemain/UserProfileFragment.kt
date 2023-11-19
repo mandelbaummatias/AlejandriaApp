@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.R
@@ -180,13 +181,14 @@ class UserProfileFragment : Fragment() {
         isInEditMode = false
     }
 
-    private fun saveEmail() {
+    private fun saveEmail(user: FirebaseUser) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val newEmail = binding.editEmail.text.toString()
 
         val validEmail = Patterns.EMAIL_ADDRESS.matcher(newEmail).matches() || newEmail.isEmpty()
 
         if (validEmail) {
+
 
             userDocumentReference?.update(
                 mapOf(
@@ -213,6 +215,8 @@ class UserProfileFragment : Fragment() {
         val view = layoutInflater.inflate(R.layout.fragment_pw_confirmation, null)
         val btnEmailChangeConfirmation = view.findViewById<Button>(R.id.btnChangeConfirmation)
         val password = view.findViewById<TextInputEditText>(R.id.passwordEmailChange)
+        val newEmail = binding.editEmail.text.toString()
+
 
         bottomSheetDialog.setContentView(view)
         bottomSheetDialog.show()
@@ -222,17 +226,25 @@ class UserProfileFragment : Fragment() {
             val user = FirebaseAuth.getInstance().currentUser
             val pass = password.text.toString()
 
+            Log.d(TAG, "current user in showChangeEmail $user")
          //   val credential = EmailAuthProvider.getCredential(user?.email ?: "", pass)
 
             val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
 
+            Log.d(TAG, "credentials $credential")
 
             if (pass.isNotEmpty()) {
                 user?.reauthenticate(credential)
                     ?.addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Log.d(TAG, "reauthenticate is successful")
-                            saveEmail()
+                            user.updateEmail(newEmail)
+                            userDocumentReference?.update(
+                                mapOf(
+                                    "email" to newEmail
+                                )
+                            )
+                           // saveEmail(user)
                             bottomSheetDialog.dismiss()
                         } else {
                             Log.d(TAG, "La reautenticación falló")
