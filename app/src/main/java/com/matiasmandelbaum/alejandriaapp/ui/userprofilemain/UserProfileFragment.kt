@@ -62,7 +62,7 @@ class UserProfileFragment : Fragment() {
                         binding.editEmail.setText(userEmail)
 
                         // Load user image
-                        if (image != null && image.isNotEmpty()) {
+                        if (!image.isNullOrEmpty()) {
                             val resourceId = resources.getIdentifier(
                                 image,
                                 "drawable",
@@ -222,12 +222,16 @@ class UserProfileFragment : Fragment() {
             val user = FirebaseAuth.getInstance().currentUser
             val pass = password.text.toString()
 
-            val credential = EmailAuthProvider.getCredential(user?.email ?: "", pass)
+         //   val credential = EmailAuthProvider.getCredential(user?.email ?: "", pass)
+
+            val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
+
 
             if (pass.isNotEmpty()) {
                 user?.reauthenticate(credential)
                     ?.addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            Log.d(TAG, "reauthenticate is successful")
                             saveEmail()
                             bottomSheetDialog.dismiss()
                         } else {
