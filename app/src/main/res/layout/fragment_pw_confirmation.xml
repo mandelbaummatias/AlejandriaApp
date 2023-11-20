@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="@dimen/confirmation_linear_layout_height"
     android:gravity="top"
     android:id="@+id/user_profile_fragment"
     android:orientation="vertical"
     android:backgroundTint="?attr/colorOnPrimary"
     android:background="@drawable/fondo_redondeado"
-    android:padding="30dp">
+    android:padding="@dimen/confirmation_linear_layout_padding">
 
     <TextView
         android:id="@+id/textViewTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirmar contraseña"
+        android:text="@string/confirmar_contrasenia"
         android:textColor="@color/md_theme_light_primary"
-        android:textSize="30dp"
+        android:textSize="@dimen/confirmation_text_size_big"
         android:layout_gravity="left"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="@dimen/confirmation_text_margin_normal" />
 
     <TextView
         android:id="@+id/confirmationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ingresa tu contraseña actual para confirmar"
+        android:text="@string/ingrese_contrasenia"
         android:layout_gravity="center"
-        android:textSize="13dp"/>
+        android:textSize="@dimen/confirmation_text_size_small"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutPassword"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Contraseña">
+        android:layout_marginTop="@dimen/confirmation_text_margin_small"
+        android:hint="@string/hint_contrasenia">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordEmailChange"
@@ -47,11 +47,11 @@
     <Button
         android:id="@+id/btnChangeConfirmation"
         android:layout_width="match_parent"
-        android:textSize="20dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Confirmar" />
+        android:textSize="@dimen/confirmation_text_size_medium"
+        android:layout_height="@dimen/confirmation_button_height"
+        android:layout_marginTop="@dimen/confirmation_text_margin_normal"
+        android:layout_marginBottom="@dimen/confirmation_text_margin_normal"
+        android:text="@string/confirmar_cambio_contrasenia" />
 
     <ProgressBar
         android:id="@+id/progressBarPasswordConfirmation"
