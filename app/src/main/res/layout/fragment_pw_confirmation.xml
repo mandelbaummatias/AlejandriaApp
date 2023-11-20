@@ -1,60 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="@dimen/pw_confirm_height"
     android:gravity="top"
     android:id="@+id/user_profile_fragment"
     android:orientation="vertical"
-    android:backgroundTint="?attr/colorOnPrimary"
+    android:clipToPadding="false"
+    android:backgroundTint="?attr/colorSurface"
     android:background="@drawable/fondo_redondeado"
-    android:padding="30dp">
+    android:padding="@dimen/pw_confirm_content_padding">
 
     <TextView
-        android:id="@+id/textViewTitulo"
+        android:id="@+id/pw_confirm_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirmar contraseña"
-        android:textColor="@color/md_theme_light_primary"
-        android:textSize="30dp"
+        android:text="@string/pw_confirm_title"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/pw_confirm_title_text_size"
         android:layout_gravity="left"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="@dimen/pw_confirm_margin_bottom" />
 
     <TextView
-        android:id="@+id/confirmationText"
+        android:id="@+id/pw_confirm_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ingresa tu contraseña actual para confirmar"
+        android:text="@string/pw_confirm_message"
         android:layout_gravity="center"
-        android:textSize="13dp"/>
+        android:textSize="@dimen/pw_confirm_message_text_size"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutPassword"
+        android:id="@+id/pw_confirm_password_label"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Contraseña">
+        android:layout_marginTop="@dimen/pw_confirm_margin_top_small"
+        android:hint="@string/pw_confirm_password_label">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/passwordEmailChange"
+            android:id="@+id/pw_confirm_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:importantForAccessibility="yes"
-            android:contentDescription="Ingrese su contraseña" />
+            android:contentDescription="@string/pw_confirm_content_description" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnChangeConfirmation"
+        android:id="@+id/pw_confirm_button"
         android:layout_width="match_parent"
-        android:textSize="20dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Confirmar" />
+        android:textSize="@dimen/pw_confirm_button_text_size"
+        android:layout_height="@dimen/pw_confirm_button_height"
+        android:layout_marginTop="@dimen/pw_confirm_margin_top"
+        android:textColor="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/colorPrimary"
+        android:layout_marginBottom="@dimen/pw_confirm_margin_bottom"
+        android:text="@string/pw_confirm_btn" />
 
     <ProgressBar
-        android:id="@+id/progressBarPasswordConfirmation"
+        android:id="@+id/pw_confirm_progressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
