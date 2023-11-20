@@ -183,6 +183,7 @@
     <string name="email_invalido">El mail no es valido</string>
     <string name="datos_actualizados_con_exito">Datos personales actualizados!</string>
     <string name="email_actualizado_con_exito">Mail actualizado con éxito!</string>
+    <string name="email_no_fue_actualizado">El mail no fue actualizado</string>
 
 
 </resources>

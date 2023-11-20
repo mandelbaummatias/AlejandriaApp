@@ -1,5 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -83,7 +84,6 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
         val previousEmail = arguments?.getString(ARG_PREVIOUS_EMAIL)
 
         binding.btnChangeConfirmation.setOnClickListener {
-
             val pass = binding.passwordEmailChange.text.toString()
             if (pass.isNotEmpty()){
                 try {
@@ -96,98 +96,13 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
                     Log.d(TAG, "exception $e")
                 }
             } else{
-                binding.textInputLayoutPassword.error = "La contraseña no puede estar vacía"
+                with(binding){
+                   textInputLayoutPassword.error = "La contraseña no puede estar vacía"
+                }
+
             }
 
         }
-//            val user = FirebaseAuth.getInstance().currentUser
-//            val pass = binding.passwordEmailChange.text.toString()
-//
-//            if (pass.isNotEmpty()) {
-//                try {
-//                    val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
-//
-//                    user?.reauthenticate(credential)
-//                        ?.addOnCompleteListener { task ->
-//                            if (task.isSuccessful) {
-//                                Log.d(
-//                                    TAG,
-//                                    "reauthenticate is successful"
-//                                )
-//                                if (newEmail != null) {
-//
-//                                    user.updateEmail(newEmail).addOnSuccessListener {
-//                                        val usersCollection = FirebaseFirestore.getInstance()
-//                                            .collection(UsersConstants.USERS_COLLECTION)
-//                                        usersCollection
-//                                            .whereEqualTo(UsersConstants.EMAIL, previousEmail)
-//                                            .get()
-//                                            .addOnSuccessListener { userDocuments ->
-//                                                if (userDocuments.size() > 0) {
-//                                                    val userDocument = userDocuments.documents[0]
-//                                                    val userReference = userDocument.reference
-//                                                    userReference.update(
-//                                                        mapOf(
-//                                                            UsersConstants.EMAIL to newEmail
-//                                                        )
-//                                                    ).addOnSuccessListener {
-//                                                        Log.d(TAG, "cambio mail ok")
-//                                                        listener?.onFinishClickDialog(true) //implementar MMVVM.
-//                                                        //quiza descartar, quizá  usar by activityViewModels
-//                                                    }
-//                                                        .addOnFailureListener {
-//                                                            Log.d(TAG, "error cambio mail")
-//                                                        }
-//                                                } else {
-//                                                    Log.d(TAG, "User not found")
-//
-//                                                }
-//                                            }
-//                                            .addOnFailureListener { e ->
-//                                                Log.d(TAG, "User query or update failed $e")
-//                                            }
-//                                        //  binding.editEmail.setText(newEmail)
-//
-//                                        this.dismiss()
-//
-//                                        Log.d(
-//                                            TAG,
-//                                            "Actualizado"
-//                                        )
-//                                    }.addOnFailureListener {
-//                                        Log.d(
-//                                            TAG,
-//                                            "update del mail fallo"
-//                                        )
-//                                    }
-//                                        .addOnCanceledListener {
-//                                            Log.d(
-//                                                TAG,
-//                                                "cancelado"
-//                                            )
-//                                        }
-//                                }
-//                            } else {
-//                                Log.d(
-//                                    TAG,
-//                                    "La reautenticación falló"
-//                                )
-//                                binding.textInputLayoutPassword.error = "Contraseña incorrecta"
-//                            }
-//                        }
-//                } catch (e: IllegalArgumentException) {
-//                    Log.e(
-//                        TAG,
-//                        "IllegalArgumentException: ${e.message}"
-//                    )
-//                    // Handle the case where the password is empty or null
-//                    binding.textInputLayoutPassword.error = "Contraseña inválida"
-//                }
-//            } else {
-//                // Handle the case when the password is empty
-//                binding.textInputLayoutPassword.error = "La contraseña no puede estar vacía"
-//            }
-//        }
     }
 
     private fun handleLoading(isLoading: Boolean) {
@@ -206,5 +121,11 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
         this.listener = listener
     }
 
-
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if(binding.textInputLayoutPassword.error?.isNotEmpty() == true){
+            Log.d(TAG, "hubo un error, pero se está cerrando el dialog")
+        }
+        listener?.onFinishClickDialog(false)
+    }
 }
