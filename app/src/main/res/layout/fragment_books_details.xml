@@ -86,8 +86,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/book_calification_margin_top"
                 android:isIndicator="true"
-                android:scaleX="0.5"
-                android:scaleY="0.5"
+                android:scaleX="@dimen/guideline_50"
+                android:scaleY="@dimen/guideline_50"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/book_author" />
