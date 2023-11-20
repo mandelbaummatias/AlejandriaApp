@@ -66,14 +66,13 @@ class UsersRepositoryImpl @Inject constructor(
     override suspend fun updateUserProfile(
         name: String,
         lastName: String,
-        email: String
+        userEmail: String
     ): Result<Unit> =
         suspendCoroutine { continuation ->
-
             val usersCollection = firestore.collection(USERS_COLLECTION)
 
             usersCollection
-                .whereEqualTo(EMAIL, email)
+                .whereEqualTo(EMAIL, userEmail)
                 .get()
                 .addOnSuccessListener { userDocuments ->
                     if (userDocuments.size() > 0) {
@@ -100,6 +99,14 @@ class UsersRepositoryImpl @Inject constructor(
                     continuation.resume(Result.Error("User query or update failed: ${e.message}"))
                 }
         }
+
+
+    override suspend fun updateUserEmail(
+        newEmail: String,
+        previousEmail: String,
+        pass: String
+    ) = userService.updateUserEmail(newEmail, previousEmail, pass)
+
 
     override suspend fun getUserById(userId: String): Result<com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User> {
         return userService.getUserById(userId)
