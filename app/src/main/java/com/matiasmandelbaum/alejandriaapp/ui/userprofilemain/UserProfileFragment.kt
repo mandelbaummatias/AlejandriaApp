@@ -3,26 +3,18 @@ package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
@@ -30,9 +22,6 @@ import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClick
 import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
-import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.EMAIL
-import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.LAST_NAME
-import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.NAME
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
 import com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation.PasswordConfirmationFragment
@@ -116,20 +105,14 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 viewModel.onSaveProfileSelected(
                     binding.editNombre.text.toString(),
                     binding.editApellido.text.toString(),
-                    // binding.editEmail.text.toString()
                     previousEmail
                 )
 
                 viewModel.onSaveUserEmailSelected(
                     binding.editEmail.text.toString(), previousEmail
                 )
+                exitEditMode()
 
-//                if (previousEmail != binding.editEmail.text.toString()) {
-//                   // showChangeEmailVerification()
-//                }
-
-                Log.d(TAG, "to save changes from click listener ")
-                Log.d(TAG, "cual es el email? ${binding.editEmail.text}")
             }
         }
     }
@@ -171,7 +154,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         viewModel.showPasswordRequiredDialog.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 //  showChangeEmailVerification()
-                showChangeEmailVerification2()
+                showChangeEmailVerification()
             }
         }
 
@@ -267,146 +250,30 @@ class UserProfileFragment : Fragment(), DialogClickListener {
 
     private fun enterEditMode() {
         isInEditMode = true
-
         with(binding) {
             editNombre.isEnabled = true
             editApellido.isEnabled = true
             editEmail.isEnabled = true
-
             userMailHeader.text = "Cambio de nombre"
-
             editNombre.requestFocus()
             editNombre.text?.let { editNombre.setSelection(it.length) }
-
             editFab.setImageResource(R.drawable.ic_save)
         }
     }
 
-    private fun saveChanges() {
-        // Update the Firestore document with the edited values
-        val newNombre = binding.editNombre.text.toString()
-        val newApellido = binding.editApellido.text.toString()
-        val newEmail = binding.editEmail.text.toString()
-
-        // Always update name and last name
-        userDocumentReference?.update(
-            mapOf(
-                NAME to newNombre,
-                LAST_NAME to newApellido
-            )
-        )?.addOnSuccessListener {
-            // Document updated successfully
-            Log.d(TAG, "Document updated successfully")
-
-            // Show Toast only if the email is not different
-            if (previousEmail == newEmail) {
-                Toast.makeText(context, "Actualizado con éxito", Toast.LENGTH_SHORT).show()
-            }
-
-            // If the email is different, prompt the email verification
-            if (previousEmail != newEmail) {
-                showChangeEmailVerification()
-            }
-        }?.addOnFailureListener { exception ->
-            Log.e(TAG, "Error updating document: $exception")
+    private fun exitEditMode() {
+        with(binding) {
+            editNombre.isEnabled = false
+            editApellido.isEnabled = false
+            editEmail.isEnabled = false
+            editFab.setImageResource(R.drawable.ic_edit)
+            userMailHeader.text = getString(R.string.personalInfo)
         }
-
-        binding.editNombre.isEnabled = false
-        binding.editApellido.isEnabled = false
-        binding.editEmail.isEnabled = false
-        binding.editFab.setImageResource(R.drawable.ic_edit)
-        binding.userMailHeader.text = getString(R.string.personalInfo)
-
         isInEditMode = false
     }
 
-    private fun saveEmail(user: FirebaseUser) {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        val newEmail = binding.editEmail.text.toString()
-
-        val validEmail = Patterns.EMAIL_ADDRESS.matcher(newEmail).matches() || newEmail.isEmpty()
-
-        if (validEmail) {
-
-
-            userDocumentReference?.update(
-                mapOf(
-                    EMAIL to newEmail
-                )
-            )
-
-                ?.addOnSuccessListener {
-
-
-                }
-                ?.addOnFailureListener { exception ->
-                    Log.e(TAG, "Error: $exception")
-                }
-            bottomSheetDialog.dismiss()
-
-        } else {
-            Toast.makeText(context, "El correo es inválido", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     private fun showChangeEmailVerification() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        val view = layoutInflater.inflate(R.layout.fragment_pw_confirmation, null)
-        val btnEmailChangeConfirmation = view.findViewById<Button>(R.id.btnChangeConfirmation)
-        val password = view.findViewById<TextInputEditText>(R.id.passwordEmailChange)
-        val newEmail = binding.editEmail.text.toString()
-
-
-        bottomSheetDialog.setContentView(view)
-        bottomSheetDialog.show()
-
-        btnEmailChangeConfirmation.setOnClickListener {
-            val user = FirebaseAuth.getInstance().currentUser
-            val pass = password.text.toString()
-            val textInputLayoutPassword =
-                view.findViewById<TextInputLayout>(R.id.textInputLayoutPassword)
-
-            if (pass.isNotEmpty()) {
-                try {
-                    val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
-
-                    user?.reauthenticate(credential)
-                        ?.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Log.d(TAG, "reauthenticate is successful")
-                                user.updateEmail(newEmail).addOnSuccessListener {
-                                    userDocumentReference?.update(
-                                        mapOf(
-                                            EMAIL to newEmail
-                                        )
-                                    )
-                                    binding.editEmail.setText(newEmail)
-                                    bottomSheetDialog.dismiss()
-                                    Log.d(TAG, "Actualizado")
-                                }.addOnFailureListener {
-                                    Log.d(TAG, "update del mail fallo")
-                                }
-                                    .addOnCanceledListener {
-                                        Log.d(TAG, "cancelado")
-                                    }
-                            } else {
-                                Log.d(TAG, "La reautenticación falló")
-                                textInputLayoutPassword.error = "Contraseña incorrecta"
-                            }
-                        }
-                } catch (e: IllegalArgumentException) {
-                    Log.e(TAG, "IllegalArgumentException: ${e.message}")
-                    // Handle the case where the password is empty or null
-                    textInputLayoutPassword.error = "Contraseña inválida"
-                }
-            } else {
-                // Handle the case when the password is empty
-                textInputLayoutPassword.error = "La contraseña no puede estar vacía"
-            }
-        }
-    }
-
-    private fun showChangeEmailVerification2() {
         val newEmail = binding.editEmail.text.toString()
         val bottomSheetFragment = PasswordConfirmationFragment.newInstance(newEmail, previousEmail)
         bottomSheetFragment.setDialogClickListener(this@UserProfileFragment)
@@ -447,12 +314,25 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     override fun onFinishClickDialog(clickValue: Boolean) {
         if (clickValue) {
             showEmailUpdateSuccesfulMessage()
+        } else {
+            binding.editEmail.setText(previousEmail) //handle loading?
+            showEmailUpdateUnsuccessfulMessage()
         }
     }
 
-    private fun showEmailUpdateSuccesfulMessage(){
-        Snackbar.make(requireView(),
-            getString(R.string.email_actualizado_con_exito), Snackbar.LENGTH_SHORT).show()
+    private fun showEmailUpdateSuccesfulMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.email_actualizado_con_exito), Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun showEmailUpdateUnsuccessfulMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.email_no_fue_actualizado), // Assuming you have a string resource for the message
+            Snackbar.LENGTH_SHORT
+        ).show()
     }
 
 
