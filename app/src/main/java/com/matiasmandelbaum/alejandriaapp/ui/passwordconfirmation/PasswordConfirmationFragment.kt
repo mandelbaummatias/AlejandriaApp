@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListenerProvider
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentPwConfirmationBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,7 +51,31 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initListeners()
+        initObservers()
+    }
 
+    private fun initObservers() {
+        viewModel.onChangeUserEmailSuccess.observe(viewLifecycleOwner) {
+            when (it) {
+                is Result.Success -> {
+                    handleLoading(true)
+                    Log.d(TAG, "success $it")
+                    this.dismiss()
+                    listener?.onFinishClickDialog(true)
+                }
+
+                is Result.Error -> {
+                    //listener?.onFinishClickDialog(false)
+                    Log.d(TAG, "error ${it.message}")
+                    binding.textInputLayoutPassword.error = "La contraseña es incorrecta"
+                }
+
+//                is Result.Loading -> {
+//                    handleLoading(true)
+//                }
+                else -> {}
+            }
+        }
     }
 
     private fun initListeners() {
@@ -60,7 +85,7 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
         binding.btnChangeConfirmation.setOnClickListener {
 
             val pass = binding.passwordEmailChange.text.toString()
-            if (pass.isNotEmpty())
+            if (pass.isNotEmpty()){
                 try {
                     if (newEmail != null) {
                         if (previousEmail != null) {
@@ -70,6 +95,10 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
                 } catch (e: Exception) {
                     Log.d(TAG, "exception $e")
                 }
+            } else{
+                binding.textInputLayoutPassword.error = "La contraseña no puede estar vacía"
+            }
+
         }
 //            val user = FirebaseAuth.getInstance().currentUser
 //            val pass = binding.passwordEmailChange.text.toString()
@@ -159,6 +188,18 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
 //                binding.textInputLayoutPassword.error = "La contraseña no puede estar vacía"
 //            }
 //        }
+    }
+
+    private fun handleLoading(isLoading: Boolean) {
+        with(binding) {
+            if (isLoading) {
+                userProfileFragment.visibility = View.GONE
+                progressBarPasswordConfirmation.visibility = View.VISIBLE
+            } else {
+                userProfileFragment.visibility = View.VISIBLE
+                progressBarPasswordConfirmation.visibility = View.GONE
+            }
+        }
     }
 
     override fun setDialogClickListener(listener: DialogClickListener) {
