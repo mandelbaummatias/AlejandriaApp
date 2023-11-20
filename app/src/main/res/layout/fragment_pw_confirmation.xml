@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="300dp"
     android:gravity="top"
+    android:id="@+id/user_profile_fragment"
     android:orientation="vertical"
     android:backgroundTint="?attr/colorOnPrimary"
     android:background="@drawable/fondo_redondeado"
@@ -51,5 +52,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="Confirmar" />
+
+    <ProgressBar
+        android:id="@+id/progressBarPasswordConfirmation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </LinearLayout>

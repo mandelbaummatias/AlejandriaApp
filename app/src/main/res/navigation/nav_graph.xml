@@ -72,7 +72,7 @@
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.signin.SignInFragment"
-        android:label="Registro">
+        android:label="@string/registro">
         <action
             android:id="@+id/action_signInFragment_to_homeListFragment"
             app:destination="@id/homeListFragment" />
@@ -116,7 +116,7 @@
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfileFragment"
-        android:label="UserProfileFragment" />
+        android:label="@string/Perfil" />
     <fragment
         android:id="@+id/userMailFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.userMainmail.UserMailFragment"
@@ -137,7 +137,7 @@
     <fragment
         android:id="@+id/changeProfileImageFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofileimage.UserImageFragment"
-        android:label="Cambio de Imagen"
+        android:label="@string/cambio_de_imagen"
         tools:layout="@layout/user_profile_picture_change" />
 
 <fragment

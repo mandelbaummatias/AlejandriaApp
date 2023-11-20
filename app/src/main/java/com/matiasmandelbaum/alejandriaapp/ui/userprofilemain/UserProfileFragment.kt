@@ -1,89 +1,67 @@
 package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.EmailAuthProvider
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
-import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
+import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
+import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
+import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
+import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
+import com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation.PasswordConfirmationFragment
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
 
 private const val TAG = "UserProfileFragment"
 
 @AndroidEntryPoint
-class UserProfileFragment : Fragment() {
+class UserProfileFragment : Fragment(), DialogClickListener {
 
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
-    private var previousEmail: String? = null
+
+    //  private var previousEmail: String? = null
+    lateinit var previousEmail: String
+    private val viewModel: UserProfileViewModel by viewModels()
 
     private lateinit var binding: UserProfileBinding
-    private val firestore = FirebaseFirestore.getInstance()
+
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
         if (user != null) {
             val userEmail = user.email
-            previousEmail = userEmail
+            if (userEmail != null) {
+                previousEmail = userEmail
+            }
             Log.d(TAG, "Email of the logged-in user: $userEmail")
 
-            // Query the Firestore collection to find a user with the matching email.
-            firestore.collection(USER_COLLECTION)
-                .whereEqualTo("email", userEmail)
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    if (!querySnapshot.isEmpty) {
-                        val document =
-                            querySnapshot.documents[0] // Access the first (and only) document
-
-                        // User document found, you can access its data here.
-                        val nombre = document.getString("nombre")
-                        val apellido = document.getString("apellido")
-                        val image = document.getString("image")
-
-                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $userEmail")
-
-                        // Update the edit texts with the retrieved data
-                        binding.editNombre.setText(nombre)
-                        binding.editApellido.setText(apellido)
-                        binding.editEmail.setText(userEmail)
-
-                        // Load user image
-                        if (image != null && image.isNotEmpty()) {
-                            val resourceId = resources.getIdentifier(
-                                image,
-                                "drawable",
-                                requireContext().packageName
-                            )
-                            binding.profileImage.setImageResource(resourceId)
-                        } else {
-                            // Default image
-                            binding.profileImage.setImageResource(R.drawable.alejandria_logo)
-                        }
-
-                        userDocumentReference = document.reference
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e(TAG, "Error querying Firestore: $exception")
-                }
+            if (userEmail != null) {
+                viewModel.getUserByEmail(userEmail)
+            } // Notify ViewModel about the user's email
         } else {
             Log.d(TAG, "User is null")
         }
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -92,14 +70,144 @@ class UserProfileFragment : Fragment() {
             findNavController().navigate(R.id.changeProfileImageFragment)
         }
 
+
+        initListeners()
+        initObservers()
+    }
+
+    private fun initListeners() {
+        binding.editNombre.apply {
+            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            onTextChanged { onFieldChanged() }
+        }.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+
+
+        binding.editApellido.apply {
+            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+            onTextChanged { onFieldChanged() }
+        }
+
+        binding.editEmail.apply {
+            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            setOnFocusChangeListener { _, hasFocus -> onEmailChanged(hasFocus) }
+            onTextChanged { onEmailChanged() }
+        }
+
         binding.editFab.setOnClickListener {
             if (!isInEditMode) {
+                Log.d(TAG, "in edit mode from click listener")
                 // Enter edit mode
                 enterEditMode()
+                //it.dismissKeyboard()
             } else {
-                // Save the changes
-                saveChanges()
+                Log.d(TAG, "PREVIOUS EMAIL $previousEmail")
+                viewModel.onSaveProfileSelected(
+                    binding.editNombre.text.toString(),
+                    binding.editApellido.text.toString(),
+                    previousEmail
+                )
+
+                viewModel.onSaveUserEmailSelected(
+                    binding.editEmail.text.toString(), previousEmail
+                )
+                exitEditMode()
+
             }
+        }
+    }
+
+    private fun initObservers() {
+        viewModel.userProfile.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Success -> {
+                    handleLoading(false)
+                    val user = result.data
+                    // Update UI with user data
+                    updateUI(user)
+                    userDocumentReference = result.data.documentReference
+                }
+
+                is Result.Error -> {
+                    handleLoading(false)
+                    // Handle error
+                    Log.e(TAG, "Error retrieving user data: ${result.message}")
+                }
+
+                is Result.Loading -> {
+                    handleLoading(true)
+                }
+
+                else -> {
+                    Unit
+                }
+            }
+        }
+
+
+        viewModel.showErrorDialog.observe(viewLifecycleOwner) {
+            if (it.showErrorDialog) {
+                Log.d(TAG, "HAY UN ERROR CON EL LOGIN ")
+            }
+        }
+
+        viewModel.showPasswordRequiredDialog.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                //  showChangeEmailVerification()
+                showChangeEmailVerification()
+            }
+        }
+
+        viewModel.showOnSuccessfulSavedDataMessage.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                showProfileUpdateSuccessMessage()
+            }
+        }
+    }
+
+    private fun showProfileUpdateSuccessMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.datos_actualizados_con_exito), Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun updateUI(userProfile: UserProfile) {
+        with(binding) {
+            editNombre.setText(userProfile.name)
+            editApellido.setText(userProfile.lastName)
+            editEmail.setText(userProfile.email)
+
+            if (!userProfile.image.isNullOrEmpty()) {
+                val resourceId = resources.getIdentifier(
+                    userProfile.image,
+                    "drawable",
+                    requireContext().packageName
+                )
+                profileImage.setImageResource(resourceId)
+            } else {
+                // Default image
+                profileImage.setImageResource(R.drawable.alejandria_logo)
+            }
+        }
+    }
+
+    private fun onErrorProfileUpdateUI(viewState: UserProfileViewState) {
+        Log.d(TAG, "onErrorProfileUpdateUI")
+        with(binding) {
+            //pbLoading.isVisible = viewState.isLoading
+            editNombreLayout.error =
+                if (viewState.isValidName) null else getString(R.string.nombre_invalido)
+            editApellidoLayout.error =
+                if (viewState.isValidLastName) null else getString(R.string.apellido_invalido)
+        }
+    }
+
+    private fun onErrorEmailUpdateUI(viewState: UserEmailViewState) {
+        Log.d(TAG, "onErrorEmailUpdateUI")
+        with(binding) {
+            editEmailLayout.error =
+                if (viewState.isValidEmail) null else getString(R.string.email_invalido)
         }
     }
 
@@ -113,131 +221,120 @@ class UserProfileFragment : Fragment() {
         AuthManager.removeAuthStateListener(authStateListener)
     }
 
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = UserProfileBinding.inflate(inflater, container, false)
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.viewState.collect {
+                    onErrorProfileUpdateUI(it)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.emailViewState.collect {
+                    onErrorEmailUpdateUI(it)
+                }
+            }
+        }
         return binding.root
     }
 
     private fun enterEditMode() {
         isInEditMode = true
-
-        // Set TextInputEditText fields as editable
-        binding.editNombre.isEnabled = true
-        binding.editApellido.isEnabled = true
-        binding.editEmail.isEnabled = true
-
-        // Cambiar el texto del encabezado
-        binding.userMailHeader.text = "Cambio de nombre"
-
-        binding.editNombre.requestFocus()
-        binding.editNombre.text?.let { binding.editNombre.setSelection(it.length) }
-
-        binding.editFab.setImageResource(R.drawable.ic_save)
+        with(binding) {
+            editNombre.isEnabled = true
+            editApellido.isEnabled = true
+            editEmail.isEnabled = true
+            userMailHeader.text = "Cambio de nombre"
+            editNombre.requestFocus()
+            editNombre.text?.let { editNombre.setSelection(it.length) }
+            editFab.setImageResource(R.drawable.ic_save)
+        }
     }
 
-    private fun saveChanges() {
-        // Update the Firestore document with the edited values
-        val newNombre = binding.editNombre.text.toString()
-        val newApellido = binding.editApellido.text.toString()
-
-        if (previousEmail != binding.editEmail.text.toString()) {
-            Toast.makeText(
-                requireContext(),
-                "El email es distinto",
-                Toast.LENGTH_LONG
-            ).show()
-            showChangeEmailVerification()
+    private fun exitEditMode() {
+        with(binding) {
+            editNombre.isEnabled = false
+            editApellido.isEnabled = false
+            editEmail.isEnabled = false
+            editFab.setImageResource(R.drawable.ic_edit)
+            userMailHeader.text = getString(R.string.personalInfo)
         }
-
-        // Get the current user's email
-        userDocumentReference?.update(
-
-            mapOf(
-                "nombre" to newNombre,
-                "apellido" to newApellido
-            )
-        )
-
-            ?.addOnSuccessListener {
-                // Document updated successfully
-                Log.d(TAG, "Document updated successfully")
-                Toast.makeText(context, "Actualizado con éxito", Toast.LENGTH_SHORT).show()
-            }
-            ?.addOnFailureListener { exception ->
-                Log.e(TAG, "Error updating document: $exception")
-            }
-
-        binding.editNombre.isEnabled = false
-        binding.editApellido.isEnabled = false
-        binding.editEmail.isEnabled = false
-        binding.editFab.setImageResource(R.drawable.ic_edit)
-        binding.userMailHeader.text = getString(R.string.personalInfo)
-
         isInEditMode = false
     }
 
-    private fun saveEmail() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
+
+    private fun showChangeEmailVerification() {
         val newEmail = binding.editEmail.text.toString()
+        val bottomSheetFragment = PasswordConfirmationFragment.newInstance(newEmail, previousEmail)
+        bottomSheetFragment.setDialogClickListener(this@UserProfileFragment)
+        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+    }
 
-        val validEmail = Patterns.EMAIL_ADDRESS.matcher(newEmail).matches() || newEmail.isEmpty()
 
-        if (validEmail) {
-
-            userDocumentReference?.update(
-                mapOf(
-                    "email" to newEmail
-                )
+    private fun onFieldChanged(hasFocus: Boolean = false) {
+        if (!hasFocus) {
+            viewModel.onFieldsChanged(
+                name = binding.editNombre.text.toString(),
+                lastName = binding.editApellido.text.toString()
             )
-
-                ?.addOnSuccessListener {
-
-                    Log.d(TAG, "Actualizado")
-                }
-                ?.addOnFailureListener { exception ->
-                    Log.e(TAG, "Error: $exception")
-                }
-            bottomSheetDialog.dismiss()
-
-        } else {
-            Toast.makeText(context, "El correo es inválido", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun showChangeEmailVerification() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        val view = layoutInflater.inflate(R.layout.fragment_pw_confirmation, null)
-        val btnEmailChangeConfirmation = view.findViewById<Button>(R.id.btnChangeConfirmation)
-        val password = view.findViewById<TextInputEditText>(R.id.passwordEmailChange)
+    private fun onEmailChanged(hasFocus: Boolean = false) {
+        if (!hasFocus) {
+            viewModel.onEmailChanged(
+                email = binding.editEmail.text.toString()
+            )
+        }
+    }
 
-        bottomSheetDialog.setContentView(view)
-        bottomSheetDialog.show()
 
-        btnEmailChangeConfirmation.setOnClickListener {
-
-            val user = FirebaseAuth.getInstance().currentUser
-            val pass = password.text.toString()
-
-            val credential = EmailAuthProvider.getCredential(user?.email ?: "", pass)
-
-            if (pass.isNotEmpty()) {
-                user?.reauthenticate(credential)
-                    ?.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            saveEmail()
-                            bottomSheetDialog.dismiss()
-                        } else {
-                            Log.d(TAG, "La reautenticación falló")
-                        }
-                    }
+    private fun handleLoading(isLoading: Boolean) {
+        with(binding) {
+            if (isLoading) {
+                userProfileScreen.visibility = View.GONE
+                progressBarUserProfile.visibility = View.VISIBLE
+            } else {
+                userProfileScreen.visibility = View.VISIBLE
+                progressBarUserProfile.visibility = View.GONE
             }
         }
     }
 
+    override fun onFinishClickDialog(clickValue: Boolean) {
+        if (clickValue) {
+            showEmailUpdateSuccesfulMessage()
+        } else {
+            binding.editEmail.setText(previousEmail) //handle loading?
+            showEmailUpdateUnsuccessfulMessage()
+        }
+    }
+
+    private fun showEmailUpdateSuccesfulMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.email_actualizado_con_exito), Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun showEmailUpdateUnsuccessfulMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.email_no_fue_actualizado), // Assuming you have a string resource for the message
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
 
 
 }
+
