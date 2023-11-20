@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -24,7 +23,6 @@ import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSigninBinding
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
-
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -33,7 +31,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import javax.inject.Inject
 
 
 private const val TAG = "SignUpFragment"
@@ -69,17 +66,9 @@ class SignInFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     private fun initUI() {
         initListeners()
         initObservers()
-//        binding.viewBottom.tvFooter.text = span(
-//            getString(R.string.signin_footer_unselected),
-//            getString(R.string.signin_footer_selected)
-//        )
     }
 
     private fun initListeners() {
@@ -197,22 +186,10 @@ class SignInFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-
-
     private fun goToHome(){
         val action = SignInFragmentDirections.actionSignInFragmentToHomeListFragment()
         findNavController().navigate(action)
     }
-
-//    private fun showErrorDialog() {
-//        ErrorDialog.create(
-//            title = getString(R.string.signin_error_dialog_title),
-//            description = getString(R.string.signin_error_dialog_body),
-//            positiveAction = ErrorDialog.Action(getString(R.string.signin_error_dialog_positive_action)) {
-//                it.dismiss()
-//            }
-//        ).show(dialogLauncher, requireActivity())
-//    }
 
     private fun updateUI(viewState: SignInViewState) {
         with(binding) {

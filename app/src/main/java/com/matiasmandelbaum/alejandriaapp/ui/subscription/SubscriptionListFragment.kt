@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import com.matiasmandelbaum.alejandriaapp.R
@@ -71,7 +70,7 @@ class SubscriptionListFragment : Fragment() {
 
                     is Result.Error -> Log.d(TAG, "subExists ERR $it")
                     is Result.Loading -> Log.d(TAG, "subExists LOAD $it")
-                    is Result.Finished -> Log.d(TAG, "subExists FINI $it")
+
                 }
             }
             user.observe(viewLifecycleOwner) {
