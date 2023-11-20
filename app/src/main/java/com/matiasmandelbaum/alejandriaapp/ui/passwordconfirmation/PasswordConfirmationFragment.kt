@@ -5,13 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListenerProvider
-import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentPwConfirmationBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,6 +20,9 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
 
     private lateinit var binding: FragmentPwConfirmationBinding
     private var listener: DialogClickListener? = null
+
+    private val viewModel: PasswordConfirmationViewModel by viewModels()
+
     companion object {
         private const val ARG_NEW_EMAIL = "arg_new_email"
         private const val ARG_PREVIOUS_EMAIL = "arg_previous_email"
@@ -58,94 +58,107 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
         val previousEmail = arguments?.getString(ARG_PREVIOUS_EMAIL)
 
         binding.btnChangeConfirmation.setOnClickListener {
-            val user = FirebaseAuth.getInstance().currentUser
+
             val pass = binding.passwordEmailChange.text.toString()
-
-            if (pass.isNotEmpty()) {
+            if (pass.isNotEmpty())
                 try {
-                    val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
-
-                    user?.reauthenticate(credential)
-                        ?.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Log.d(
-                                    TAG,
-                                    "reauthenticate is successful"
-                                )
-                                if (newEmail != null) {
-
-                                    user.updateEmail(newEmail).addOnSuccessListener {
-                                        val usersCollection = FirebaseFirestore.getInstance()
-                                            .collection(UsersConstants.USERS_COLLECTION)
-                                        usersCollection
-                                            .whereEqualTo(UsersConstants.EMAIL, previousEmail)
-                                            .get()
-                                            .addOnSuccessListener { userDocuments ->
-                                                if (userDocuments.size() > 0) {
-                                                    val userDocument = userDocuments.documents[0]
-                                                    val userReference = userDocument.reference
-                                                    userReference.update(
-                                                        mapOf(
-                                                            UsersConstants.EMAIL to newEmail
-                                                        )
-                                                    ).addOnSuccessListener {
-                                                        Log.d(TAG, "cambio mail ok")
-                                                        listener?.onFinishClickDialog(true) //implementar MMVVM.
-                                                        //quiza descartar, quizá  usar by activityViewModels
-                                                    }
-                                                        .addOnFailureListener {
-                                                            Log.d(TAG, "error cambio mail")
-                                                        }
-                                                } else {
-                                                    Log.d(TAG, "User not found")
-
-                                                }
-                                            }
-                                            .addOnFailureListener { e ->
-                                                Log.d(TAG, "User query or update failed $e")
-                                            }
-                                        //  binding.editEmail.setText(newEmail)
-
-                                        this.dismiss()
-
-                                        Log.d(
-                                            TAG,
-                                            "Actualizado"
-                                        )
-                                    }.addOnFailureListener {
-                                        Log.d(
-                                            TAG,
-                                            "update del mail fallo"
-                                        )
-                                    }
-                                        .addOnCanceledListener {
-                                            Log.d(
-                                                TAG,
-                                                "cancelado"
-                                            )
-                                        }
-                                }
-                            } else {
-                                Log.d(
-                                    TAG,
-                                    "La reautenticación falló"
-                                )
-                                binding.textInputLayoutPassword.error = "Contraseña incorrecta"
-                            }
+                    if (newEmail != null) {
+                        if (previousEmail != null) {
+                            viewModel.changeUserEmail(newEmail, previousEmail, pass)
                         }
-                } catch (e: IllegalArgumentException) {
-                    Log.e(
-                        TAG,
-                        "IllegalArgumentException: ${e.message}"
-                    )
-                    // Handle the case where the password is empty or null
-                    binding.textInputLayoutPassword.error = "Contraseña inválida"
+                    }
+                } catch (e: Exception) {
+                    Log.d(TAG, "exception $e")
                 }
-            } else {
-                // Handle the case when the password is empty
-                binding.textInputLayoutPassword.error = "La contraseña no puede estar vacía"
-            }
         }
+//            val user = FirebaseAuth.getInstance().currentUser
+//            val pass = binding.passwordEmailChange.text.toString()
+//
+//            if (pass.isNotEmpty()) {
+//                try {
+//                    val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
+//
+//                    user?.reauthenticate(credential)
+//                        ?.addOnCompleteListener { task ->
+//                            if (task.isSuccessful) {
+//                                Log.d(
+//                                    TAG,
+//                                    "reauthenticate is successful"
+//                                )
+//                                if (newEmail != null) {
+//
+//                                    user.updateEmail(newEmail).addOnSuccessListener {
+//                                        val usersCollection = FirebaseFirestore.getInstance()
+//                                            .collection(UsersConstants.USERS_COLLECTION)
+//                                        usersCollection
+//                                            .whereEqualTo(UsersConstants.EMAIL, previousEmail)
+//                                            .get()
+//                                            .addOnSuccessListener { userDocuments ->
+//                                                if (userDocuments.size() > 0) {
+//                                                    val userDocument = userDocuments.documents[0]
+//                                                    val userReference = userDocument.reference
+//                                                    userReference.update(
+//                                                        mapOf(
+//                                                            UsersConstants.EMAIL to newEmail
+//                                                        )
+//                                                    ).addOnSuccessListener {
+//                                                        Log.d(TAG, "cambio mail ok")
+//                                                        listener?.onFinishClickDialog(true) //implementar MMVVM.
+//                                                        //quiza descartar, quizá  usar by activityViewModels
+//                                                    }
+//                                                        .addOnFailureListener {
+//                                                            Log.d(TAG, "error cambio mail")
+//                                                        }
+//                                                } else {
+//                                                    Log.d(TAG, "User not found")
+//
+//                                                }
+//                                            }
+//                                            .addOnFailureListener { e ->
+//                                                Log.d(TAG, "User query or update failed $e")
+//                                            }
+//                                        //  binding.editEmail.setText(newEmail)
+//
+//                                        this.dismiss()
+//
+//                                        Log.d(
+//                                            TAG,
+//                                            "Actualizado"
+//                                        )
+//                                    }.addOnFailureListener {
+//                                        Log.d(
+//                                            TAG,
+//                                            "update del mail fallo"
+//                                        )
+//                                    }
+//                                        .addOnCanceledListener {
+//                                            Log.d(
+//                                                TAG,
+//                                                "cancelado"
+//                                            )
+//                                        }
+//                                }
+//                            } else {
+//                                Log.d(
+//                                    TAG,
+//                                    "La reautenticación falló"
+//                                )
+//                                binding.textInputLayoutPassword.error = "Contraseña incorrecta"
+//                            }
+//                        }
+//                } catch (e: IllegalArgumentException) {
+//                    Log.e(
+//                        TAG,
+//                        "IllegalArgumentException: ${e.message}"
+//                    )
+//                    // Handle the case where the password is empty or null
+//                    binding.textInputLayoutPassword.error = "Contraseña inválida"
+//                }
+//            } else {
+//                // Handle the case when the password is empty
+//                binding.textInputLayoutPassword.error = "La contraseña no puede estar vacía"
+//            }
+//        }
     }
 
     override fun setDialogClickListener(listener: DialogClickListener) {
