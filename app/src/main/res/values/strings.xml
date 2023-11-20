@@ -181,6 +181,8 @@
     <string name="nombre_invalido">El nombre no es valido\n</string>
     <string name="apellido_invalido">El apellido no es valido</string>
     <string name="email_invalido">El mail no es valido</string>
+    <string name="datos_actualizados_con_exito">Datos personales actualizados!</string>
+    <string name="email_actualizado_con_exito">Mail actualizado con éxito!</string>
 
 
 </resources>

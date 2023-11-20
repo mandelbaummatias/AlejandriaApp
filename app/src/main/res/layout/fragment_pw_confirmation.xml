@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="300dp"
     android:gravity="top"
+    android:id="@+id/user_profile_fragment"
     android:orientation="vertical"
     android:backgroundTint="?attr/colorOnPrimary"
     android:background="@drawable/fondo_redondeado"
