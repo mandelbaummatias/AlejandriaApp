@@ -113,6 +113,13 @@
     <dimen name="confirmation_text_size_medium">20sp</dimen>
     <dimen name="confirmation_text_size_small">13sp</dimen>
 
+    <!--profile picture-->
+    <dimen name="profile_picture_text_size_big">35sp</dimen>
+    <dimen name="profile_picture_card_corner_radius">100dp</dimen>
+    <dimen name="profile_picture_card_elevation">4dp</dimen>
+    <dimen name="profile_picture_layout_width">170dp</dimen>
+    <dimen name="profile_picture_layout_height">170dp</dimen>
+
     <!--Guidelines Percents-->
     <dimen name="guideline_10">0.1</dimen>
     <dimen name="guideline_15">0.15</dimen>

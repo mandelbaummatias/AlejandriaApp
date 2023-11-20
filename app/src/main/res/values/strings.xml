@@ -191,4 +191,7 @@
     <string name="hint_contrasenia">Contraseña</string>
     <string name="confirmar_cambio_contrasenia">Confirmar</string>
 
+    <!--profile picture-->
+    <string name="elige_imagen">Elige una imagen</string>
+
 </resources>

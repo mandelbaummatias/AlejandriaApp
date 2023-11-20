@@ -11,37 +11,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
+        app:layout_constraintGuide_percent="@dimen/guideline_50"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontal_guide_line_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1"/>
+        app:layout_constraintGuide_percent="@dimen/guideline_10"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontal_guide_line_2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4"/>
+        app:layout_constraintGuide_percent="@dimen/guideline_40"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontal_guide_line_3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.7"/>
+        app:layout_constraintGuide_percent="@dimen/guideline_70"/>
 
     <TextView
         android:id="@+id/changeImageTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Elige una imagen"
+        android:text="@string/elige_imagen"
         android:textColor="?attr/colorPrimary"
         android:gravity="center"
-        android:textSize="35dp"
+        android:textSize="@dimen/profile_picture_text_size_big"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,8 +51,8 @@
         android:id="@+id/image1Container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="@dimen/profile_picture_card_corner_radius"
+        app:cardElevation="@dimen/profile_picture_card_elevation"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_2"
         app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_1"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,11 +60,11 @@
 
         <ImageView
             android:id="@+id/image1"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="@dimen/profile_picture_layout_width"
+            android:layout_height="@dimen/profile_picture_layout_height"
             android:layout_gravity="center"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
+            android:scaleX="@dimen/guideline_70"
+            android:scaleY="@dimen/guideline_70"
             android:src="@drawable/alejandria_logo"
             app:tint="?attr/colorPrimary"/>
     </androidx.cardview.widget.CardView>
@@ -73,8 +73,8 @@
         android:id="@+id/image2Container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="@dimen/profile_picture_card_corner_radius"
+        app:cardElevation="@dimen/profile_picture_card_elevation"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
@@ -82,11 +82,11 @@
 
         <ImageView
             android:id="@+id/image2"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="@dimen/profile_picture_layout_width"
+            android:layout_height="@dimen/profile_picture_layout_height"
             android:layout_gravity="center"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
+            android:scaleX="@dimen/guideline_70"
+            android:scaleY="@dimen/guideline_70"
             android:src="@drawable/ic_profile"
             app:tint="?attr/colorPrimary"/>
     </androidx.cardview.widget.CardView>
@@ -95,8 +95,8 @@
         android:id="@+id/image3Container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="@dimen/profile_picture_card_corner_radius"
+        app:cardElevation="@dimen/profile_picture_card_elevation"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_3"
         app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_1"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,11 +104,11 @@
 
         <ImageView
             android:id="@+id/image3"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="@dimen/profile_picture_layout_width"
+            android:layout_height="@dimen/profile_picture_layout_height"
             android:layout_gravity="center"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
+            android:scaleX="@dimen/guideline_70"
+            android:scaleY="@dimen/guideline_70"
             android:src="@drawable/ic_menu_book"
             app:tint="?attr/colorPrimary" />
     </androidx.cardview.widget.CardView>
@@ -117,8 +117,8 @@
         android:id="@+id/image4Container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="@dimen/profile_picture_card_corner_radius"
+        app:cardElevation="@dimen/profile_picture_card_elevation"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_guide_line_3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
@@ -126,11 +126,11 @@
 
         <ImageView
             android:id="@+id/image4"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="@dimen/profile_picture_layout_width"
+            android:layout_height="@dimen/profile_picture_layout_height"
             android:layout_gravity="center"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
+            android:scaleX="@dimen/guideline_70"
+            android:scaleY="@dimen/guideline_70"
             android:src="@drawable/ic_book"
             app:tint="?attr/colorPrimary" />
     </androidx.cardview.widget.CardView>
@@ -139,8 +139,8 @@
         android:id="@+id/image5Container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="@dimen/profile_picture_card_corner_radius"
+        app:cardElevation="@dimen/profile_picture_card_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_1"
         app:layout_constraintStart_toStartOf="parent"
@@ -148,11 +148,11 @@
 
         <ImageView
             android:id="@+id/image5"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="@dimen/profile_picture_layout_width"
+            android:layout_height="@dimen/profile_picture_layout_height"
             android:layout_gravity="center"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
+            android:scaleX="@dimen/guideline_70"
+            android:scaleY="@dimen/guideline_70"
             android:src="@drawable/ic_face"
             app:tint="?attr/colorPrimary" />
     </androidx.cardview.widget.CardView>
@@ -161,8 +161,8 @@
         android:id="@+id/image6Container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="@dimen/profile_picture_card_corner_radius"
+        app:cardElevation="@dimen/profile_picture_card_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
@@ -170,11 +170,11 @@
 
         <ImageView
             android:id="@+id/image6"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="@dimen/profile_picture_layout_width"
+            android:layout_height="@dimen/profile_picture_layout_height"
             android:layout_gravity="center"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
+            android:scaleX="@dimen/guideline_70"
+            android:scaleY="@dimen/guideline_70"
             android:src="@drawable/ic_temple"
             app:tint="?attr/colorPrimary" />
     </androidx.cardview.widget.CardView>
