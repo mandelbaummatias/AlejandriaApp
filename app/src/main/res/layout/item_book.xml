@@ -20,14 +20,14 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="@dimen/item_book_layout_card_height"
+            android:layout_marginTop="@dimen/item_book_margin_small_2"
             android:clickable="true"
             android:focusable="true"
             android:onClick="@{() -> clickListener.onClick(book)}"
             app:cardPreventCornerOverlap="true"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            app:cardCornerRadius="@dimen/item_book_card_corner_radius"
+            app:cardElevation="@dimen/item_book_card_elevation">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -38,12 +38,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.3" />
+                    app:layout_constraintGuide_percent="@dimen/guideline_30" />
 
                 <ImageView
                     android:id="@+id/book_small_thumbnail"
-                    android:layout_width="100dp"
-                    android:layout_height="160dp"
+                    android:layout_width="@dimen/item_book_image_width"
+                    android:layout_height="@dimen/item_book_image_height"
                     android:scaleType="centerCrop"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_1"
@@ -52,14 +52,14 @@
 
                 <TextView
                     android:id="@+id/book_name_text_view"
-                    android:layout_width="250dp"
+                    android:layout_width="@dimen/item_book_text_width"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="@dimen/item_book_margin_small_2"
+                    android:layout_marginTop="@dimen/item_book_margin_medium"
                     android:adjustViewBounds="true"
                     android:maxLines="2"
                     android:textColor="?attr/colorPrimary"
-                    android:textSize="20dp"
+                    android:textSize="@dimen/item_book_text_size_medium"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.421"
@@ -68,26 +68,26 @@
 
                 <TextView
                     android:id="@+id/publisher_name_text_view"
-                    android:layout_width="250dp"
+                    android:layout_width="@dimen/item_book_text_width"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginStart="@dimen/item_book_margin_small_2"
+                    android:layout_marginTop="@dimen/item_book_margin_big"
                     android:adjustViewBounds="true"
                     android:singleLine="true"
                     android:textColor="?attr/colorSecondary"
-                    android:textSize="17dp"
+                    android:textSize="@dimen/item_book_text_size_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
                     app:layout_constraintTop_toBottomOf="@+id/book_name_text_view" />
 
                 <RatingBar
                     android:id="@+id/barraPuntaje"
-                    android:layout_width="243dp"
-                    android:layout_height="52dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_width="@dimen/item_book_rating_width"
+                    android:layout_height="@dimen/item_book_rating_height"
+                    android:layout_marginBottom="@dimen/item_book_margin_small_1"
                     android:isIndicator="true"
-                    android:scaleX="0.75"
-                    android:scaleY="0.75"
+                    android:scaleX="@dimen/guideline_75"
+                    android:scaleY="@dimen/guideline_75"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1" />

@@ -120,6 +120,22 @@
     <dimen name="profile_picture_layout_width">170dp</dimen>
     <dimen name="profile_picture_layout_height">170dp</dimen>
 
+    <!--item book-->
+    <dimen name="item_book_layout_card_height">200dp</dimen>
+    <dimen name="item_book_margin_small_1">5dp</dimen>
+    <dimen name="item_book_margin_small_2">10dp</dimen>
+    <dimen name="item_book_margin_medium">20dp</dimen>
+    <dimen name="item_book_margin_big">30dp</dimen>
+    <dimen name="item_book_card_elevation">4dp</dimen>
+    <dimen name="item_book_card_corner_radius">16dp</dimen>
+    <dimen name="item_book_image_height">160dp</dimen>
+    <dimen name="item_book_image_width">100dp</dimen>
+    <dimen name="item_book_text_width">250dp</dimen>
+    <dimen name="item_book_text_size_medium">20sp</dimen>
+    <dimen name="item_book_text_size_small">16sp</dimen>
+    <dimen name="item_book_rating_width">240dp</dimen>
+    <dimen name="item_book_rating_height">50dp</dimen>
+
     <!--Guidelines Percents-->
     <dimen name="guideline_10">0.1</dimen>
     <dimen name="guideline_15">0.15</dimen>
