@@ -13,8 +13,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PasswordConfirmationViewModel @Inject constructor(private val changeUserEmailUseCase: ChangeUserEmailUseCase) :
     ViewModel() {
-
-
     private val _onChangeUserEmailSuccess = MutableLiveData<Result<Unit>>()
     val onChangeUserEmailSuccess: LiveData<Result<Unit>> = _onChangeUserEmailSuccess
 
@@ -22,6 +20,7 @@ class PasswordConfirmationViewModel @Inject constructor(private val changeUserEm
         _onChangeUserEmailSuccess.value = Result.Loading
         viewModelScope.launch {
             val result = changeUserEmailUseCase(newEmail, previousEmail, pass)
+            _onChangeUserEmailSuccess.postValue(result)
         }
     }
 

@@ -145,10 +145,13 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
         val usersCollection = firebase.db.collection(UsersConstants.USERS_COLLECTION)
         val credential = EmailAuthProvider.getCredential(user?.email!!, pass)
 
+        Log.d(TAG, "CREDENCIALES $newEmail, $previousEmail , $pass")
+
         user.reauthenticate(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "reauthenticate is successful")
+
                     user.updateEmail(newEmail).addOnCompleteListener { updateEmailTask ->
                         if (updateEmailTask.isSuccessful) {
                             usersCollection
@@ -192,7 +195,9 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
                         }
                     }
                 } else {
+
                     Log.d(TAG, "Reauthentication failed")
+                    Log.d(TAG, "veo credenciales fallidas $newEmail, $previousEmail, $pass")
                     continuation.resume(Result.Error("Reauthentication failed"))
                 }
             }
