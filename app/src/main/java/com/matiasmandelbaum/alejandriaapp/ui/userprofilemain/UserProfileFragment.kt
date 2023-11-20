@@ -17,13 +17,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
+import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
@@ -32,6 +35,7 @@ import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.User
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.NAME
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
+import com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation.PasswordConfirmationFragment
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,11 +45,13 @@ import kotlinx.coroutines.launch
 private const val TAG = "UserProfileFragment"
 
 @AndroidEntryPoint
-class UserProfileFragment : Fragment() {
+class UserProfileFragment : Fragment(), DialogClickListener {
 
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
-    private var previousEmail: String? = null
+
+    //  private var previousEmail: String? = null
+    lateinit var previousEmail: String
     private val viewModel: UserProfileViewModel by viewModels()
 
     private lateinit var binding: UserProfileBinding
@@ -54,7 +60,9 @@ class UserProfileFragment : Fragment() {
         val user = auth.currentUser
         if (user != null) {
             val userEmail = user.email
-            previousEmail = userEmail
+            if (userEmail != null) {
+                previousEmail = userEmail
+            }
             Log.d(TAG, "Email of the logged-in user: $userEmail")
 
             if (userEmail != null) {
@@ -97,10 +105,6 @@ class UserProfileFragment : Fragment() {
             onTextChanged { onEmailChanged() }
         }
 
-        // with(binding) {
-        // binding.editFab.setOnClickListener {
-        //     it.dismissKeyboard()
-
         binding.editFab.setOnClickListener {
             if (!isInEditMode) {
                 Log.d(TAG, "in edit mode from click listener")
@@ -108,55 +112,24 @@ class UserProfileFragment : Fragment() {
                 enterEditMode()
                 //it.dismissKeyboard()
             } else {
-
+                Log.d(TAG, "PREVIOUS EMAIL $previousEmail")
                 viewModel.onSaveProfileSelected(
                     binding.editNombre.text.toString(),
                     binding.editApellido.text.toString(),
-                    binding.editEmail.text.toString()
+                    // binding.editEmail.text.toString()
+                    previousEmail
                 )
 
                 viewModel.onSaveUserEmailSelected(
-                    binding.editEmail.text.toString()
+                    binding.editEmail.text.toString(), previousEmail
                 )
 
+//                if (previousEmail != binding.editEmail.text.toString()) {
+//                   // showChangeEmailVerification()
+//                }
+
                 Log.d(TAG, "to save changes from click listener ")
-                // Save the changes
-                //     saveChanges()
-//                binding.editNombre.apply {
-//                    loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-//                    onTextChanged { onFieldChanged() }
-//                }.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-//
-//
-//                binding.editApellido.apply {
-//                    loseFocusAfterAction(EditorInfo.IME_ACTION_DONE)
-//                    setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-//                    onTextChanged { onFieldChanged() }
-//                }
-//
-//                binding.editEmail.apply {
-//                    loseFocusAfterAction(EditorInfo.IME_ACTION_DONE)
-//                    setOnFocusChangeListener { _, hasFocus -> onEmailChanged(hasFocus) }
-//                    onTextChanged { onFieldChanged() }
-//                }
-//
-//                // with(binding) {
-//                // binding.editFab.setOnClickListener {
-//                //     it.dismissKeyboard()
-//                viewModel.onSaveProfileSelected(
-//                    binding.editNombre.text.toString(),
-//                    binding.editApellido.text.toString(),
-//                    binding.editEmail.text.toString()
-//                )
-//
-//                viewModel.onSaveUserEmailSelected(
-//                    binding.editEmail.text.toString()
-//                )
-
                 Log.d(TAG, "cual es el email? ${binding.editEmail.text}")
-                // }
-                // }
-
             }
         }
     }
@@ -194,6 +167,26 @@ class UserProfileFragment : Fragment() {
                 Log.d(TAG, "HAY UN ERROR CON EL LOGIN ")
             }
         }
+
+        viewModel.showPasswordRequiredDialog.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                //  showChangeEmailVerification()
+                showChangeEmailVerification2()
+            }
+        }
+
+        viewModel.showOnSuccessfulSavedDataMessage.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                showProfileUpdateSuccessMessage()
+            }
+        }
+    }
+
+    private fun showProfileUpdateSuccessMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.datos_actualizados_con_exito), Snackbar.LENGTH_SHORT
+        ).show()
     }
 
     private fun updateUI(userProfile: UserProfile) {
@@ -368,46 +361,56 @@ class UserProfileFragment : Fragment() {
         bottomSheetDialog.show()
 
         btnEmailChangeConfirmation.setOnClickListener {
-
             val user = FirebaseAuth.getInstance().currentUser
             val pass = password.text.toString()
-
-            Log.d(TAG, "current user in showChangeEmail $user")
-            //   val credential = EmailAuthProvider.getCredential(user?.email ?: "", pass)
-
-            val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
-
-            Log.d(TAG, "credentials $credential")
+            val textInputLayoutPassword =
+                view.findViewById<TextInputLayout>(R.id.textInputLayoutPassword)
 
             if (pass.isNotEmpty()) {
-                user?.reauthenticate(credential)
-                    ?.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d(TAG, "reauthenticate is successful")
-                            user.updateEmail(newEmail).addOnSuccessListener {
-                                userDocumentReference?.update(
-                                    mapOf(
-                                        EMAIL to newEmail
+                try {
+                    val credential = EmailAuthProvider.getCredential("$previousEmail", pass)
+
+                    user?.reauthenticate(credential)
+                        ?.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.d(TAG, "reauthenticate is successful")
+                                user.updateEmail(newEmail).addOnSuccessListener {
+                                    userDocumentReference?.update(
+                                        mapOf(
+                                            EMAIL to newEmail
+                                        )
                                     )
-                                )
-                                binding.editEmail.setText(newEmail)
-                                bottomSheetDialog.dismiss()
-                                Log.d(TAG, "Actualizado")
-                            }.addOnFailureListener {
-                                Log.d(TAG, "update del mail fallo")
-                            }
-                                .addOnCanceledListener {
-                                    Log.d(TAG, "cancelado")
+                                    binding.editEmail.setText(newEmail)
+                                    bottomSheetDialog.dismiss()
+                                    Log.d(TAG, "Actualizado")
+                                }.addOnFailureListener {
+                                    Log.d(TAG, "update del mail fallo")
                                 }
-
-                            // saveEmail(user)
-
-                        } else {
-                            Log.d(TAG, "La reautenticación falló")
+                                    .addOnCanceledListener {
+                                        Log.d(TAG, "cancelado")
+                                    }
+                            } else {
+                                Log.d(TAG, "La reautenticación falló")
+                                textInputLayoutPassword.error = "Contraseña incorrecta"
+                            }
                         }
-                    }
+                } catch (e: IllegalArgumentException) {
+                    Log.e(TAG, "IllegalArgumentException: ${e.message}")
+                    // Handle the case where the password is empty or null
+                    textInputLayoutPassword.error = "Contraseña inválida"
+                }
+            } else {
+                // Handle the case when the password is empty
+                textInputLayoutPassword.error = "La contraseña no puede estar vacía"
             }
         }
+    }
+
+    private fun showChangeEmailVerification2() {
+        val newEmail = binding.editEmail.text.toString()
+        val bottomSheetFragment = PasswordConfirmationFragment.newInstance(newEmail, previousEmail)
+        bottomSheetFragment.setDialogClickListener(this@UserProfileFragment)
+        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
     }
 
 
@@ -440,6 +443,18 @@ class UserProfileFragment : Fragment() {
             }
         }
     }
+
+    override fun onFinishClickDialog(clickValue: Boolean) {
+        if (clickValue) {
+            showEmailUpdateSuccesfulMessage()
+        }
+    }
+
+    private fun showEmailUpdateSuccesfulMessage(){
+        Snackbar.make(requireView(),
+            getString(R.string.email_actualizado_con_exito), Snackbar.LENGTH_SHORT).show()
+    }
+
 
 }
 

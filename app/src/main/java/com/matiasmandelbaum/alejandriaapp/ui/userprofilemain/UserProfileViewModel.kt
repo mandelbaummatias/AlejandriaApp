@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.DocumentReference
 import com.matiasmandelbaum.alejandriaapp.common.event.Event
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
@@ -33,11 +32,6 @@ class UserProfileViewModel @Inject constructor(
     private val _userProfile = MutableLiveData<Result<UserProfile>?>()
     val userProfile: MutableLiveData<Result<UserProfile>?> get() = _userProfile
 
-    private val _userDocumentReference = MutableLiveData<DocumentReference>()
-
-    val userDocumentReference = _userDocumentReference
-
-
     private companion object {
         const val MIN_NAME_LENGTH = 2
         const val MIN_LAST_NAME_LENGTH = 2
@@ -50,9 +44,13 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    private val _navigateToHome = MutableLiveData<Event<Boolean>>()
-    val navigateToHome: LiveData<Event<Boolean>>
-        get() = _navigateToHome
+    private val _showPasswordRequiredDialog = MutableLiveData<Event<Boolean>>()
+    val showPasswordRequiredDialog: LiveData<Event<Boolean>>
+        get() = _showPasswordRequiredDialog
+
+    private val _showOnSuccessfulSavedDataMessage = MutableLiveData<Event<Boolean>>()
+    val showOnSuccessfulSavedDataMessage: LiveData<Event<Boolean>>
+        get() = _showOnSuccessfulSavedDataMessage
 
     private val _viewState = MutableStateFlow(UserProfileViewState())
     val viewState: StateFlow<UserProfileViewState>
@@ -75,18 +73,25 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    fun onSaveUserEmailSelected(email: String) {
+    fun onSaveUserEmailSelected(email: String, previousEmail: String) {
         Log.d(TAG, " onSaveUserEmailSelected")
         if (isValidOrEmptyEmail(email)) {
-            saveUserEmail(email)
+            saveUserEmail(email, previousEmail)
         } else {
             onEmailChanged(email)
         }
     }
 
-    private fun saveUserEmail(email: String){
+    private fun saveUserEmail(email: String, previousEmail: String) {
         viewModelScope.launch {
             _emailViewState.value = UserEmailViewState()
+            if (email != previousEmail) {
+                Log.d(TAG, "son diferentes: $email y $previousEmail")
+                _showPasswordRequiredDialog.value = Event(true)
+            } else {
+                Log.d(TAG, "no son dif los emails")
+                //dismiss?
+            }
         }
     }
 
@@ -103,8 +108,8 @@ class UserProfileViewModel @Inject constructor(
                 }
 
                 is Result.Success -> {
+                    _showOnSuccessfulSavedDataMessage.value = Event(true)
                     Log.d(TAG, "Change ok")
-                    // _navigateToHome.value = Event(true)
                 }
 
                 else -> {
