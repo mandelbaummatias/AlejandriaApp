@@ -185,5 +185,10 @@
     <string name="email_actualizado_con_exito">Mail actualizado con éxito!</string>
     <string name="email_no_fue_actualizado">El mail no fue actualizado</string>
 
+    <!--confirmation-->
+    <string name="confirmar_contrasenia">Confirmar contraseña</string>
+    <string name="ingrese_contrasenia">Ingresa tu contraseña actual para confirmar</string>
+    <string name="hint_contrasenia">Contraseña</string>
+    <string name="confirmar_cambio_contrasenia">Confirmar</string>
 
 </resources>

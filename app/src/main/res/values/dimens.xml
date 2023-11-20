@@ -103,6 +103,16 @@
     <dimen name="subscription_card_margin_bottom">20dp</dimen>
     <dimen name="subscription_card_margin_bottom_larger">40dp</dimen>
 
+    <!--confirmation-->
+    <dimen name="confirmation_text_margin_normal">16dp</dimen>
+    <dimen name="confirmation_text_margin_small">8dp</dimen>
+    <dimen name="confirmation_linear_layout_padding">30dp</dimen>
+    <dimen name="confirmation_linear_layout_height">300dp</dimen>
+    <dimen name="confirmation_button_height">60dp</dimen>
+    <dimen name="confirmation_text_size_big">30sp</dimen>
+    <dimen name="confirmation_text_size_medium">20sp</dimen>
+    <dimen name="confirmation_text_size_small">13sp</dimen>
+
     <!--Guidelines Percents-->
     <dimen name="guideline_10">0.1</dimen>
     <dimen name="guideline_15">0.15</dimen>
