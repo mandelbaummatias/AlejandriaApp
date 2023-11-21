@@ -151,6 +151,11 @@
     <dimen name="signin_text_size_small">20sp</dimen>
     <dimen name="signin_text_button_height">60sp</dimen>
 
+    <!--search-->
+    <dimen name="search_logo_size">400dp</dimen>
+    <dimen name="search_margin_icon_text">-80dp</dimen>
+    <dimen name="search_text_size">24sp</dimen>
+
 
     <!--Guidelines Percents-->
     <dimen name="guideline_10">0.1</dimen>

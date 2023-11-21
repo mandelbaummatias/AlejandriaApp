@@ -201,4 +201,7 @@
     <!--profile picture-->
     <string name="elige_imagen">Elige una imagen</string>
 
+    <!--search-->
+    <string name="texto_imagen">Descubrí un sin fin de libros</string>
+
 </resources>
