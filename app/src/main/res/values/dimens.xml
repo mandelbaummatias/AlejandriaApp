@@ -50,12 +50,12 @@
     <dimen name="registro_text_size">16sp</dimen>
     <dimen name="sign_in_padding">30dp</dimen>
     <dimen name="titulo_registro_text_size">32sp</dimen>
-    <dimen name="sign_in_margin_top">2dp</dimen>
-    <dimen name="sign_in_text_size">2dp</dimen>
+    <!--<dimen name="sign_in_margin_top">2dp</dimen>-->
+    <dimen name="sign_in_text_size">2sp</dimen>
     <dimen name="sign_in_nombre_text_size">8dp</dimen>
-    <dimen name="sign_in_nombre_margin_top">2dp</dimen>
+    <!--<dimen name="sign_in_nombre_margin_top">2dp</dimen>-->
     <dimen name="input_apellido_padding_top">8dp</dimen>
-    <dimen name="input_apellido_margin_top">2dp</dimen>
+    <!--<dimen name="input_apellido_margin_top">2dp</dimen>-->
     <dimen name="input_layout_fecha_nacimiento_padding_top">8dp</dimen>
     <dimen name="input_layout_fecha_nacimiento_margin_top">2dp</dimen>
 
@@ -135,6 +135,15 @@
     <dimen name="item_book_text_size_small">16sp</dimen>
     <dimen name="item_book_rating_width">240dp</dimen>
     <dimen name="item_book_rating_height">50dp</dimen>
+
+    <!--signin-->
+    <dimen name="signin_text_padding_standard">8dp</dimen>
+    <dimen name="signin_text_padding_medium">16dp</dimen>
+    <dimen name="signin_text_margin_standard">8dp</dimen>
+    <dimen name="signin_text_margin_small">2dp</dimen>
+    <dimen name="signin_text_size_small">20sp</dimen>
+    <dimen name="signin_text_button_height">60sp</dimen>
+
 
     <!--Guidelines Percents-->
     <dimen name="guideline_10">0.1</dimen>
