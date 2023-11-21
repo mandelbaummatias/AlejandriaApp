@@ -50,12 +50,12 @@
     <dimen name="registro_text_size">16sp</dimen>
     <dimen name="sign_in_padding">30dp</dimen>
     <dimen name="titulo_registro_text_size">32sp</dimen>
-    <dimen name="sign_in_margin_top">2dp</dimen>
-    <dimen name="sign_in_text_size">2dp</dimen>
+    <!--<dimen name="sign_in_margin_top">2dp</dimen>-->
+    <dimen name="sign_in_text_size">2sp</dimen>
     <dimen name="sign_in_nombre_text_size">8dp</dimen>
-    <dimen name="sign_in_nombre_margin_top">2dp</dimen>
+    <!--<dimen name="sign_in_nombre_margin_top">2dp</dimen>-->
     <dimen name="input_apellido_padding_top">8dp</dimen>
-    <dimen name="input_apellido_margin_top">2dp</dimen>
+    <!--<dimen name="input_apellido_margin_top">2dp</dimen>-->
     <dimen name="input_layout_fecha_nacimiento_padding_top">8dp</dimen>
     <dimen name="input_layout_fecha_nacimiento_margin_top">2dp</dimen>
 
@@ -109,6 +109,48 @@
     <dimen name="subscription_card_margin_top">10dp</dimen>
     <dimen name="subscription_card_margin_bottom">20dp</dimen>
     <dimen name="subscription_card_margin_bottom_larger">40dp</dimen>
+
+    <!--confirmation-->
+    <dimen name="confirmation_text_margin_normal">16dp</dimen>
+    <dimen name="confirmation_text_margin_small">8dp</dimen>
+    <dimen name="confirmation_linear_layout_padding">30dp</dimen>
+    <dimen name="confirmation_linear_layout_height">300dp</dimen>
+    <dimen name="confirmation_button_height">60dp</dimen>
+    <dimen name="confirmation_text_size_big">30sp</dimen>
+    <dimen name="confirmation_text_size_medium">20sp</dimen>
+    <dimen name="confirmation_text_size_small">13sp</dimen>
+
+    <!--profile picture-->
+    <dimen name="profile_picture_text_size_big">35sp</dimen>
+    <dimen name="profile_picture_card_corner_radius">100dp</dimen>
+    <dimen name="profile_picture_card_elevation">4dp</dimen>
+    <dimen name="profile_picture_layout_width">170dp</dimen>
+    <dimen name="profile_picture_layout_height">170dp</dimen>
+
+    <!--item book-->
+    <dimen name="item_book_layout_card_height">200dp</dimen>
+    <dimen name="item_book_margin_small_1">5dp</dimen>
+    <dimen name="item_book_margin_small_2">10dp</dimen>
+    <dimen name="item_book_margin_medium">20dp</dimen>
+    <dimen name="item_book_margin_big">30dp</dimen>
+    <dimen name="item_book_card_elevation">4dp</dimen>
+    <dimen name="item_book_card_corner_radius">16dp</dimen>
+    <dimen name="item_book_image_height">160dp</dimen>
+    <dimen name="item_book_image_width">100dp</dimen>
+    <dimen name="item_book_text_width">250dp</dimen>
+    <dimen name="item_book_text_size_medium">20sp</dimen>
+    <dimen name="item_book_text_size_small">16sp</dimen>
+    <dimen name="item_book_rating_width">240dp</dimen>
+    <dimen name="item_book_rating_height">50dp</dimen>
+
+    <!--signin-->
+    <dimen name="signin_text_padding_standard">8dp</dimen>
+    <dimen name="signin_text_padding_medium">16dp</dimen>
+    <dimen name="signin_text_margin_standard">8dp</dimen>
+    <dimen name="signin_text_margin_small">2dp</dimen>
+    <dimen name="signin_text_size_small">20sp</dimen>
+    <dimen name="signin_text_button_height">60sp</dimen>
+
 
     <!--Guidelines Percents-->
     <dimen name="guideline_10">0.1</dimen>
