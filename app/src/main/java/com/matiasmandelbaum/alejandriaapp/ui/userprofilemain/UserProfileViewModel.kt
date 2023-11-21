@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import java.text.ParseException
+import java.text.SimpleDateFormat
 
 private const val TAG = "UserProfileViewModel"
 
@@ -64,12 +66,12 @@ class UserProfileViewModel @Inject constructor(
     val showErrorDialog: LiveData<UserProfile2>
         get() = _showErrorDialog
 
-    fun onSaveProfileSelected(name: String, lastName: String, email: String) {
+    fun onSaveProfileSelected(name: String, lastName: String, email: String, birthDate: String) {
         Log.d(TAG, " onSaveProfileSelected")
-        if (isValidName(name) && isValidLastName(lastName)) {
-            saveUserProfile(name, lastName, email)
+        if (isValidName(name) && isValidLastName(lastName) && isValidOrEmptyDate(birthDate)) {
+            saveUserProfile(name, lastName, email, birthDate)
         } else {
-            onFieldsChanged(name, lastName)
+            onFieldsChanged(name, lastName, birthDate)
         }
     }
 
@@ -95,11 +97,11 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    private fun saveUserProfile(name: String, lastName: String, email: String) {
+    private fun saveUserProfile(name: String, lastName: String, email: String, birthDate: String) {
         Log.d(TAG, "email? $email")
         viewModelScope.launch {
             _viewState.value = UserProfileViewState(isLoading = true)
-            when (changeUserProfileUseCase(name, lastName, email)) {
+            when (changeUserProfileUseCase(name, lastName, email, birthDate)) {
                 is Result.Error -> {
                     Log.d(TAG, "Chang Error")
                     _showErrorDialog.value =
@@ -120,10 +122,11 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    fun onFieldsChanged(name: String, lastName: String) {
+    fun onFieldsChanged(name: String, lastName: String, birthDate: String) {
         _viewState.value = UserProfileViewState(
             isValidName = isValidName(name),
-            isValidLastName = isValidLastName(lastName)
+            isValidLastName = isValidLastName(lastName),
+            isValidBirthDate = isDateFormatValid(birthDate)
         )
     }
 
@@ -133,14 +136,29 @@ class UserProfileViewModel @Inject constructor(
         )
     }
 
+
     private fun isValidName(name: String) =
-        name.length >= MIN_NAME_LENGTH || name.isEmpty()
+        name.length >= MIN_NAME_LENGTH && !name.isNullOrBlank()
 
     private fun isValidLastName(lastName: String): Boolean =
-        lastName.length >= MIN_LAST_NAME_LENGTH || lastName.isEmpty()
+        lastName.length >= MIN_LAST_NAME_LENGTH && ! lastName.isNullOrBlank()
 
     private fun isValidOrEmptyEmail(email: String) =
-        Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty()
+        Patterns.EMAIL_ADDRESS.matcher(email).matches() && !email.isNullOrBlank()
+
+    private fun isValidOrEmptyDate(birthDate: String) =
+        !birthDate.isNullOrBlank() && isDateFormatValid(birthDate)
+
+    private fun isDateFormatValid(dateString: String): Boolean {
+        val format = "dd/MM/yyyy"
+        val sdf = SimpleDateFormat(format)
+        sdf.isLenient = true // Esto hace que la validación sea estricta
+
+        return try {
+            sdf.parse(dateString)
+            true
+        } catch (e: ParseException) {
+            false
+        }
+    }
 }
-
-

@@ -8,6 +8,7 @@ class ChangeUserProfileUseCase @Inject constructor(private val usersRepository: 
     suspend operator fun invoke(
         name: String,
         lastName: String,
-        email: String
-    ) = usersRepository.updateUserProfile(name, lastName, email)
+        email: String,
+        birthDate: String
+    ) = usersRepository.updateUserProfile(name, lastName, email, birthDate)
 }

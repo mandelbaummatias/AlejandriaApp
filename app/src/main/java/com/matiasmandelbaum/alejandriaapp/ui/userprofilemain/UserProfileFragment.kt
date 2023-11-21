@@ -70,7 +70,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             findNavController().navigate(R.id.changeProfileImageFragment)
         }
 
-
         initListeners()
         initObservers()
     }
@@ -105,7 +104,8 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 viewModel.onSaveProfileSelected(
                     binding.editNombre.text.toString(),
                     binding.editApellido.text.toString(),
-                    previousEmail
+                    previousEmail,
+                    binding.editDate.text.toString()
                 )
 
                 viewModel.onSaveUserEmailSelected(
@@ -177,6 +177,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             editNombre.setText(userProfile.name)
             editApellido.setText(userProfile.lastName)
             editEmail.setText(userProfile.email)
+            editDate.setText(userProfile.birthDate)
 
             if (!userProfile.image.isNullOrEmpty()) {
                 val resourceId = resources.getIdentifier(
@@ -200,6 +201,8 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 if (viewState.isValidName) null else getString(R.string.nombre_invalido)
             editApellidoLayout.error =
                 if (viewState.isValidLastName) null else getString(R.string.apellido_invalido)
+            editDateLayout.error =
+                if (viewState.isValidBirthDate) null else "La fecha no es válida"
         }
     }
 
@@ -254,6 +257,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             editNombre.isEnabled = true
             editApellido.isEnabled = true
             editEmail.isEnabled = true
+            editDate.isEnabled = true
             userMailHeader.text = "Cambio de nombre"
             editNombre.requestFocus()
             editNombre.text?.let { editNombre.setSelection(it.length) }
@@ -266,8 +270,10 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             editNombre.isEnabled = false
             editApellido.isEnabled = false
             editEmail.isEnabled = false
+            editDate.isEnabled = false
             editFab.setImageResource(R.drawable.ic_edit)
             userMailHeader.text = getString(R.string.personalInfo)
+
         }
         isInEditMode = false
     }
@@ -285,7 +291,8 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         if (!hasFocus) {
             viewModel.onFieldsChanged(
                 name = binding.editNombre.text.toString(),
-                lastName = binding.editApellido.text.toString()
+                lastName = binding.editApellido.text.toString(),
+                birthDate = binding.editDate.text.toString()
             )
         }
     }
@@ -294,6 +301,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         if (!hasFocus) {
             viewModel.onEmailChanged(
                 email = binding.editEmail.text.toString()
+
             )
         }
     }

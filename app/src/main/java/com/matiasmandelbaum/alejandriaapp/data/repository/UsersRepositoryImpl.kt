@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService.Companion.USER_COLLECTION
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.DATE_OF_BIRTH
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.EMAIL
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.HAS_RESERVED_BOOK
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.IMAGE
@@ -66,7 +67,8 @@ class UsersRepositoryImpl @Inject constructor(
     override suspend fun updateUserProfile(
         name: String,
         lastName: String,
-        userEmail: String
+        userEmail: String,
+        birthDate: String
     ): Result<Unit> =
         suspendCoroutine { continuation ->
             val usersCollection = firestore.collection(USERS_COLLECTION)
@@ -81,7 +83,8 @@ class UsersRepositoryImpl @Inject constructor(
                         userReference.update(
                             mapOf(
                                 NAME to name,
-                                LAST_NAME to lastName
+                                LAST_NAME to lastName,
+                                DATE_OF_BIRTH to birthDate
                             )
                         ).addOnSuccessListener {
                             continuation.resume(Result.Success(Unit))
@@ -124,10 +127,11 @@ class UsersRepositoryImpl @Inject constructor(
                         val nombre = document.getString(NAME)
                         val apellido = document.getString(LAST_NAME)
                         val image = document.getString(IMAGE)
+                        val date = document.getString(DATE_OF_BIRTH)
                         val userProfile =
-                            UserProfile(nombre!!, apellido!!, email, image, document.reference)
+                            UserProfile(nombre!!, apellido!!, email, image, date!!, document.reference)
 
-                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $email")
+                        Log.d(TAG, "Nombre: $nombre, Apellido: $apellido, Email: $email, Fecha de nacim.: $date")
 
                         //   val user = document.toObject(com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.User::class.java())
 
