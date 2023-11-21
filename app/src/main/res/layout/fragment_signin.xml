@@ -34,13 +34,13 @@
             android:id="@+id/text_input_layout_nombre"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            android:paddingTop="@dimen/sign_in_nombre_text_size"
+            android:paddingTop="@dimen/signin_text_padding_standard"
             android:layout_height="wrap_content"
             android:hint="@string/nombre"
             app:layout_constraintTop_toBottomOf="@+id/text_view_titulo_registro"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/sign_in_nombre_margin_top">
+            android:layout_marginTop="@dimen/signin_text_margin_small">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_nombre"
@@ -56,13 +56,13 @@
             android:id="@+id/text_input_layout_apellido"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            android:paddingTop="@dimen/input_apellido_padding_top"
+            android:paddingTop="@dimen/signin_text_padding_standard"
             android:layout_height="wrap_content"
             android:hint="@string/apellido"
             app:layout_constraintTop_toBottomOf="@+id/text_input_layout_nombre"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/input_apellido_margin_top">
+            android:layout_marginTop="@dimen/signin_text_margin_small">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_apellido"
@@ -78,7 +78,7 @@
             android:id="@+id/text_input_layout_fecha_nacimiento"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            android:paddingTop="@dimen/input_layout_fecha_nacimiento_padding_top"
+            android:paddingTop="@dimen/signin_text_padding_standard"
             android:layout_height="wrap_content"
             android:hint="@string/fecha_de_nacimiento"
             app:layout_constraintTop_toBottomOf="@+id/text_input_layout_apellido"
@@ -103,11 +103,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Email"
-            android:paddingTop="8dp"
+            android:paddingTop="@dimen/signin_text_padding_standard"
             app:layout_constraintTop_toBottomOf="@+id/text_input_layout_fecha_nacimiento"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="2dp">
+            android:layout_marginTop="@dimen/signin_text_margin_small">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_email"
@@ -124,12 +124,12 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
+            android:paddingTop="@dimen/signin_text_padding_standard"
             android:hint="Contraseña"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="2dp">
+            android:layout_marginTop="@dimen/signin_text_margin_small">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextContrasenia"
@@ -147,12 +147,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Repetir Contraseña"
-            android:paddingTop="8dp"
-            android:paddingBottom="16dp"
+            android:paddingTop="@dimen/signin_text_padding_standard"
+            android:paddingBottom="@dimen/signin_text_padding_medium"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutContrasenia"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="2dp">
+            android:layout_marginTop="@dimen/signin_text_margin_small">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextRepetirContrasenia"
@@ -168,9 +168,9 @@
             android:id="@+id/btnRegistro"
             android:layout_width="0dp"
 
-            android:textSize="20dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
+            android:textSize="@dimen/signin_text_size_small"
+            android:layout_height="@dimen/signin_text_button_height"
+            android:layout_marginTop="@dimen/signin_text_margin_standard"
             android:text="Registrarse"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
