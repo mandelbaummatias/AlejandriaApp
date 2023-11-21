@@ -68,7 +68,7 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
                 is Result.Error -> {
                     //listener?.onFinishClickDialog(false)
                     Log.d(TAG, "error ${it.message}")
-                    binding.textInputLayoutPassword.error = "La contraseña es incorrecta"
+                    binding.pwConfirmPasswordLabel.error = "La contraseña es incorrecta"
                 }
 
 //                is Result.Loading -> {
@@ -83,8 +83,8 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
         val newEmail = arguments?.getString(ARG_NEW_EMAIL)
         val previousEmail = arguments?.getString(ARG_PREVIOUS_EMAIL)
 
-        binding.btnChangeConfirmation.setOnClickListener {
-            val pass = binding.passwordEmailChange.text.toString()
+        binding.pwConfirmButton.setOnClickListener {
+            val pass = binding.pwConfirmPassword.text.toString()
             if (pass.isNotEmpty()){
                 try {
                     if (newEmail != null) {
@@ -97,7 +97,7 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
                 }
             } else{
                 with(binding){
-                   textInputLayoutPassword.error = "La contraseña no puede estar vacía"
+                    pwConfirmPasswordLabel.error = "La contraseña no puede estar vacía"
                 }
 
             }
@@ -109,10 +109,10 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
         with(binding) {
             if (isLoading) {
                 userProfileFragment.visibility = View.GONE
-                progressBarPasswordConfirmation.visibility = View.VISIBLE
+                pwConfirmProgressbar.visibility = View.VISIBLE
             } else {
                 userProfileFragment.visibility = View.VISIBLE
-                progressBarPasswordConfirmation.visibility = View.GONE
+                pwConfirmProgressbar.visibility = View.GONE
             }
         }
     }
@@ -123,7 +123,7 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if(binding.textInputLayoutPassword.error?.isNotEmpty() == true){
+        if(binding.pwConfirmPasswordLabel.error?.isNotEmpty() == true){
             Log.d(TAG, "hubo un error, pero se está cerrando el dialog")
         }
         listener?.onFinishClickDialog(false)
