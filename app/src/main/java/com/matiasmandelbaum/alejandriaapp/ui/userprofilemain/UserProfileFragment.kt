@@ -23,11 +23,13 @@ import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
-import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
+
 import com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation.PasswordConfirmationFragment
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.model.UserProfile2
 import dagger.hilt.android.AndroidEntryPoint
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfile
 import kotlinx.coroutines.launch
 
 
@@ -93,6 +95,12 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             onTextChanged { onEmailChanged() }
         }
 
+        binding.editDate.apply {
+            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+            onTextChanged { onFieldChanged() }
+        }
+
         binding.editFab.setOnClickListener {
             if (!isInEditMode) {
                 Log.d(TAG, "in edit mode from click listener")
@@ -101,17 +109,28 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 //it.dismissKeyboard()
             } else {
                 Log.d(TAG, "PREVIOUS EMAIL $previousEmail")
-                viewModel.onSaveProfileSelected(
-                    binding.editNombre.text.toString(),
-                    binding.editApellido.text.toString(),
-                    previousEmail,
-                    binding.editDate.text.toString()
-                )
+//                viewModel.onSaveProfileSelected(
+//                    binding.editNombre.text.toString(),
+//                    binding.editApellido.text.toString(),
+//                    previousEmail,
+//                    binding.editDate.text.toString()
+//                )
+                if (viewModel.onSaveProfileSelected(
+                        UserProfile(
+                            binding.editNombre.text.toString(),
+                            binding.editApellido.text.toString(),
+                            previousEmail,
+                            binding.editDate.text.toString()
+                        )
+                    )
+                ) {
+                    exitEditMode()
+                }
 
                 viewModel.onSaveUserEmailSelected(
                     binding.editEmail.text.toString(), previousEmail
                 )
-                exitEditMode()
+               // exitEditMode()
 
             }
         }
@@ -172,7 +191,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         ).show()
     }
 
-    private fun updateUI(userProfile: UserProfile) {
+    private fun updateUI(userProfile: com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile) {
         with(binding) {
             editNombre.setText(userProfile.name)
             editApellido.setText(userProfile.lastName)
@@ -290,9 +309,12 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     private fun onFieldChanged(hasFocus: Boolean = false) {
         if (!hasFocus) {
             viewModel.onFieldsChanged(
-                name = binding.editNombre.text.toString(),
-                lastName = binding.editApellido.text.toString(),
-                birthDate = binding.editDate.text.toString()
+                UserProfile(
+                    name = binding.editNombre.text.toString(),
+                    lastName = binding.editApellido.text.toString(),
+                    birthDate = binding.editDate.text.toString()
+                )
+
             )
         }
     }
@@ -301,7 +323,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         if (!hasFocus) {
             viewModel.onEmailChanged(
                 email = binding.editEmail.text.toString()
-
             )
         }
     }
