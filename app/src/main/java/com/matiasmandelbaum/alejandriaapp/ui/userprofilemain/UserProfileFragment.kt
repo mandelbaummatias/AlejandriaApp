@@ -43,6 +43,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
 
     //  private var previousEmail: String? = null
     lateinit var previousEmail: String
+    lateinit var newEmail: String
     private val viewModel: UserProfileViewModel by viewModels()
 
     private lateinit var binding: UserProfileBinding
@@ -127,10 +128,12 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                     exitEditMode()
                 }
 
+                newEmail = binding.editEmail.text.toString()
+
                 viewModel.onSaveUserEmailSelected(
                     binding.editEmail.text.toString(), previousEmail
                 )
-               // exitEditMode()
+                // exitEditMode()
 
             }
         }
@@ -343,6 +346,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     override fun onFinishClickDialog(clickValue: Boolean) {
         if (clickValue) {
             showEmailUpdateSuccesfulMessage()
+            binding.editEmail.setText(newEmail)
         } else {
             binding.editEmail.setText(previousEmail) //handle loading?
             showEmailUpdateUnsuccessfulMessage()
@@ -352,7 +356,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     private fun showEmailUpdateSuccesfulMessage() {
         Snackbar.make(
             requireView(),
-            getString(R.string.email_actualizado_con_exito), Snackbar.LENGTH_SHORT
+            getString(R.string.datos_actualizados_con_exito), Snackbar.LENGTH_SHORT
         ).show()
     }
 
