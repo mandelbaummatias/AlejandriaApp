@@ -59,20 +59,27 @@
     <dimen name="input_layout_fecha_nacimiento_padding_top">8dp</dimen>
     <dimen name="input_layout_fecha_nacimiento_margin_top">2dp</dimen>
 
-
     <!--Password Recovery-->
     <dimen name="pw_recovery_height">300dp</dimen>
     <dimen name="pw_recovery_content_padding">30dp</dimen>
-
     <dimen name="pw_recovery_margin_top_small">8dp</dimen>
     <dimen name="pw_recovery_margin_top">16dp</dimen>
     <dimen name="pw_recovery_margin_bottom">16dp</dimen>
-
     <dimen name="pw_recovery_title_text_size">30sp</dimen>
     <dimen name="pw_recovery_message_text_size">13sp</dimen>
-
     <dimen name="pw_recovery_button_height">60dp</dimen>
     <dimen name="pw_recovery_button_text_size">20sp</dimen>
+
+    <!--Password Confirm-->
+    <dimen name="pw_confirm_height">300dp</dimen>
+    <dimen name="pw_confirm_content_padding">30dp</dimen>
+    <dimen name="pw_confirm_margin_top_small">8dp</dimen>
+    <dimen name="pw_confirm_margin_top">16dp</dimen>
+    <dimen name="pw_confirm_margin_bottom">16dp</dimen>
+    <dimen name="pw_confirm_title_text_size">30sp</dimen>
+    <dimen name="pw_confirm_message_text_size">13sp</dimen>
+    <dimen name="pw_confirm_button_height">60dp</dimen>
+    <dimen name="pw_confirm_button_text_size">20sp</dimen>
 
     <!--Reserved Book Item-->
     <dimen name="item_reserve_label_size">20sp</dimen>
