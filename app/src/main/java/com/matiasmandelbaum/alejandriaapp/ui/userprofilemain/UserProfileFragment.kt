@@ -2,6 +2,7 @@ package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -31,6 +35,12 @@ import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.model.UserProfile2
 import dagger.hilt.android.AndroidEntryPoint
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfile
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 private const val TAG = "UserProfileFragment"
@@ -40,9 +50,11 @@ class UserProfileFragment : Fragment(), DialogClickListener {
 
     private var isInEditMode = false
     private var userDocumentReference: DocumentReference? = null
+    private lateinit var datePicker: MaterialDatePicker<Long>
 
     //  private var previousEmail: String? = null
     lateinit var previousEmail: String
+    lateinit var previousDate: String
     lateinit var newEmail: String
     private val viewModel: UserProfileViewModel by viewModels()
 
@@ -100,6 +112,11 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
             setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
             onTextChanged { onFieldChanged() }
+        }
+
+        binding.editDate.setOnClickListener {
+            previousDate = binding.editDate.text.toString()
+            showDatePicker()
         }
 
         binding.editFab.setOnClickListener {
@@ -270,6 +287,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 }
             }
         }
+        setupDatePicker()
         return binding.root
     }
 
@@ -366,6 +384,86 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             getString(R.string.email_no_fue_actualizado), // Assuming you have a string resource for the message
             Snackbar.LENGTH_SHORT
         ).show()
+    }
+
+    private fun setupDatePicker() {
+
+        val calendarMin = Calendar.getInstance()
+        calendarMin.add(Calendar.YEAR, -18)
+
+
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.YEAR, -18)
+        val minDateInMillis = cal.timeInMillis
+
+// Define date validator
+        val dateValidatorMin: CalendarConstraints.DateValidator =
+            DateValidatorPointBackward.before(minDateInMillis)
+
+        val constraints: CalendarConstraints =
+            CalendarConstraints.Builder()
+                .setValidator(dateValidatorMin)
+
+                .build()
+
+
+        val builder = MaterialDatePicker.Builder.datePicker()
+            .setCalendarConstraints(constraints)
+
+        builder.setSelection(calendarMin.timeInMillis)
+        builder.setTitleText(getString(R.string.selecciona_fecha_de_nacimiento))
+        builder.setCalendarConstraints(constraints)
+        datePicker = builder.build()
+
+        var hasSelectedDate = false
+
+        var finalSelectedDate = ""
+
+
+        datePicker.addOnPositiveButtonClickListener {
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val selectedDateStr = format.format(Date(it))
+            val selectedLocalDate =
+                LocalDate.parse(selectedDateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+            Log.d(TAG, "date: $selectedLocalDate")
+            val format2 = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val formattedDate = selectedLocalDate.format(format2)
+
+            // Convert the String to Editable
+            val editableText = Editable.Factory.getInstance().newEditable(formattedDate)
+
+            binding.editDate.text = editableText
+            hasSelectedDate = true
+            finalSelectedDate = formattedDate
+            binding.editDate.requestFocus()
+            binding.editDate.text?.let { binding.editDate.setSelection(it.length) }
+        }
+
+        datePicker.addOnNegativeButtonClickListener {
+            Log.d(TAG, "en negative viendo hasSelectedDate: $hasSelectedDate")
+            //  datePicker.selection?.let {
+            //      it.let {
+            if (hasSelectedDate) {
+                binding.editDate.text = Editable.Factory.getInstance().newEditable(
+                    finalSelectedDate
+                )
+            } else {
+                Log.d(TAG, "doesn't have selected date")
+//                binding.editDate.text =
+//                    Editable.Factory.getInstance().newEditable(" ")
+                binding.editDate.setText(previousDate)
+                binding.editDate.requestFocus()
+                binding.editDate.text?.let { binding.editDate.setSelection(it.length) }
+                //        Log.d(TAG, "pasandole null en negative?")
+                //viewModel.isValidDate(null)
+            }
+
+        }
+    }
+
+    fun showDatePicker() {
+        Log.d(TAG, "showDatePicker()")
+        datePicker.show(parentFragmentManager, "datePicker")
     }
 
 
