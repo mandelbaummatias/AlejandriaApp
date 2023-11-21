@@ -36,10 +36,11 @@ class BooksRepositoryImpl @Inject constructor(
     private val googleBooksService: GoogleBooksService
 ) : BooksRepository {
     override fun getAllItems(): Flow<Result<List<Book>>> = callbackFlow {
-        val itemsReference = firestore.collection(BOOKS_COLLECTION).orderBy(
-            DATE,
-            Query.Direction.DESCENDING
-        )
+        val itemsReference = firestore.collection(BOOKS_COLLECTION)
+            .orderBy(AVAILABLE_QUANTITY, Query.Direction.ASCENDING) // Order by "cantidad_disponible" first
+            .orderBy(DATE, Query.Direction.DESCENDING) // Then order by "fecha_ingreso"
+            .whereGreaterThan(AVAILABLE_QUANTITY, 0)
+
 
         val subscription = itemsReference.addSnapshotListener { snapshot, error ->
             if (error != null) {
