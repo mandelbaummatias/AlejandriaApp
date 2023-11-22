@@ -8,5 +8,6 @@ interface GoogleBooksApiClient {
     @GET(" ")
     suspend fun searchBooksByISBN(
         @Query("q") isbn: String,
+        @Query("key") apiKey: String
     ): GoogleBooksResponse
 }
