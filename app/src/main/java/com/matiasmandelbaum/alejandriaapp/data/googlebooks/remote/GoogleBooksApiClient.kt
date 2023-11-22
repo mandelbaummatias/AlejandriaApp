@@ -1,6 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote
 
-import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.GoogleBooksResponse
+import com.matiasmandelbaum.alejandriaapp.data.googlebooks.response.GoogleBooksResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

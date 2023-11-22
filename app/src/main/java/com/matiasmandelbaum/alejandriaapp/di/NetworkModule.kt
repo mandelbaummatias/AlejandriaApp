@@ -38,7 +38,6 @@ object NetworkModule {
     @Provides
     @Named("GBooks")
     fun provideRetrofit(): Retrofit {
-        val apiKey = GoogleBooksConfig.apiKey
         val baseUrl = GoogleBooksConfig.baseUrl
 
         val client = OkHttpClient.Builder()

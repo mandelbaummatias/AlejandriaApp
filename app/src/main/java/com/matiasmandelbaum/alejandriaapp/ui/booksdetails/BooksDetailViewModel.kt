@@ -47,6 +47,10 @@ class BooksDetailViewModel @Inject constructor(
     private val _onSuccessfulReservation = MutableLiveData<Result<ReservationResult>?>()
     val onSuccessfulReservation: LiveData<Result<ReservationResult>?> = _onSuccessfulReservation
 
+    private val _onFailedReservation = MutableLiveData<Result<ReservationResult>?>()
+    val onFailedReservation: LiveData<Result<ReservationResult>?> = _onFailedReservation
+
+
     val book: Book = savedStateHandle["book"]!!
 
 
@@ -55,9 +59,12 @@ class BooksDetailViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = reserveBookUseCase(book.isbn, userEmail, book.cantidadDisponible)) {
                 is Result.Success -> {
+                    Log.d(TAG, "succcess!")
                     handleSuccessfulReservation(result, userEmail)
                 }
-                is Result.Error -> postOnSuccessfulReservation(result)
+                is Result.Error -> {
+                   postOnFailedReservation(result)
+                }
                 else -> Unit
             }
         }
@@ -74,6 +81,10 @@ class BooksDetailViewModel @Inject constructor(
 
     private fun postOnSuccessfulReservation(result: Result<ReservationResult>) {
         _onSuccessfulReservation.postValue(result)
+    }
+
+    private fun postOnFailedReservation(result: Result<ReservationResult>) {
+        _onFailedReservation.postValue(result)
     }
 
     private fun fetchSubscription(id: String) {

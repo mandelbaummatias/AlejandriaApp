@@ -1,6 +1,6 @@
-package com.matiasmandelbaum.alejandriaapp.data.googlebooks.model
+package com.matiasmandelbaum.alejandriaapp.data.googlebooks.response
 
-import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.BookItem
+import com.matiasmandelbaum.alejandriaapp.data.googlebooks.response.components.BookItem
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

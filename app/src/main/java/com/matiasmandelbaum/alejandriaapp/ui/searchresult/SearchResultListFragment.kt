@@ -31,7 +31,7 @@ class SearchResultListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchResultListBinding.inflate(inflater, container, false)
-        //viewModel.getBooksByTitle()
+        viewModel.getBooksByTitle()
 
         return binding.root
     }
@@ -56,20 +56,27 @@ class SearchResultListFragment : Fragment() {
             adapter = bookListAdapter
         }
 
-        viewModel.getBooksByTitle()
+       // viewModel.getBooksByTitle()
         // viewModel.getBooksByTitle()
 
         viewModel.bookListState.observe(viewLifecycleOwner) {
             when (it) {
                 is Result.Success ->{
+                    Log.d(TAG, "success ${it.data}")
                     handleLoading(false)
                     bookListAdapter.submitList(it.data)
                     val className = it.data::class.java.simpleName
                     Log.d(TAG, " mi data ${it.data}")
                     Log.d(TAG, "The data type is: $className")
                 }
-                is Result.Loading -> handleLoading(true)
-                is Result.Error -> handleLoading(false)
+                is Result.Loading ->{
+                    handleLoading(true)
+                    Log.d(TAG, "loading")
+                }
+                is Result.Error -> {
+                    handleLoading(false)
+                    Log.d(TAG, "error ${it.message}")
+                }
                 else -> {
 
                 }
