@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -183,7 +184,10 @@ class SignInFragment : Fragment() {
 
     private fun goToLogin(){
         val action = SignInFragmentDirections.actionSignInFragmentToLoginFragment()
-        findNavController().navigate(action)
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.loginFragment, true)
+            .build()
+        findNavController().navigate(action, navOptions)
     }
 
     private fun goToHome(){
