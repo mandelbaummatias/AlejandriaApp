@@ -93,24 +93,30 @@ class BooksRepositoryImpl @Inject constructor(
         quantity: Int
     ): Result<ReservationResult> {
         return try {
-            val result = suspendCoroutine { continuation ->
-                val booksCollection = firestore.collection(BOOKS_COLLECTION)
-                val book = booksCollection.document(isbn)
+            return if(quantity > 0) {
 
-                book.update(AVAILABLE_QUANTITY, quantity - 1)
-                    .addOnSuccessListener {
-                        Log.d(TAG, "update ok")
-                        // Call continuation.resume with the Result.Success
-                        continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
-                    }
-                    .addOnFailureListener {
-                        Log.d(TAG, "error en update $it")
-                        // Call continuation.resume with the Result.Error
-                        continuation.resume(Result.Error("Error reserving book: ${it.message}"))
-                    }
+
+                val result = suspendCoroutine { continuation ->
+                    val booksCollection = firestore.collection(BOOKS_COLLECTION)
+                    val book = booksCollection.document(isbn)
+
+                    book.update(AVAILABLE_QUANTITY, quantity - 1)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "update ok")
+                            // Call continuation.resume with the Result.Success
+                            continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
+                        }
+                        .addOnFailureListener {
+                            Log.d(TAG, "error en update $it")
+                            // Call continuation.resume with the Result.Error
+                            continuation.resume(Result.Error("Error reserving book: ${it.message}"))
+                        }
+                }
+
+                result
+            } else{
+                Result.Error("Error. No hay disponibilidad")
             }
-
-            result
         } catch (e: Exception) {
             Result.Error("Error reserving book: ${e.message}")
         }
