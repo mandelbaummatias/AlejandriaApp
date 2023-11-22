@@ -15,7 +15,7 @@ class AlejandriaApp : Application() {
         GoogleBooksConfig.apiKey = resources.getString(R.string.google_books_api_key)
         MercadoPagoConfig.apiKey = resources.getString(R.string.mercadopago_api_key)
         MercadoPagoConfig.baseUrl = resources.getString(R.string.mercadopago_api_base_url)
-        AlgoliaConfig.applicationID = resources.getString(R.string.algolia_application_id)
-        AlgoliaConfig.apiKey = resources.getString(R.string.algolia_api_key)
+//        AlgoliaConfig.applicationID = resources.getString(R.string.algolia_application_id)
+//        AlgoliaConfig.apiKey = resources.getString(R.string.algolia_api_key)
     }
 }

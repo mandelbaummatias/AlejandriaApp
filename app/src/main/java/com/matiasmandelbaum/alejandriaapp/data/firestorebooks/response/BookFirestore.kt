@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 data class BookFirestore(
     val autor: String = "",
     val titulo: String = "",
-    val fecha_ingreso: String = "",
     val cantidad: Int = 0,
     val cantidad_disponible: Int = 0,
     val isbn: String = ""
