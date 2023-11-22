@@ -274,7 +274,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         Snackbar.make(
             requireView(),
             getString(R.string.reserva_exitosa),
-            Snackbar.LENGTH_INDEFINITE
+            Snackbar.LENGTH_LONG
         )
             .show()
     }
