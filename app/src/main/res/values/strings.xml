@@ -203,5 +203,8 @@
 
     <!--search-->
     <string name="texto_imagen">Descubrí un sin fin de libros</string>
+    <string name="enlace_reestablecer_contrasenia">Se envió un enlace para restablecer tu contraseña</string>
+    <string name="error_correo_recuperacion">Error al enviar el correo de recuperación</string>
+    <string name="imagen_de_perfil_actualizada">Imagen de perfil actualizada</string>
 
 </resources>

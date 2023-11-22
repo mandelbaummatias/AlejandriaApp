@@ -20,10 +20,6 @@ object InterceptorCustom : Interceptor {
 class CustomResponseInterceptor : Interceptor {
     private var lastResponse: Response? = null
 
-    fun getLastResponse(): Response? {
-        return lastResponse
-    }
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
         lastResponse = response
