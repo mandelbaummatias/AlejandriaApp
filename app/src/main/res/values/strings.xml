@@ -125,7 +125,7 @@
     <string name="newPw">Nueva contraseña</string>
     <string name="newPwConfirmation">Confirme nueva contraseña</string>
     <string name="actualPassword">Contraseña actual</string>
-    <string name="mercadopago_api_key"></string>
+    <string name="mercadopago_api_key">APP_USR-5860728769093886-111111-431aaf98e3266c792bb45a11fcee35e1-1545631124</string>
     <string name="mercadopago_api_base_url">https://api.mercadopago.com/</string>
     <string name="solicitud_iniciar_sesion">Iniciar sesión para suscribirse!</string>
 
