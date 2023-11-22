@@ -2,7 +2,6 @@ package com.matiasmandelbaum.alejandriaapp.data.repository
 
 import android.util.Log
 import com.algolia.search.client.ClientSearch
-import com.algolia.search.client.Index
 import com.algolia.search.helper.deserialize
 import com.algolia.search.model.APIKey
 import com.algolia.search.model.ApplicationID
@@ -104,34 +103,79 @@ class BooksRepositoryImpl @Inject constructor(
         quantity: Int
     ): Result<ReservationResult> {
         return try {
-            return if (quantity > 0) {
+            val result = suspendCoroutine { continuation ->
+                val booksCollection = firestore.collection(BOOKS_COLLECTION)
+                val book = booksCollection.document(isbn)
 
+                // Retrieve the current quantity before updating
+                book.get().addOnSuccessListener { documentSnapshot ->
+                    val currentQuantityLong = documentSnapshot.getLong(AVAILABLE_QUANTITY) ?: 0
+                    val currentQuantity = currentQuantityLong.toInt()
 
-                val result = suspendCoroutine { continuation ->
-                    val booksCollection = firestore.collection(BOOKS_COLLECTION)
-                    val book = booksCollection.document(isbn)
-
-                    book.update(AVAILABLE_QUANTITY, quantity - 1)
-                        .addOnSuccessListener {
-                            Log.d(TAG, "update ok")
-                            // Call continuation.resume with the Result.Success
-                            continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
-                        }
-                        .addOnFailureListener {
-                            Log.d(TAG, "error en update $it")
-                            // Call continuation.resume with the Result.Error
-                            continuation.resume(Result.Error("Error reserving book: ${it.message}"))
-                        }
+                    if (currentQuantity <= 0) {
+                        Log.d(TAG, "CURRENT Q LESS OR EQUAL THAN 0 $currentQuantity")
+                        // If current quantity is less than 0, return an error immediately
+                        continuation.resume(Result.Error("Alguien fue más rápido! No hay disponibilidad..."))
+                    } else {
+                        Log.d(TAG, "CURRENT Q greater THAN 0 $currentQuantity")
+                        // Update the available quantity
+                        book.update(AVAILABLE_QUANTITY, currentQuantity - 1)
+                            .addOnSuccessListener {
+                                Log.d(TAG, "update ok")
+                                // Call continuation.resume with the Result.Success
+                                continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
+                            }
+                            .addOnFailureListener {
+                                Log.d(TAG, "error en update $it")
+                                // Call continuation.resume with the Result.Error
+                                continuation.resume(Result.Error("Error reserving book: ${it.message}"))
+                            }
+                    }
                 }
-
-                result
-            } else {
-                Result.Error("Error. No hay disponibilidad")
             }
+
+            Log.d(TAG, "RESULT FINAL $result")
+
+            result
         } catch (e: Exception) {
             Result.Error("Error reserving book: ${e.message}")
         }
     }
+
+//    override suspend fun reserveBook(
+//        isbn: String,
+//        userEmail: String,
+//        quantity: Int
+//    ): Result<ReservationResult> {
+//        return try {
+//            return if (quantity > 0) {
+//
+//
+//                val result = suspendCoroutine { continuation ->
+//                    val booksCollection = firestore.collection(BOOKS_COLLECTION)
+//                    val book = booksCollection.document(isbn)
+//
+//                    book.update(AVAILABLE_QUANTITY, quantity - 1)
+//                        .addOnSuccessListener {
+//                            Log.d(TAG, "update ok")
+//                            // Call continuation.resume with the Result.Success
+//                            continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
+//                        }
+//                        .addOnFailureListener {
+//                            Log.d(TAG, "error en update $it")
+//                            // Call continuation.resume with the Result.Error
+//                            continuation.resume(Result.Error("Error reserving book: ${it.message}"))
+//                        }
+//                }
+//
+//                result
+//            } else {
+//                Result.Error("Error. No hay disponibilidad")
+//            }
+//        } catch (e: Exception) {
+//            Result.Error("Error reserving book: ${e.message}")
+//        }
+//    }
 
     private val client = ClientSearch(
         applicationID = ApplicationID(""),
