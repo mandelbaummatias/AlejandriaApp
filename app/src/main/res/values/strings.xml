@@ -179,8 +179,7 @@
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="cambio_de_imagen">Cambio de Imagen</string>
     <string name="Perfil">Perfil</string>
@@ -188,9 +187,11 @@
     <string name="nombre_invalido">El nombre no es valido\n</string>
     <string name="apellido_invalido">El apellido no es valido</string>
     <string name="email_invalido">El mail no es valido</string>
+    <string name="fecha_invalida">La fecha no es válida</string>
     <string name="datos_actualizados_con_exito">Datos personales actualizados!</string>
     <string name="email_actualizado_con_exito">Mail actualizado con éxito!</string>
     <string name="email_no_fue_actualizado">El mail no fue actualizado</string>
+    <string name="modificar_datos">Modificar datos</string>
 
     <!--confirmation-->
     <string name="confirmar_contrasenia">Confirmar contraseña</string>
