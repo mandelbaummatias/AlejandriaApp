@@ -208,4 +208,8 @@
     <string name="error_correo_recuperacion">Error al enviar el correo de recuperación</string>
     <string name="imagen_de_perfil_actualizada">Imagen de perfil actualizada</string>
 
+
+    <!--search-->
+    <string name="algolia_api_key"></string>
+    <string name="algolia_application_id"></string>
 </resources>

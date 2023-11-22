@@ -1,5 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.searchresult
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -33,6 +34,7 @@ class SearchResultViewModel @Inject constructor(
     private val titulo: String = savedStateHandle["titulo"]!!
 
     fun getBooksByTitle() {
+        Log.d(TAG, "getBooksByTitle")
         _booksListState.postValue(Result.Loading)
         viewModelScope.launch {
             val booksResult = getBooksByTitleUseCase(titulo)
