@@ -1,7 +1,7 @@
 package com.matiasmandelbaum.alejandriaapp.domain.model.book
 
 import android.os.Parcelable
-import com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components.ImageLinks
+import com.matiasmandelbaum.alejandriaapp.data.googlebooks.response.components.ImageLinks
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

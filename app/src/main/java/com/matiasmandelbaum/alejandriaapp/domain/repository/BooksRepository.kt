@@ -7,17 +7,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface BooksRepository {
     suspend fun getBooksByTitle(title: String): Result<List<Book>>
-
-    suspend fun getAllBooks(): Result<List<Book>>
-
-    fun getAllItems(): Flow<Result<List<Book>>>
-
-    suspend fun reserveBook(isbn: String, userEmail: String): Boolean
-
-    suspend fun updateBook(book: Book): Result<Boolean>
-
-    suspend fun reserveBook(isbn: String, userEmail: String, quantity: Int): Result<ReservationResult>
-
+    fun getAllBooks(): Flow<Result<List<Book>>>
+    suspend fun reserveBook(
+        isbn: String,
+        userEmail: String,
+        quantity: Int
+    ): Result<ReservationResult>
 
 
 }
