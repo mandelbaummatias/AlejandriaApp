@@ -59,6 +59,21 @@
     <dimen name="input_layout_fecha_nacimiento_padding_top">8dp</dimen>
     <dimen name="input_layout_fecha_nacimiento_margin_top">2dp</dimen>
 
+    <!--User Profile-->
+    <dimen name="user_profile_content_padding">30dp</dimen>
+    <dimen name="user_profile_image_margin_top">30dp</dimen>
+    <dimen name="user_profile_image_radius">100dp</dimen>
+    <dimen name="user_profile_image_elevation">4dp</dimen>
+    <dimen name="user_profile_image_size">120dp</dimen>
+    <dimen name="user_profile_image_scale">0.7</dimen>
+    <dimen name="user_profile_header_margin_top">20dp</dimen>
+    <dimen name="user_profile_header_text_size">24sp</dimen>
+    <dimen name="user_profile_input_layout_margin_top">10dp</dimen>
+    <dimen name="user_profile_input_layout_margin_bottom">20dp</dimen>
+    <dimen name="user_profile_input_text_size">20sp</dimen>
+    <dimen name="user_profile_floating_action_button_margin">15dp</dimen>
+    <dimen name="user_profile_input_text">24sp</dimen>
+
     <!--Password Recovery-->
     <dimen name="pw_recovery_height">300dp</dimen>
     <dimen name="pw_recovery_content_padding">30dp</dimen>

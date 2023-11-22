@@ -99,14 +99,14 @@
     <string name="personalInfo">Información personal</string>
     <string name="domicilio">Domicilio</string>
 
-    <string name="realName">Nombre(s):</string>
-    <string name="surname">Apellido(s):</string>
-    <string name="email">Email:</string>
+    <string name="realName">Nombre(s)</string>
+    <string name="surname">Apellido(s)</string>
+    <string name="email">Email</string>
 
-    <string name="country">País:</string>
-    <string name="city">Ciudad:</string>
-    <string name="pc">Código Postal:</string>
-    <string name="address">Dirección:</string>
+    <string name="country">País</string>
+    <string name="city">Ciudad</string>
+    <string name="pc">Código Postal</string>
+    <string name="address">Dirección</string>
 
     <string name="userPfpText">Foto de perfil del usuario</string>
 

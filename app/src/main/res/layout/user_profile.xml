@@ -4,26 +4,27 @@
     android:id="@+id/userProfileScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="30dp">
+    android:clipToPadding="false"
+    android:padding="@dimen/user_profile_content_padding">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/profileImageContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
+        android:layout_marginTop="@dimen/user_profile_image_margin_top"
+        app:cardCornerRadius="@dimen/user_profile_image_radius"
+        app:cardElevation="@dimen/user_profile_image_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/profileImage"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="@dimen/user_profile_image_size"
+            android:layout_height="@dimen/user_profile_image_size"
             android:layout_gravity="center"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
+            android:scaleX="@dimen/user_profile_image_scale"
+            android:scaleY="@dimen/user_profile_image_scale"
             app:tint="?attr/colorPrimary" />
     </androidx.cardview.widget.CardView>
 
@@ -31,19 +32,19 @@
         android:id="@+id/userMailHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/user_profile_header_margin_top"
         android:text="@string/personalInfo"
         android:textColor="?attr/colorOnPrimaryContainer"
-        android:textSize="24sp"
+        android:textSize="@dimen/user_profile_header_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileImageContainer" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editNombreLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/user_profile_input_layout_margin_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userMailHeader">
@@ -56,12 +57,12 @@
             android:hint="@string/nombre"
             android:inputType="text"
             android:textColor="?attr/colorOnPrimaryContainer"
-            android:textSize="20sp" />
+            android:textSize="@dimen/user_profile_input_text_size" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editApellidoLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,17 +73,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:hint="Apellido"
+            android:hint="@string/apellido"
             android:inputType="text"
             android:textColor="?attr/colorOnPrimaryContainer"
-            android:textSize="20sp" />
+            android:textSize="@dimen/user_profile_input_text_size" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editEmailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/user_profile_input_layout_margin_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editApellidoLayout">
@@ -92,17 +93,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="text"
             android:textColor="?attr/colorOnPrimaryContainer"
-            android:textSize="20sp" />
+            android:textSize="@dimen/user_profile_input_text_size" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editDateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/user_profile_input_layout_margin_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editEmailLayout">
@@ -112,20 +113,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:hint="Fecha de nacimiento"
+            android:hint="@string/fecha_de_nacimiento"
             android:inputType="date"
             android:textColor="?attr/colorOnPrimaryContainer"
-            android:textSize="20sp" />
+            android:textSize="@dimen/user_profile_input_text_size" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/edit_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="@dimen/user_profile_floating_action_button_margin"
+        android:layout_marginBottom="@dimen/user_profile_floating_action_button_margin"
         android:contentDescription="Edit"
         android:src="@drawable/ic_edit"
+        android:backgroundTint="?attr/colorPrimary"
+        android:tintMode="?attr/colorOnPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -133,7 +136,6 @@
         android:id="@+id/progress_bar_user_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

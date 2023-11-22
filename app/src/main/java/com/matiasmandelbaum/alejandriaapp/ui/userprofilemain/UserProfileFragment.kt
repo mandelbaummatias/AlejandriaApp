@@ -298,7 +298,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             editApellido.isEnabled = true
             editEmail.isEnabled = true
             editDate.isEnabled = true
-            userMailHeader.text = "Cambio de nombre"
+            userMailHeader.text = "Modificar datos"
             editNombre.requestFocus()
             editNombre.text?.let { editNombre.setSelection(it.length) }
             editFab.setImageResource(R.drawable.ic_save)
