@@ -40,11 +40,8 @@ private const val TAG = "BooksRepositoryImpl"
 class BooksRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val googleBooksService: GoogleBooksService,
-    private val algoliaClient: ClientSearch
+   // private val algoliaClient: ClientSearch
 ) : BooksRepository {
-    override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
-        TODO("Not yet implemented")
-    }
 
     override fun getAllBooks(): Flow<Result<List<Book>>> = callbackFlow {
         val itemsReference = firestore.collection(BOOKS_COLLECTION)
@@ -136,31 +133,33 @@ class BooksRepositoryImpl @Inject constructor(
         }
     }
 
-//    private val client = ClientSearch(
-//        applicationID = ApplicationID(""),
-//        apiKey = APIKey("")
-//    )
+    private val client = ClientSearch(
+        applicationID = ApplicationID(""),
+        apiKey = APIKey("")
+    )
+
     private val indexName = IndexName("libros")
-    private lateinit var index : Index
+   // private lateinit var index: Index
 
-//    private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
-//        index = client.initIndex(indexName)
-//       // val index = algoliaClient.initIndex(IndexName("libros"))
-//        var libros: List<BookFirestore> = emptyList()
-//
-//        try {
-//            val response = index.search(Query(title))
-//            libros = response.hits.deserialize(BookFirestore.serializer())
-//            Log.d(TAG, "mi response $response")
-//            Log.d(TAG, "mis libros $libros")
-//        } catch (e: Exception) {
-//            Log.e(TAG, "Error during Algolia search $e")
-//        }
-//
-//        return libros
-//    }
+    private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
 
-//    override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
+        //index = algoliaClient.initIndex(indexName)
+        val index = client.initIndex(IndexName("libros"))
+        var libros: List<BookFirestore> = emptyList()
+
+        try {
+            val response = index.search(Query(title))
+            libros = response.hits.deserialize(BookFirestore.serializer())
+            Log.d(TAG, "mi response $response")
+            Log.d(TAG, "mis libros $libros")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during Algolia search $e")
+        }
+
+        return libros
+    }
+
+    //    override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
 //        return try {
 //            val books = mutableListOf<Book>()
 //
@@ -185,39 +184,36 @@ class BooksRepositoryImpl @Inject constructor(
 //            Result.Error(e.message.toString())
 //        }
 //    }
-//override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
-//    return try {
-//        val books = mutableListOf<Book>()
-//
-//        val booksFirestore = withContext(Dispatchers.IO) {
-//            getBooksFromFirestoreByTitle(title)
-//            //getBooksFromFirestoreByTitle2(title)
-//        }
-//
-//        Log.d(TAG, "booksFirestore $booksFirestore")
-//        val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
-//
-//        if (booksFirestore.size != booksGoogle.size) {
-//            throw IllegalArgumentException("Input lists must have the same size") //Revisar
-//            //En general siempre van a ser iguales la lista de firestore y gbooks porque el isbn es uno
-//            //Pero contemplar un caso donde esta excepción sea un problema, o al menos sea controlada
-//        }
-//
-//        for (i in booksFirestore.indices) {
-//            val bookFirestore = booksFirestore[i]
-//            val bookGoogle = booksGoogle[i]
-//            val book = createBookFromRemoteData(bookFirestore, bookGoogle)
-//            Log.d(TAG, "Viendo mi book final $book")
-//            books.add(book)
-//        }
-//        Result.Success(books) // Return the list of books
-//    } catch (e: Exception) {
-//        Result.Error(e.message.toString())
-//    }
-//}
+    override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
+        return try {
+            val books = mutableListOf<Book>()
 
+            val booksFirestore = withContext(Dispatchers.IO) {
+                getBooksFromFirestoreByTitle(title)
+                //getBooksFromFirestoreByTitle2(title)
+            }
 
+            Log.d(TAG, "booksFirestore $booksFirestore")
+            val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
 
+            if (booksFirestore.size != booksGoogle.size) {
+                throw IllegalArgumentException("Input lists must have the same size") //Revisar
+                //En general siempre van a ser iguales la lista de firestore y gbooks porque el isbn es uno
+                //Pero contemplar un caso donde esta excepción sea un problema, o al menos sea controlada
+            }
+
+            for (i in booksFirestore.indices) {
+                val bookFirestore = booksFirestore[i]
+                val bookGoogle = booksGoogle[i]
+                val book = createBookFromRemoteData(bookFirestore, bookGoogle)
+                Log.d(TAG, "Viendo mi book final $book")
+                books.add(book)
+            }
+            Result.Success(books) // Return the list of books
+        } catch (e: Exception) {
+            Result.Error(e.message.toString())
+        }
+    }
 
 
     private fun createBookFromRemoteData(
