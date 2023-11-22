@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -185,12 +184,16 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     private fun handleNoBooksAvailable() {
         with(binding) {
             bookReserveButton.visibility = View.INVISIBLE
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.no_hay_libros_disponibles_para_reservar),
-                Toast.LENGTH_SHORT
-            ).show()
+            showNoBooksAvailableMessage()
         }
+    }
+
+    private fun showNoBooksAvailableMessage(){
+        Snackbar.make(
+            requireView(),
+            getString(R.string.no_hay_libros_disponibles_para_reservar),
+            Snackbar.LENGTH_SHORT
+        ).show()
     }
 
     private fun handleAuthorizedStatus() {
@@ -199,14 +202,19 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
             Log.d(TAG, "hay mas de 1")
             handleButtonClick(DialogType.RESERVATION)
         } else {
-            Toast.makeText(
-                context,
-                getString(R.string.ya_se_reservo_este_mes),
-                Toast.LENGTH_SHORT
-            ).show()
+            showBookAlreadyReservedMessage()
         }
         binding.bookReserveButton.isEnabled = true
     }
+
+    private fun showBookAlreadyReservedMessage(){
+        Snackbar.make(
+            requireView(),
+            getString(R.string.ya_se_reservo_este_mes),
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
 
     private fun handleBlankSubscriptionId() {
         Log.d(TAG, "handleBlankSubscriptionId()")
@@ -274,7 +282,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         Snackbar.make(
             requireView(),
             getString(R.string.reserva_exitosa),
-            Snackbar.LENGTH_INDEFINITE
+            Snackbar.LENGTH_LONG
         )
             .show()
     }
