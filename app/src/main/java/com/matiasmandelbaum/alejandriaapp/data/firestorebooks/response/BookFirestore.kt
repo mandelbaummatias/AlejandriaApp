@@ -10,4 +10,4 @@ data class BookFirestore(
     val cantidad: Int = 0,
     val cantidad_disponible: Int = 0,
     val isbn: String = ""
-)  //: Parcelable//Creating a no-argument constructor indirectly for Firestore.
+)

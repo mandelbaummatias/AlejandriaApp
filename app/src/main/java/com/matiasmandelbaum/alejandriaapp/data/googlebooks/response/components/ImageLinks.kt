@@ -1,4 +1,4 @@
-package com.matiasmandelbaum.alejandriaapp.data.googlebooks.model.components
+package com.matiasmandelbaum.alejandriaapp.data.googlebooks.response.components
 
 import android.os.Parcelable
 import com.squareup.moshi.Json
