@@ -84,6 +84,20 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
             onSuccessfulReservation.observe(viewLifecycleOwner) {
                 handleReservationResult(it)
             }
+
+            onFailedReservation.observe(viewLifecycleOwner) {
+                handleFailedReservation(it)
+            }
+        }
+    }
+
+    private fun handleFailedReservation(result: Result<ReservationResult>?) {
+        when (result) {
+            is Result.Error -> {
+                showErrorOnReservationMessage(result.message)
+                binding.bookReserveButton.visibility = View.INVISIBLE
+            }
+            else -> {}
         }
     }
 
@@ -188,7 +202,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         }
     }
 
-    private fun showNoBooksAvailableMessage(){
+    private fun showNoBooksAvailableMessage() {
         Snackbar.make(
             requireView(),
             getString(R.string.no_hay_libros_disponibles_para_reservar),
@@ -207,7 +221,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         binding.bookReserveButton.isEnabled = true
     }
 
-    private fun showBookAlreadyReservedMessage(){
+    private fun showBookAlreadyReservedMessage() {
         Snackbar.make(
             requireView(),
             getString(R.string.ya_se_reservo_este_mes),
