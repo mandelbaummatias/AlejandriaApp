@@ -28,6 +28,7 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
 
     private companion object {
         const val MIN_PASSWORD_LENGTH = 6
+        const val MIN_NAME_LENGTH = 2
         const val MIN_DATE_LENGTH = 10
     }
 
@@ -91,7 +92,7 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
 
     private fun isValidName(name: String): Boolean {
         Log.d(TAG, " mi name al principio $name")
-        return name.length >= MIN_PASSWORD_LENGTH || name.isEmpty()
+        return name.length >= MIN_NAME_LENGTH || name.isEmpty()
     }
 
 
