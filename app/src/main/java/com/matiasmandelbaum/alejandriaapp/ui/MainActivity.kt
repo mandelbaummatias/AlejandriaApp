@@ -25,10 +25,12 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
+import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.ActivityMainBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
@@ -39,13 +41,14 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DialogClickListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var id: String
     private lateinit var navController: NavController
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var drawerLayout: DrawerLayout
 
     private val viewModel: SubscriptionListViewModel by viewModels()
 
@@ -95,7 +98,8 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        val drawerLayout: DrawerLayout = binding.drawerLayout
+       // val drawerLayout: DrawerLayout = binding.drawerLayout
+        drawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
 
         Log.d(TAG, "ViewModel hash code: ${viewModel.hashCode()}")
@@ -149,6 +153,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.logout -> {
                     val dialog = SignOutDialogFragment()
                     dialog.show(supportFragmentManager, "SignOutDialogFragment")
+                 //   drawerLayout.closeDrawers()
                 }
 
                 R.id.profile -> {
@@ -222,5 +227,14 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onFinishClickDialog(clickValue: Boolean) {
+        Log.d(TAG, "onFinishClickDialog")
+        if (clickValue) {
+            Log.d(TAG, "onFinishClickDialog click! $clickValue")
+           // viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
+            drawerLayout.closeDrawers()
+        }
     }
 }

@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
@@ -68,7 +67,7 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-   // private val authManager = AuthManager.instance // Use the AuthManager instance
+    // private val authManager = AuthManager.instance // Use the AuthManager instance
 
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
@@ -82,13 +81,13 @@ class LoginFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         addAuthStateListener(authStateListener)
-      //  authManager.addAuthStateListener(authStateListener)
+        //  authManager.addAuthStateListener(authStateListener)
     }
 
     override fun onStop() {
         super.onStop()
         removeAuthStateListener(authStateListener)
-       // authManager.removeAuthStateListener(authStateListener)
+        // authManager.removeAuthStateListener(authStateListener)
     }
 
 //    override fun onResume() {
@@ -170,14 +169,14 @@ class LoginFragment : Fragment() {
 
         viewModel.showErrorDialog.observe(viewLifecycleOwner) { userLogin ->
             if (userLogin.showErrorDialog) {
-               showLoginError()
+                showLoginError()
             }
         }
 
 
     }
 
-    private fun showLoginError(){
+    private fun showLoginError() {
         val snackbar = Snackbar.make(
             requireView(),
             getString(R.string.error_login), Snackbar.LENGTH_LONG
@@ -214,12 +213,12 @@ class LoginFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun goToHome(){
+    private fun goToHome() {
         findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeListFragment())
 
     }
 
-    private fun showWelcomeMessage(){
+    private fun showWelcomeMessage() {
         Snackbar.make(
             requireView(),
             "Bienvenido a AlejandriaApp!", Snackbar.LENGTH_SHORT
@@ -265,18 +264,9 @@ class LoginFragment : Fragment() {
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 bottomSheetDialog.dismiss()
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Se envió un enlace para restablecer tu contraseña",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                showLinkForPasswordRecoverySentMessage()
                             } else {
-
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Error al enviar el correo de recuperación",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                showOnErrorLinkSentMessage()
                             }
                         }
                 } catch (e: Exception) {
@@ -285,6 +275,22 @@ class LoginFragment : Fragment() {
 
             }
         }
+    }
+
+    private fun showLinkForPasswordRecoverySentMessage() {
+        Snackbar.make(
+            requireView(),  // Use requireView() to get the root view of the fragment/activity
+            getString(R.string.enlace_reestablecer_contrasenia),
+            Snackbar.LENGTH_LONG
+        ).show();
+    }
+
+    private fun showOnErrorLinkSentMessage() {
+        Snackbar.make(
+            requireView(),  // Use requireView() to get the root view of the fragment/activity
+            getString(R.string.error_correo_recuperacion),
+            Snackbar.LENGTH_LONG
+        ).show();
     }
 }
 

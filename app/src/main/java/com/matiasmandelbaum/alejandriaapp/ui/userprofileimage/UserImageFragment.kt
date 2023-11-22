@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.R
@@ -96,11 +97,7 @@ class UserImageFragment : Fragment() {
                     val userDocument = querySnapshot.documents[0].reference
                     userDocument.update("image", newImage)
                         .addOnSuccessListener {
-                            Toast.makeText(
-                                requireContext(),
-                                "Imagen de perfil actualizada",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            showImageUpdatedMessage()
                             val navOptions = NavOptions.Builder()
                                 .setPopUpTo(R.id.userProfileFragment, true)
                                 .build()
@@ -108,5 +105,12 @@ class UserImageFragment : Fragment() {
                         }
                 }
         }
+    }
+
+    private fun showImageUpdatedMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.imagen_de_perfil_actualizada), Snackbar.LENGTH_SHORT
+        ).show()
     }
 }
