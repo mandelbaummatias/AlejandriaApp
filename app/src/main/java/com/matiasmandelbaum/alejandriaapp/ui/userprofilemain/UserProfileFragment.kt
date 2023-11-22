@@ -241,7 +241,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             editApellidoLayout.error =
                 if (viewState.isValidLastName) null else getString(R.string.apellido_invalido)
             editDateLayout.error =
-                if (viewState.isValidBirthDate) null else "La fecha no es válida"
+                if (viewState.isValidBirthDate) null else getString(R.string.fecha_invalida)
         }
     }
 
@@ -298,7 +298,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             editApellido.isEnabled = true
             editEmail.isEnabled = true
             editDate.isEnabled = true
-            userMailHeader.text = "Modificar datos"
+            userMailHeader.text = getString(R.string.modificar_datos)
             editNombre.requestFocus()
             editNombre.text?.let { editNombre.setSelection(it.length) }
             editFab.setImageResource(R.drawable.ic_save)
