@@ -165,7 +165,7 @@
     <string name="ingrese_su_nombre">Ingrese su nombre</string>
     <string name="apellido">Apellido</string>
     <string name="ingrese_su_apellido">Ingrese su apellido</string>
-    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento (dd/MM/yyyy)</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
