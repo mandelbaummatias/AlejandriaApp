@@ -11,7 +11,7 @@ class MercadoPagoSubscription {
                     currencyIdRequest = "ARS",
                     frequencyRequest = 1,
                     frequencyTypeRequest = "months",
-                    transactionAmountRequest = 5
+                    transactionAmountRequest = 500
                 ),
                 backUrlRequest = "https://mercadopago.com.ar",
                 payerEmailRequest = payerEmail,
