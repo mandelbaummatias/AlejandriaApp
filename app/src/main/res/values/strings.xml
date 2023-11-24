@@ -209,7 +209,8 @@
     <string name="imagen_de_perfil_actualizada">Imagen de perfil actualizada</string>
 
 
-    <!--search-->
-    <string name="algolia_api_key"></string>
+    <!--Algolia-->
     <string name="algolia_application_id"></string>
+    <string name="algolia_api_key"></string>
+
 </resources>

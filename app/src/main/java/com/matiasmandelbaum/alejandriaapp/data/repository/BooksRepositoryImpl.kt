@@ -39,7 +39,7 @@ private const val TAG = "BooksRepositoryImpl"
 class BooksRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val googleBooksService: GoogleBooksService,
-   // private val algoliaClient: ClientSearch
+    private val algoliaClient: ClientSearch
 ) : BooksRepository {
 
     override fun getAllBooks(): Flow<Result<List<Book>>> = callbackFlow {
@@ -123,7 +123,14 @@ class BooksRepositoryImpl @Inject constructor(
                             .addOnSuccessListener {
                                 Log.d(TAG, "update ok")
                                 // Call continuation.resume with the Result.Success
-                                continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
+                                continuation.resume(
+                                    Result.Success(
+                                        ReservationResult(
+                                            userEmail,
+                                            isbn
+                                        )
+                                    )
+                                )
                             }
                             .addOnFailureListener {
                                 Log.d(TAG, "error en update $it")
@@ -142,53 +149,8 @@ class BooksRepositoryImpl @Inject constructor(
         }
     }
 
-//    override suspend fun reserveBook(
-//        isbn: String,
-//        userEmail: String,
-//        quantity: Int
-//    ): Result<ReservationResult> {
-//        return try {
-//            return if (quantity > 0) {
-//
-//
-//                val result = suspendCoroutine { continuation ->
-//                    val booksCollection = firestore.collection(BOOKS_COLLECTION)
-//                    val book = booksCollection.document(isbn)
-//
-//                    book.update(AVAILABLE_QUANTITY, quantity - 1)
-//                        .addOnSuccessListener {
-//                            Log.d(TAG, "update ok")
-//                            // Call continuation.resume with the Result.Success
-//                            continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
-//                        }
-//                        .addOnFailureListener {
-//                            Log.d(TAG, "error en update $it")
-//                            // Call continuation.resume with the Result.Error
-//                            continuation.resume(Result.Error("Error reserving book: ${it.message}"))
-//                        }
-//                }
-//
-//                result
-//            } else {
-//                Result.Error("Error. No hay disponibilidad")
-//            }
-//        } catch (e: Exception) {
-//            Result.Error("Error reserving book: ${e.message}")
-//        }
-//    }
-
-    private val client = ClientSearch(
-        applicationID = ApplicationID(""),
-        apiKey = APIKey("")
-    )
-
-    private val indexName = IndexName("libros")
-   // private lateinit var index: Index
-
     private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
-
-        //index = algoliaClient.initIndex(indexName)
-        val index = client.initIndex(IndexName("libros"))
+        val index = algoliaClient.initIndex(IndexName("libros"))
         var libros: List<BookFirestore> = emptyList()
 
         try {
@@ -203,31 +165,6 @@ class BooksRepositoryImpl @Inject constructor(
         return libros
     }
 
-    //    override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
-//        return try {
-//            val books = mutableListOf<Book>()
-//
-//            val booksFirestore = withContext(Dispatchers.IO) {
-//                getBooksFromFirestoreByTitle(title)
-//                //getBooksFromFirestoreByTitle2(title)
-//            }
-//            val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
-//
-//            if (booksFirestore.size != booksGoogle.size) {
-//                throw IllegalArgumentException("Input lists must have the same size")
-//            }
-//            for (i in booksFirestore.indices) {
-//                val bookFirestore = booksFirestore[i]
-//                val bookGoogle = booksGoogle[i]
-//                val book = createBookFromRemoteData(bookFirestore, bookGoogle)
-//                Log.d(TAG, "Viendo mi book final $book")
-//                books.add(book)
-//            }
-//            Result.Success(books)
-//        } catch (e: Exception) {
-//            Result.Error(e.message.toString())
-//        }
-//    }
     override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
         return try {
             val books = mutableListOf<Book>()
@@ -258,7 +195,6 @@ class BooksRepositoryImpl @Inject constructor(
             Result.Error(e.message.toString())
         }
     }
-
 
     private fun createBookFromRemoteData(
         bookFirestore: BookFirestore,
