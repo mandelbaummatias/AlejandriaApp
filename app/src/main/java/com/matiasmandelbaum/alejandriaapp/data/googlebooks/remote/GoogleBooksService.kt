@@ -24,7 +24,7 @@ class GoogleBooksService @Inject constructor(private val googleBooksApiClient: G
                     Log.d(TAG, "Searching books for ISBN: ${book.isbn}")
 
                     val bookGoogleResponse = withContext(Dispatchers.IO) {
-                        googleBooksApiClient.searchBooksByISBN(book.isbn, GoogleBooksConfig.apiKey)
+                        googleBooksApiClient.searchBooksByISBN(book.isbn)
                     }
                     booksGoogleResponse.add(bookGoogleResponse)
                     success = true
