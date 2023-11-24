@@ -150,7 +150,7 @@ class BooksRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
-        val index = algoliaClient.initIndex(IndexName("libros"))
+        val index = algoliaClient.initIndex(IndexName(BOOKS_COLLECTION))
         var libros: List<BookFirestore> = emptyList()
 
         try {

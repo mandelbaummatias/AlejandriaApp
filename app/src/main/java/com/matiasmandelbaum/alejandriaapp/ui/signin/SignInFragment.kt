@@ -122,7 +122,7 @@ class SignInFragment : Fragment() {
 
 
         with(binding) {
-            btnRegistro.setOnClickListener {
+            buttonRegistro.setOnClickListener {
                 it.dismissKeyboard()
                 viewModel!!.onSignInSelected(
                     UserSignIn(
@@ -158,16 +158,18 @@ class SignInFragment : Fragment() {
             }
         }
 
-        viewModel.navigateToLogin.observe(viewLifecycleOwner){
+        viewModel.navigateToLogin.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 goToLogin()
             }
         }
     }
 
-    private fun showSignInSucessful(){
-        val snackbar = Snackbar.make(requireView(),
-            getString(R.string.registro_exitoso), Snackbar.LENGTH_SHORT)
+    private fun showSignInSucessful() {
+        val snackbar = Snackbar.make(
+            requireView(),
+            getString(R.string.registro_exitoso), Snackbar.LENGTH_SHORT
+        )
         snackbar.show()
     }
 
@@ -176,13 +178,15 @@ class SignInFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun showEmailAlreadyRegistered(){
-        val snackbar = Snackbar.make(requireView(),
-            getString(R.string.error_signin), Snackbar.LENGTH_LONG)
+    private fun showEmailAlreadyRegistered() {
+        val snackbar = Snackbar.make(
+            requireView(),
+            getString(R.string.error_signin), Snackbar.LENGTH_LONG
+        )
         snackbar.show()
     }
 
-    private fun goToLogin(){
+    private fun goToLogin() {
         val action = SignInFragmentDirections.actionSignInFragmentToLoginFragment()
         val navOptions = NavOptions.Builder()
             .setPopUpTo(R.id.loginFragment, true)
@@ -190,7 +194,7 @@ class SignInFragment : Fragment() {
         findNavController().navigate(action, navOptions)
     }
 
-    private fun goToHome(){
+    private fun goToHome() {
         val action = SignInFragmentDirections.actionSignInFragmentToHomeListFragment()
         findNavController().navigate(action)
     }
@@ -293,7 +297,7 @@ class SignInFragment : Fragment() {
                 Log.d(TAG, "doesn't have selected date")
                 binding.editTextFechaNacimiento.text =
                     Editable.Factory.getInstance().newEditable(" ")
-       //        Log.d(TAG, "pasandole null en negative?")
+                //        Log.d(TAG, "pasandole null en negative?")
                 //viewModel.isValidDate(null)
             }
 

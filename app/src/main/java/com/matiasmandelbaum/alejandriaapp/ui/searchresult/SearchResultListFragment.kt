@@ -51,7 +51,7 @@ class SearchResultListFragment : Fragment() {
         )
 
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.recyclerView2.apply {
+        binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this.context)
             adapter = bookListAdapter
         }
@@ -87,9 +87,9 @@ class SearchResultListFragment : Fragment() {
     private fun handleLoading(isLoading: Boolean) {
         with(binding) {
             if (isLoading) {
-                progressBar2.visibility = View.VISIBLE
+                progressBarResult.visibility = View.VISIBLE
             } else {
-                progressBar2.visibility = View.GONE
+                progressBarResult.visibility = View.GONE
             }
         }
     }
