@@ -124,7 +124,8 @@
     <string name="newPw">Nueva contraseña</string>
     <string name="newPwConfirmation">Confirme nueva contraseña</string>
     <string name="actualPassword">Contraseña actual</string>
-    <string name="mercadopago_api_key"></string>
+    <string name="mercadopago_api_key">
+</string>
     <string name="mercadopago_api_base_url">https://api.mercadopago.com/</string>
     <string name="solicitud_iniciar_sesion">Iniciar sesión para suscribirse!</string>
 
@@ -209,7 +210,7 @@
 
 
     <!--Algolia-->
-    <string name="algolia_application_id"1FG1HP1Z34</string>
+    <string name="algolia_application_id"></string>
     <string name="algolia_api_key"></string>
     <string name="ingrese_su_fecha_de_nacimiento">Ingrese su fecha de nacimiento</string>
     <string name="ingrese_direccion_correo">Ingrese su dirección de correo electrónico</string>
