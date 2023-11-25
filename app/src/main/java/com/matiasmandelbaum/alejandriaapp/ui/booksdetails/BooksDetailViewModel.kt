@@ -53,11 +53,9 @@ class BooksDetailViewModel @Inject constructor(
 
     val book: Book = savedStateHandle["book"]!!
 
-
-
     fun reserveBook(userEmail: String) {
         viewModelScope.launch {
-            when (val result = reserveBookUseCase(book.isbn, userEmail, book.cantidadDisponible)) {
+            when (val result = reserveBookUseCase(book.isbn, userEmail)) {
                 is Result.Success -> {
                     Log.d(TAG, "succcess!")
                     handleSuccessfulReservation(result, userEmail)

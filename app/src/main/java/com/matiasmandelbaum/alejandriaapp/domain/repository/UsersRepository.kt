@@ -14,9 +14,14 @@ interface UsersRepository {
 
     suspend fun updateUserReservationState(userEmail: String): Result<Unit>
 
-    suspend fun updateUserProfile(name: String, lastName: String, userEmail: String, birthDate: String): Result<Unit>
+    suspend fun updateUserProfile(
+        name: String,
+        lastName: String,
+        userEmail: String,
+        birthDate: String
+    ): Result<Unit>
 
-    suspend fun updateUserEmail(newEmail:String, previousEmail: String, pass: String): Result<Unit>
+    suspend fun updateUserEmail(newEmail: String, previousEmail: String, pass: String): Result<Unit>
 
     suspend fun addSubscriptionId(subscriptionId: String, userId: String): Boolean
 
