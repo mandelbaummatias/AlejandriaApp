@@ -4,5 +4,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.repository.ReservationsReposito
 import javax.inject.Inject
 
 class CreateReservationUseCase @Inject constructor(private val reservationsRepository: ReservationsRepository) {
-    suspend operator fun invoke(isbn: String, userEmail:String) = reservationsRepository.createReservation(isbn, userEmail)
+    suspend operator fun invoke(isbn: String, userEmail: String) =
+        reservationsRepository.createReservation(isbn, userEmail)
 }

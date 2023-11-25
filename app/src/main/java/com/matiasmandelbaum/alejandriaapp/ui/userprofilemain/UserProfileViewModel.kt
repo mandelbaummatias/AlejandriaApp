@@ -8,23 +8,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matiasmandelbaum.alejandriaapp.common.event.Event
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils.DAY_MONTH_YEAR
+import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils.YEAR_MONTH_DAY
+import com.matiasmandelbaum.alejandriaapp.domain.model.userinput.UserDataInput
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.ChangeUserProfileUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByEmailUseCase
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.model.UserProfile2
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.model.UserEmailAndPasswordConfirmation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
+import javax.inject.Inject
 
 private const val TAG = "UserProfileViewModel"
 
@@ -67,40 +68,18 @@ class UserProfileViewModel @Inject constructor(
     val emailViewState: StateFlow<UserEmailViewState>
         get() = _emailViewState
 
-    private var _showErrorDialog = MutableLiveData(UserProfile2())
-    val showErrorDialog: LiveData<UserProfile2>
+    private var _showErrorDialog = MutableLiveData(UserEmailAndPasswordConfirmation())
+    val showErrorDialog: LiveData<UserEmailAndPasswordConfirmation>
         get() = _showErrorDialog
 
-    //    fun onSaveProfileSelected(name: String, lastName: String, email: String, birthDate: String) {
-//        Log.d(TAG, " onSaveProfileSelected")
-//        if (isValidName(name) && isValidLastName(lastName) && isValidDate(birthDate)) {
-//            // if (isValidName(name) && isValidLastName(lastName) && isValidOrEmptyDate(birthDate)) {
-//            saveUserProfile(name, lastName, email, birthDate)
-//        } else {
-//            onFieldsChanged(name, lastName, birthDate)
-//        }
-//    }
-//    fun onSaveProfileSelected(userProfile: com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfile) {
-//        Log.d(TAG, " onSaveProfileSelected")
-//        val viewState = userProfile.toUserProfileViewState()
-//        if (viewState.userValidated() && userProfile.isNotEmpty()) {
-//            // if (isValidName(name) && isValidLastName(lastName) && isValidOrEmptyDate(birthDate)) {
-//            saveUserProfile(userProfile)
-//            //return true
-//        } else {
-//            onFieldsChanged(userProfile)
-//            //return false
-//        }
-//    }
-
-    fun onSaveProfileSelected(userProfile: com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfile): Boolean {
+    fun onSaveProfileSelected(userDataInput: UserDataInput): Boolean {
         Log.d(TAG, "onSaveProfileSelected")
-        val viewState = userProfile.toUserProfileViewState()
-        return if (viewState.userValidated() && userProfile.isNotEmpty()) {
-            saveUserProfile(userProfile)
+        val viewState = userDataInput.toUserProfileViewState()
+        return if (viewState.userValidated() && userDataInput.isNotEmpty()) {
+            saveUserProfile(userDataInput)
             true
         } else {
-            onFieldsChanged(userProfile)
+            onFieldsChanged(userDataInput)
             false
         }
     }
@@ -127,41 +106,16 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-//    private fun saveUserProfile(name: String, lastName: String, email: String, birthDate: String) {
-//        Log.d(TAG, "email? $email")
-//        viewModelScope.launch {
-//            _viewState.value = UserProfileViewState(isLoading = true)
-//            when (changeUserProfileUseCase(name, lastName, email, birthDate)) {
-//                is Result.Error -> {
-//                    Log.d(TAG, "Chang Error")
-//                    _showErrorDialog.value =
-//                        UserProfile2(email = name, password = lastName, showErrorDialog = true)
-//                    _viewState.value = UserProfileViewState(isLoading = false)
-//                }
-//
-//                is Result.Success -> {
-//                    _showOnSuccessfulSavedDataMessage.value = Event(true)
-//                    Log.d(TAG, "Change ok")
-//                }
-//
-//                else -> {
-//                    Unit
-//                }
-//            }
-//            _viewState.value = UserProfileViewState(isLoading = false)
-//        }
-//    }
-
-    private fun saveUserProfile(userProfile: com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfile) {
+    private fun saveUserProfile(userDataInput: UserDataInput) {
         viewModelScope.launch {
             _viewState.value = UserProfileViewState(isLoading = true)
-            when (changeUserProfileUseCase(userProfile)) {
+            when (changeUserProfileUseCase(userDataInput)) {
                 is Result.Error -> {
                     Log.d(TAG, "Chang Error")
                     _showErrorDialog.value =
-                        UserProfile2(
-                            email = userProfile.name,
-                            password = userProfile.lastName,
+                        UserEmailAndPasswordConfirmation(
+                            email = userDataInput.name,
+                            password = userDataInput.lastName,
                             showErrorDialog = true
                         ) //pasarlo a true?
                     _viewState.value = UserProfileViewState(isLoading = false)
@@ -180,17 +134,8 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-
-//    fun onFieldsChanged(name: String, lastName: String, birthDate: String) {
-//        _viewState.value = UserProfileViewState(
-//            isValidName = isValidName(name),
-//            isValidLastName = isValidLastName(lastName),
-//            isValidBirthDate = isDateFormatValid(birthDate)
-//        )
-//    }
-
-    fun onFieldsChanged(userProfile: com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfile) {
-        _viewState.value = userProfile.toUserProfileViewState()
+    fun onFieldsChanged(userDataInput: UserDataInput) {
+        _viewState.value = userDataInput.toUserProfileViewState()
     }
 
 
@@ -200,22 +145,11 @@ class UserProfileViewModel @Inject constructor(
         )
     }
 
-
-//    private fun isValidName(name: String) =
-//        name.length >= MIN_NAME_LENGTH && !name.isNullOrBlank()
-
-
     private fun isValidName(name: String) =
         name.length >= MIN_NAME_LENGTH || name.isEmpty()
 
-//    private fun isValidLastName(lastName: String): Boolean =
-//        lastName.length >= MIN_LAST_NAME_LENGTH && !lastName.isNullOrBlank()
-
     private fun isValidLastName(lastName: String): Boolean =
-        lastName.length >= MIN_LAST_NAME_LENGTH ||lastName.isEmpty()
-
-//    private fun isValidOrEmptyEmail(email: String) =
-//        Patterns.EMAIL_ADDRESS.matcher(email).matches() && !email.isNullOrBlank()
+        lastName.length >= MIN_LAST_NAME_LENGTH || lastName.isEmpty()
 
     private fun isValidOrEmptyEmail(email: String) =
         Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty()
@@ -225,37 +159,10 @@ class UserProfileViewModel @Inject constructor(
         return isUserAtLeast18YearsOld(date) && date.length >= MIN_DATE_LENGTH || date.isEmpty() //isValidDate(date)||
     }
 
-//    fun isValidDate(date: String): Boolean {
-//        Log.d(TAG, "mi date al principio isValid -> $date")
-//        //   return date.isNotEmpty()
-//
-//        return isUserAtLeast18YearsOld(date) && date.length >= MIN_DATE_LENGTH || date.isEmpty() //isValidDate(date)||
-//    }
-
-    private fun isValidOrEmptyDate(birthDate: String) =
-        !birthDate.isNullOrBlank() && isDateFormatValid(birthDate) && isUserAtLeast18YearsOld(
-            birthDate
-        ) && birthDate.length >= MIN_DATE_LENGTH
-
-    private fun isDateFormatValid(dateString: String): Boolean {
-        val format = "dd/MM/yyyy"
-        val sdf = SimpleDateFormat(format)
-        sdf.isLenient = true // Esto hace que la validación sea estricta
-
-        return try {
-            sdf.parse(dateString)
-            true
-        } catch (e: ParseException) {
-            false
-        }
-    }
-
     private fun isUserAtLeast18YearsOld(date: String): Boolean {
-        Log.d(TAG, "isUserAtLeast...(date: $date)")
         val dateFormats = listOf(
-            DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-            DateTimeFormatter.ofPattern("dd/MM/yyyy"), // Add more formats as needed
-            // Add additional date formats here
+            DateTimeFormatter.ofPattern(YEAR_MONTH_DAY),
+            DateTimeFormatter.ofPattern(DAY_MONTH_YEAR)
         )
 
         for (dateFormat in dateFormats) {
@@ -265,7 +172,6 @@ class UserProfileViewModel @Inject constructor(
                 val age = ChronoUnit.YEARS.between(parsedDate, today)
                 return age >= 18
             } catch (e: DateTimeParseException) {
-                // Continue to the next format if parsing fails
             }
         }
 
@@ -274,12 +180,11 @@ class UserProfileViewModel @Inject constructor(
     }
 
 
-    private fun com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfile.toUserProfileViewState(): UserProfileViewState {
+    private fun UserDataInput.toUserProfileViewState(): UserProfileViewState {
         return UserProfileViewState(
             isValidName = isValidName(name),
             isValidLastName = isValidLastName(lastName),
             isValidBirthDate = isValidDate(birthDate)
         )
     }
-
 }

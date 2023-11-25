@@ -6,43 +6,43 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:padding="@dimen/sign_in_padding"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/sign_in_padding">
 
             <!-- Titulo -->
             <TextView
                 android:id="@+id/text_view_titulo_registro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="0dp"
                 android:text="@string/crear_cuenta"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="@dimen/titulo_registro_text_size"
-                android:layout_gravity="start"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="0dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Campo de entrada para el nombre -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/text_input_layout_nombre"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
-                android:paddingTop="@dimen/signin_text_padding_standard"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/signin_text_margin_small"
                 android:hint="@string/nombre"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_titulo_registro"
-                app:layout_constraintStart_toStartOf="parent"
+                android:paddingTop="@dimen/signin_text_padding_standard"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/signin_text_margin_small">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_titulo_registro">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_nombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:contentDescription="@string/ingrese_su_nombre"
                     android:importantForAccessibility="yes"
-                    android:contentDescription="@string/ingrese_su_nombre" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Campo de entrada para el apellido -->
@@ -50,21 +50,21 @@
                 android:id="@+id/text_input_layout_apellido"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
-                android:paddingTop="@dimen/signin_text_padding_standard"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/signin_text_margin_small"
                 android:hint="@string/apellido"
-                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_nombre"
-                app:layout_constraintStart_toStartOf="parent"
+                android:paddingTop="@dimen/signin_text_padding_standard"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/signin_text_margin_small">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_nombre">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_apellido"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:contentDescription="@string/ingrese_su_apellido"
                     android:importantForAccessibility="yes"
-                    android:contentDescription="@string/ingrese_su_apellido" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- fecha de nacimiento -->
@@ -72,22 +72,22 @@
                 android:id="@+id/text_input_layout_fecha_nacimiento"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
-                android:paddingTop="@dimen/signin_text_padding_standard"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/input_layout_fecha_nacimiento_margin_top"
                 android:hint="@string/fecha_de_nacimiento"
-                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_apellido"
-                app:layout_constraintStart_toStartOf="parent"
+                android:paddingTop="@dimen/signin_text_padding_standard"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/input_layout_fecha_nacimiento_margin_top">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_apellido">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextFechaNacimiento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:singleLine="true"
+                    android:contentDescription="@string/ingrese_su_fecha_de_nacimiento"
                     android:importantForAccessibility="yes"
-                    android:contentDescription="Ingrese su fecha de nacimiento" />
+                    android:inputType="date"
+                    android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- correo electrónico -->
@@ -96,94 +96,93 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:layout_marginTop="@dimen/signin_text_margin_small"
+                android:hint="@string/email"
                 android:paddingTop="@dimen/signin_text_padding_standard"
-                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_fecha_nacimiento"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/signin_text_margin_small">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_fecha_nacimiento">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
+                    android:contentDescription="@string/ingrese_direccion_correo"
                     android:importantForAccessibility="yes"
-                    android:contentDescription="Ingrese su dirección de correo electrónico" />
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- contraseña -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutContrasenia"
+                android:id="@+id/text_input_layout_contrasenia"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/signin_text_margin_small"
+                android:hint="@string/pwd"
                 android:paddingTop="@dimen/signin_text_padding_standard"
-                android:hint="Contraseña"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/signin_text_margin_small">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextContrasenia"
+                    android:id="@+id/edit_text_contrasenia"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
+                    android:contentDescription="@string/ingrese_su_contrasenia"
                     android:importantForAccessibility="yes"
-                    android:contentDescription="Ingrese su contraseña" />
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- repetir la contraseña -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutRepetirContrasenia"
+                android:id="@+id/text_input_layout_repetir_contrasenia"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Repetir Contraseña"
+                android:layout_marginTop="@dimen/signin_text_margin_small"
+                android:hint="@string/repetir_contrasenia"
                 android:paddingTop="@dimen/signin_text_padding_standard"
                 android:paddingBottom="@dimen/signin_text_padding_medium"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutContrasenia"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/signin_text_margin_small">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_contrasenia">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextRepetirContrasenia"
+                    android:id="@+id/edit_text_repetir_contrasenia"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
+                    android:contentDescription="@string/repita_su_contrasenia"
                     android:importantForAccessibility="yes"
-                    android:contentDescription="Repita su contraseña" />
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Botón de Registro -->
             <Button
-                android:id="@+id/btnRegistro"
+                android:id="@+id/button_registro"
                 android:layout_width="0dp"
-
-                android:textSize="@dimen/signin_text_size_small"
                 android:layout_height="@dimen/signin_text_button_height"
                 android:layout_marginTop="@dimen/signin_text_margin_standard"
-                android:text="Registrarse"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/registrarse"
+                android:textSize="@dimen/signin_text_size_small"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutRepetirContrasenia" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_repetir_contrasenia" />
 
             <!-- "Ya tengo una cuenta" -->
             <Button
                 android:id="@+id/already_have_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ya tengo una cuenta"
                 android:backgroundTint="?attr/colorSurface"
-                android:textColor="?attr/colorPrimary"
-                app:layout_constraintTop_toBottomOf="@id/btnRegistro"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:text="@string/ya_tengo_una_cuenta"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_registro" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

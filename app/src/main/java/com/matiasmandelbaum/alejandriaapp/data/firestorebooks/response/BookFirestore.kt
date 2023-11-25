@@ -2,7 +2,6 @@ package com.matiasmandelbaum.alejandriaapp.data.firestorebooks.response
 
 import kotlinx.serialization.Serializable
 
-//@Parcelize
 @Serializable
 data class BookFirestore(
     val autor: String = "",

@@ -1,6 +1,6 @@
-package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
+package com.matiasmandelbaum.alejandriaapp.domain.model.userinput
 
-data class UserProfile(
+data class UserDataInput( //input?
     val name: String,
     val lastName: String,
     val email: String? = null,

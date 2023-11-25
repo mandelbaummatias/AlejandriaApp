@@ -1,13 +1,13 @@
 package com.matiasmandelbaum.alejandriaapp.ui.signin
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matiasmandelbaum.alejandriaapp.common.event.Event
-
+import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils.DAY_MONTH_YEAR
+import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils.YEAR_MONTH_DAY
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.CreateAccountUseCase
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,10 +44,6 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
     val viewState: StateFlow<SignInViewState>
         get() = _viewState
 
-    private val _navigateToVerifyEmail = MutableLiveData<Event<Boolean>>()
-    val navigateToVerifyEmail: LiveData<Event<Boolean>>
-        get() = _navigateToVerifyEmail
-
     private var _showErrorDialog = MutableLiveData(false)
     val showErrorDialog: LiveData<Boolean> = _showErrorDialog
     fun onSignInSelected(userSignIn: UserSignIn) {
@@ -64,11 +60,9 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
             _viewState.value = SignInViewState(isLoading = true)
             val accountCreated = createAccountUseCase(userSignIn)
             if (accountCreated) {
-              //  _navigateToVerifyEmail.value = Event(true)
                 _navigateToHome.value = Event(true)
             } else {
                 _showErrorDialog.value = true
-                Log.d(TAG, "show error: $showErrorDialog")
             }
             _viewState.value = SignInViewState(isLoading = false)
         }
@@ -91,23 +85,18 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
         (password.length >= MIN_PASSWORD_LENGTH && password == passwordConfirmation) || password.isEmpty() || passwordConfirmation.isEmpty()
 
     private fun isValidName(name: String): Boolean {
-        Log.d(TAG, " mi name al principio $name")
         return name.length >= MIN_NAME_LENGTH || name.isEmpty()
     }
 
 
-     fun isValidDate(date: String): Boolean {
-        Log.d(TAG, "mi date al principio isValid -> $date")
-     //   return date.isNotEmpty()
-
+    private fun isValidDate(date: String): Boolean {
         return isUserAtLeast18YearsOld(date) && date.length >= MIN_DATE_LENGTH || date.isEmpty() //isValidDate(date)||
     }
+
     private fun isUserAtLeast18YearsOld(date: String): Boolean {
-        Log.d(TAG, "isUserAtLeast...(date: $date)")
         val dateFormats = listOf(
-            DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-            DateTimeFormatter.ofPattern("dd/MM/yyyy"), // Add more formats as needed
-            // Add additional date formats here
+            DateTimeFormatter.ofPattern(YEAR_MONTH_DAY),
+            DateTimeFormatter.ofPattern(DAY_MONTH_YEAR)
         )
 
         for (dateFormat in dateFormats) {
@@ -120,8 +109,6 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
                 // Continue to the next format if parsing fails
             }
         }
-
-        Log.d(TAG, "Invalid date format: $date")
         return false
     }
 

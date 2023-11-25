@@ -7,20 +7,6 @@ import javax.inject.Inject
 
 private const val TAG = "AddSubscriptionIdToUserUseCase"
 
-//class AddSubscriptionIdToUserUseCase @Inject constructor(
-//    private val userService: UserService
-//) {
-//    suspend operator fun invoke(subscriptionId: String, userId: String): Result<Boolean> {
-//        return try {
-//            userService.addSubsciptionId(subscriptionId, userId)
-//            Result.Success(true)
-//        } catch (e: FirebaseAuthUserCollisionException) {
-//            Log.d(TAG, "Exception $e")
-//            Result.Error(e.message.toString())
-//        }
-//    }
-//}
-
 class AddSubscriptionIdToUserUseCase @Inject constructor(
     private val usersRepository: UsersRepository
 ) {
@@ -29,7 +15,6 @@ class AddSubscriptionIdToUserUseCase @Inject constructor(
             usersRepository.addSubscriptionId(subscriptionId, userId)
         } catch (e: FirebaseAuthUserCollisionException) {
             Log.d(TAG, "Exception $e")
-            // You can log the exception or handle it as needed
             false
         }
     }

@@ -1,21 +1,22 @@
 package com.matiasmandelbaum.alejandriaapp.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.matiasmandelbaum.alejandriaapp.R
-import com.matiasmandelbaum.alejandriaapp.ui.booksreserved.Reserves
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.PENDING_STATUS
+import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils
+import com.matiasmandelbaum.alejandriaapp.databinding.ItemReserveBinding
+import com.matiasmandelbaum.alejandriaapp.domain.model.reserve.Reserves
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerView.Adapter<ReserveAdapter.MyViewHolder>() {
+class ReserveAdapter(private val reserveList: ArrayList<Reserves>) :
+    RecyclerView.Adapter<ReserveAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val reserveView = LayoutInflater.from(parent.context).inflate(R.layout.item_reserve,
-            parent, false)
-        return MyViewHolder(reserveView)
+        val binding = ItemReserveBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MyViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -23,33 +24,25 @@ class ReserveAdapter(private val reserveList : ArrayList<Reserves>) : RecyclerVi
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentReserve = reserveList[position]
-        holder.isbn.text = currentReserve.isbn
-        holder.title.text = currentReserve.title
-        holder.author.text = currentReserve.author
-
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm")
-      //  val stringDate = dateFormat.format(currentReserve.reserveDate)
-       // holder.reserveDate.text = stringDate
-        // Inside your ViewHolder or wherever you set the text
-        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-        val formattedDate = sdf.format(currentReserve.reserveDate.toDate()) // Assuming reserveDate is a Firebase Timestamp
-
-        holder.reserveDate.text = formattedDate
-       // holder.reserveDate.text = currentReserve.reserveDate.toString()
-
-        if (currentReserve.status == "A retirar") {
-            holder.status.text = holder.itemView.context.getString(R.string.reservedBookStatusNotRetired)
-        } else {
-            holder.status.text = currentReserve.status
-        }
+        holder.bind(reserveList[position])
     }
 
-    class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        val isbn : TextView = itemView.findViewById(R.id.reserved_book_isbn)
-        val title : TextView = itemView.findViewById(R.id.reserved_book_title)
-        val author : TextView = itemView.findViewById(R.id.reserved_book_author)
-        val reserveDate : TextView = itemView.findViewById(R.id.reserved_book_date)
-        val status : TextView = itemView.findViewById(R.id.reserved_book_status)
+    class MyViewHolder(private val binding: ItemReserveBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(reserve: Reserves) = with(binding) {
+            reservedBookIsbn.text = reserve.isbn
+            reservedBookTitle.text = reserve.title
+            reservedBookAuthor.text = reserve.author
+
+            val sdf = SimpleDateFormat(TimeUtils.DAY_MONTH_YEAR_HOUR_MIN, Locale.getDefault())
+            reservedBookDate.text = sdf.format(reserve.reserveDate.toDate())
+
+            reservedBookStatus.text = if (reserve.status == PENDING_STATUS) {
+                itemView.context.getString(R.string.reservedBookStatusNotRetired)
+            } else {
+                reserve.status
+            }
+        }
     }
 }

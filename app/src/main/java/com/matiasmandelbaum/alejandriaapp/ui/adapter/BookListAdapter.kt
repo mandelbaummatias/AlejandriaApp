@@ -10,7 +10,7 @@ import com.matiasmandelbaum.alejandriaapp.databinding.ItemBookBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 
 
-class BookListAdapter(val clickListener: BookListener) :
+class BookListAdapter(private val clickListener: BookListener) :
     ListAdapter<Book, BookListAdapter.BookHolder>(
         DiffCallback
     ) {

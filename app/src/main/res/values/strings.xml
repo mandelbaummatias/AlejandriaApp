@@ -35,8 +35,7 @@
 
     <!--GBooks Config-->
     <string name="google_books_api_base_url">https://www.googleapis.com/books/v1/volumes/</string>
-    <string name="google_books_api_key"></string>
-    <string name="titulo">Últimas novedades</string>
+
 
 
     <!--Sign in -->
@@ -209,7 +208,21 @@
     <string name="imagen_de_perfil_actualizada">Imagen de perfil actualizada</string>
 
 
-    <!--search-->
-    <string name="algolia_api_key"></string>
+    <!--Algolia-->
     <string name="algolia_application_id"></string>
+    <string name="algolia_api_key"></string>
+    <string name="ingrese_su_fecha_de_nacimiento">Ingrese su fecha de nacimiento</string>
+    <string name="ingrese_direccion_correo">Ingrese su dirección de correo electrónico</string>
+    <string name="pwd">Contraseña</string>
+    <string name="ingrese_su_contrasenia">Ingrese su contraseña</string>
+    <string name="repetir_contrasenia">Repetir Contraseña</string>
+    <string name="repita_su_contrasenia">Repita su contraseña</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="ya_tengo_una_cuenta">Ya tengo una cuenta</string>
+    <string name="error_en_login">Error en login</string>
+    <string name="suscripcion_requerida">Suscripción requerida</string>
+    <string name="para_reservar_primero_debe_suscribirse">Para reservar, primero debe suscribirse</string>
+    <string name="quiza_despues">Quizá después</string>
+    <string name="error_en_cambio_de_imagen">Error en cambio de imagen\n</string>
+
 </resources>

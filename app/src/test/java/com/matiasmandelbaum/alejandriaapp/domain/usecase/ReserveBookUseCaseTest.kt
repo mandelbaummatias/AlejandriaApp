@@ -31,12 +31,12 @@ class ReserveBookUseCaseTest {
         val userEmail = "user@example.com"
         val quantity = 1
 
-        coEvery { booksRepository.reserveBook(isbn, userEmail, quantity) } returns Result.Success(
+        coEvery { booksRepository.reserveBook(isbn, userEmail) } returns Result.Success(
             ReservationResult(userEmail, isbn)
         )
 
         // When
-        val result = reserveBookUseCase(isbn, userEmail, quantity)
+        val result = reserveBookUseCase(isbn, userEmail)
 
         // Then
         assert(result is Result.Success)
@@ -52,10 +52,10 @@ class ReserveBookUseCaseTest {
         val userEmail = "user@example.com"
         val quantity = 1
 
-        coEvery { booksRepository.reserveBook(isbn, userEmail, quantity) } throws Exception("Reservation failed")
+        coEvery { booksRepository.reserveBook(isbn, userEmail) } throws Exception("Reservation failed")
 
         // When
-        val result = reserveBookUseCase(isbn, userEmail, quantity)
+        val result = reserveBookUseCase(isbn, userEmail)
 
         // Then
         assert(result is Result.Error)

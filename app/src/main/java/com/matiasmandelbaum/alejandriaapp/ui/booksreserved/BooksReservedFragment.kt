@@ -5,118 +5,111 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
-import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseUser
 import com.matiasmandelbaum.alejandriaapp.R
+import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
+import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.databinding.FragmentBooksReservedBinding
+import com.matiasmandelbaum.alejandriaapp.domain.model.reserve.Reserves
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.ReserveAdapter
-import java.time.LocalDate
-import java.util.Date
+import dagger.hilt.android.AndroidEntryPoint
+
 
 private const val TAG = "BooksReservedFragment"
+
+@AndroidEntryPoint
 class BooksReservedFragment : Fragment() {
+
+    private lateinit var binding: FragmentBooksReservedBinding
     private lateinit var adapter: ReserveAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var reserveList: ArrayList<Reserves>
+    private val reserveList = ArrayList<Reserves>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-    }
+    private val viewModel: BooksReservedViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_books_reserved, container, false)
+    ): View {
+        binding = FragmentBooksReservedBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        val snapHelper: SnapHelper = LinearSnapHelper()
+        with(binding) {
+            val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            val snapHelper: SnapHelper = LinearSnapHelper()
+            reservesRecyclerView.layoutManager = layoutManager
+            reservesRecyclerView.setHasFixedSize(true)
+            adapter = ReserveAdapter(reserveList)
+            reservesRecyclerView.adapter = adapter
 
-        getReservesForCurrentUser()
-
-        recyclerView = view.findViewById(R.id.reserves_recycler_view)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.setHasFixedSize(true)
-        adapter = ReserveAdapter(reserveList)
-        recyclerView.adapter = adapter
-        snapHelper.attachToRecyclerView(recyclerView)
-    }
-
-
-    private fun getReservesForCurrentUser() {
-        Log.d(TAG, "getReservesForCurrentUser")
-        reserveList = ArrayList()
-
-        val db = FirebaseFirestore.getInstance()
-        val auth = FirebaseAuth.getInstance()
-        val currentUser = auth.currentUser
-        val reserveListEmptyTextView = view?.findViewById<TextView>(R.id.reserve_list_empty)
-
-        if (currentUser != null) {
-            val userEmail = currentUser.email
-
-            val bookReserveCollection = db.collection("reservas_libros")
-            bookReserveCollection.whereEqualTo("mail_usuario", userEmail)
-                .get()
-                .addOnSuccessListener { reserveQuerySnapshot ->
-                    for (document in reserveQuerySnapshot) {
-                        val isbn = document.getString("isbn")
-                        Log.d(TAG, "isbn $isbn")
-                        if (isbn != null) {
-                            this.getBookDetails(isbn, document)
-                        } else {
-                            Log.d(TAG, "isbn is null")
-                        }
-                    }
-                    if (reserveQuerySnapshot.isEmpty) {
-                        reserveListEmptyTextView?.text = getString(R.string.noReservedBooksMsg)
-                        reserveListEmptyTextView?.visibility = View.VISIBLE
-                    } else {
-                        reserveListEmptyTextView?.visibility = View.GONE
-                    }
-                }
-        }else{
-            reserveListEmptyTextView?.text = getString(R.string.notLogedReservedBooksMsg)
-            reserveListEmptyTextView?.visibility = View.VISIBLE
+            snapHelper.attachToRecyclerView(reservesRecyclerView)
+            initObservers()
         }
     }
 
-    private fun getBookDetails(isbn: String, reserveDocument: DocumentSnapshot) {
-        Log.d(TAG, "getBookDetails")
-        val db = FirebaseFirestore.getInstance()
-        val bookCollection = db.collection("libros")
 
-        bookCollection.whereEqualTo("isbn", isbn).get()
-            .addOnSuccessListener { bookQuerySnapshot ->
-                for (bookDocument in bookQuerySnapshot) {
-                    val title = bookDocument.getString("titulo") ?: ""
-                    val author = bookDocument.getString("autor") ?: ""
+    private fun initObservers() {
+        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { handleAuthState(it) }
 
-                   // val dateReserve = reserveDocument.getDate("fecha_reserva") ?:  reserveDocument.getTimestamp("fecha_reserva")
-                    val dateReserve = reserveDocument.getTimestamp("fecha_inicio") ?: Timestamp(Date())
-
-
-                    Log.d(TAG, "dateReserve $dateReserve")
-                    val status = reserveDocument.getString("status") ?: ""
-                    val reserve = Reserves(isbn, title, author, dateReserve, status)
-                    reserveList.add(reserve)
+        viewModel.reserveList.observe(viewLifecycleOwner) {
+            when (it) {
+                is Result.Success -> {
+                    handleLoading(false)
+                    if (it.data.isNotEmpty()) {
+                        reserveList.addAll(it.data)
+                        reserveList.sort()
+                        adapter.notifyDataSetChanged()
+                    } else {
+                        with(binding) {
+                            reserveListEmpty.text = getString(R.string.noReservedBooksMsg)
+                            reserveListEmpty.visibility = View.VISIBLE
+                        }
+                    }
                 }
-                reserveList.sort()
-                adapter.notifyDataSetChanged()
+
+                is Result.Loading -> {
+                    handleLoading(true)
+                }
+
+                is Result.Error -> {
+
+                }
             }
+        }
     }
+
+    private fun handleAuthState(user: FirebaseUser?) {
+        with(binding) {
+            user?.let {
+                Log.d(TAG, "user not null")
+                viewModel.getReservesForCurrentUser(user.email!!)
+            } ?: run {
+                Log.d(TAG, "user null")
+                reserveListEmpty.text = getString(R.string.notLogedReservedBooksMsg)
+                reserveListEmpty.visibility = View.VISIBLE
+            }
+        }
+
+    }
+
+    private fun handleLoading(isLoading: Boolean) {
+        with(binding) {
+            if (isLoading) {
+                progressBarReserves.visibility = View.VISIBLE
+                reservesContainer.visibility = View.GONE
+            } else {
+                progressBarReserves.visibility = View.GONE
+                reservesContainer.visibility = View.VISIBLE
+            }
+        }
+    }
+
 }
