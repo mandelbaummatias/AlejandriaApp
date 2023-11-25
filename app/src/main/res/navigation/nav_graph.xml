@@ -25,8 +25,8 @@
         <action
             android:id="@+id/action_searchFragment_to_searchResultListFragment"
             app:destination="@id/searchResultListFragment"
-            app:popUpToInclusive="true"
-            app:popUpTo="@id/homeListFragment"/>
+            app:popUpTo="@id/homeListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -39,12 +39,10 @@
             app:argType="string" />
         <action
             android:id="@+id/action_searchResultListFragment_to_bookDetailsFragment"
-            app:destination="@id/bookDetailsFragment"
-         />
+            app:destination="@id/bookDetailsFragment" />
         <action
             android:id="@+id/action_searchResultListFragment_to_bookDetailsFragment2"
-            app:destination="@id/bookDetailsFragment"
-         />
+            app:destination="@id/bookDetailsFragment" />
 
     </fragment>
 
@@ -83,9 +81,6 @@
         <action
             android:id="@+id/action_signInFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_signInFragment_to_verificationFragment"
-            app:destination="@id/verificationFragment" />
     </fragment>
 
     <fragment
@@ -121,22 +116,6 @@
         android:id="@+id/userProfileFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfileFragment"
         android:label="@string/Perfil" />
-    <fragment
-        android:id="@+id/userMailFragment"
-        android:name="com.matiasmandelbaum.alejandriaapp.ui.userMainmail.UserMailFragment"
-        android:label="UserMailFragment" />
-    <fragment
-        android:id="@+id/verificationFragment"
-        android:name="com.matiasmandelbaum.alejandriaapp.ui.verification.VerificationFragment"
-        android:label="VerificationFragment">
-        <action
-            android:id="@+id/action_verificationFragment_to_homeListFragment"
-            app:destination="@id/homeListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/changePasswordFragment"
-        android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofilepw.ChangePasswordFragment"
-        android:label="ChangePasswordFragment" />
 
     <fragment
         android:id="@+id/changeProfileImageFragment"
@@ -144,7 +123,7 @@
         android:label="@string/cambio_de_imagen"
         tools:layout="@layout/user_profile_picture_change" />
 
-<fragment
+    <fragment
         android:id="@+id/settings"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.settings.SettingsFragment"
         android:label="@string/configuracion" />

@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
-import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils.DAY_MONTH_YEAR
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.END_DATE
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.ISBN
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.PENDING_STATUS
@@ -12,9 +11,9 @@ import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.R
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.START_DATE
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.STATUS
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.USER_EMAIL
+import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils.DAY_MONTH_YEAR
 import com.matiasmandelbaum.alejandriaapp.domain.model.reservation.Reservation
 import com.matiasmandelbaum.alejandriaapp.domain.repository.ReservationsRepository
-
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -46,7 +45,6 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
 
             val reservationData = hashMapOf(
                 STATUS to PENDING_STATUS,
-                // START_DATE to formattedFechaInicio,
                 START_DATE to FieldValue.serverTimestamp(),
                 END_DATE to formattedFechaFin,
                 ISBN to isbn,
@@ -63,21 +61,14 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
                 }
         }
 
-    override suspend fun getReservationByUserEmail(email: String): Reservation {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getAllReservations(): Result<List<Reservation>> {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun createReservation(reservation: Reservation): Boolean {
         return try {
             reservationsCollection.add(reservation).await()
-            true // reserva creada
+            true
         } catch (e: Exception) {
             Log.e(TAG, "error al crear la reserva: ${e.message}")
-            false // error al crear la reserva
+            false
         }
     }
 

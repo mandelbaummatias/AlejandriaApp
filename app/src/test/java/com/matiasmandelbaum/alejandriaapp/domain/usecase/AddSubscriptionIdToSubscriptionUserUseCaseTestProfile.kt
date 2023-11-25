@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
-class AddSubscriptionIdToUserUseCaseTestProfile {
+class AddSubscriptionIdToSubscriptionUserUseCaseTestProfile {
 
     private lateinit var usersRepository: UsersRepository
     private lateinit var addSubscriptionIdToUserUseCase: AddSubscriptionIdToUserUseCase

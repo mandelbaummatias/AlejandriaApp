@@ -10,16 +10,16 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-//@Module
-//@InstallIn(SingletonComponent::class)
-//object AlgoliaModule {
-//
-//    @Provides
-//    @Singleton
-//    fun provideAlgoliaClient(): ClientSearch {
-//        return ClientSearch(
-//            applicationID = ApplicationID(AlgoliaConfig.applicationID),
-//            apiKey = APIKey(AlgoliaConfig.apiKey)
-//        )
-//    }
-//}
+@Module
+@InstallIn(SingletonComponent::class)
+object AlgoliaModule {
+
+    @Provides
+    @Singleton
+    fun provideAlgoliaClient(): ClientSearch {
+        return ClientSearch(
+            applicationID = ApplicationID(AlgoliaConfig.applicationID),
+            apiKey = APIKey(AlgoliaConfig.apiKey)
+        )
+    }
+}

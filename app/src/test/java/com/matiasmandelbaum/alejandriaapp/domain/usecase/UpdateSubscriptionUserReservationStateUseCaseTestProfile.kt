@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
-class UpdateUserReservationStateUseCaseTestProfile {
+class UpdateSubscriptionUserReservationStateUseCaseTestProfile {
 
     @RelaxedMockK
     private lateinit var usersRepository: UsersRepository

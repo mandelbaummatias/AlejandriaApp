@@ -3,10 +3,10 @@ package com.matiasmandelbaum.alejandriaapp.data.repository
 import android.util.Log
 import com.algolia.search.client.ClientSearch
 import com.algolia.search.helper.deserialize
-import com.algolia.search.model.APIKey
-import com.algolia.search.model.ApplicationID
 import com.algolia.search.model.IndexName
 import com.algolia.search.model.search.*
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
@@ -14,11 +14,19 @@ import com.matiasmandelbaum.alejandriaapp.data.firestorebooks.response.BookFires
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.GoogleBooksService
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.response.GoogleBooksResponse
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.response.components.ImageLinks
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.AUTHOR
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.AVAILABLE_QUANTITY
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.BOOKS_COLLECTION
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.DATE
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.TITLE
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.ISBN
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.RESERVATIONS_COLLECTION
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.START_DATE
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.STATUS
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.USER_EMAIL
 import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
+import com.matiasmandelbaum.alejandriaapp.domain.model.reserve.Reserves
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -28,9 +36,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.util.Date
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
@@ -39,7 +50,7 @@ private const val TAG = "BooksRepositoryImpl"
 class BooksRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val googleBooksService: GoogleBooksService,
-   // private val algoliaClient: ClientSearch
+    private val algoliaClient: ClientSearch
 ) : BooksRepository {
 
     override fun getAllBooks(): Flow<Result<List<Book>>> = callbackFlow {
@@ -97,98 +108,111 @@ class BooksRepositoryImpl @Inject constructor(
         awaitClose { subscription.remove() }
     }
 
-    override suspend fun reserveBook(
-        isbn: String,
-        userEmail: String,
-        quantity: Int
-    ): Result<ReservationResult> {
+    override suspend fun getUserReservedBooks(userEmail: String): Result<List<Reserves>> {
         return try {
-            val result = suspendCoroutine { continuation ->
-                val booksCollection = firestore.collection(BOOKS_COLLECTION)
-                val book = booksCollection.document(isbn)
+            val bookReserveCollection = firestore.collection(RESERVATIONS_COLLECTION)
+                .whereEqualTo(USER_EMAIL, userEmail)
+                .get()
+                .await()
 
-                // Retrieve the current quantity before updating
-                book.get().addOnSuccessListener { documentSnapshot ->
-                    val currentQuantityLong = documentSnapshot.getLong(AVAILABLE_QUANTITY) ?: 0
-                    val currentQuantity = currentQuantityLong.toInt()
+            val resultBooks = mutableListOf<Reserves>()
 
-                    if (currentQuantity <= 0) {
-                        Log.d(TAG, "CURRENT Q LESS OR EQUAL THAN 0 $currentQuantity")
-                        // If current quantity is less than 0, return an error immediately
-                        continuation.resume(Result.Error("Alguien fue más rápido! No hay disponibilidad..."))
-                    } else {
-                        Log.d(TAG, "CURRENT Q greater THAN 0 $currentQuantity")
-                        // Update the available quantity
-                        book.update(AVAILABLE_QUANTITY, currentQuantity - 1)
-                            .addOnSuccessListener {
-                                Log.d(TAG, "update ok")
-                                // Call continuation.resume with the Result.Success
-                                continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
-                            }
-                            .addOnFailureListener {
-                                Log.d(TAG, "error en update $it")
-                                // Call continuation.resume with the Result.Error
-                                continuation.resume(Result.Error("Error reserving book: ${it.message}"))
-                            }
-                    }
+            for (document in bookReserveCollection) {
+                val isbn = document.getString(ISBN)
+                if (isbn != null) {
+                    val book = getBookDetails(isbn, document)
+                    resultBooks.add(book)
+                } else {
+                    Log.d(TAG, "isbn is null")
                 }
             }
 
-            Log.d(TAG, "RESULT FINAL $result")
+            Result.Success(resultBooks)
+        } catch (e: Exception) {
+            Result.Error(e.message.toString())
+        }
+    }
 
-            result
+    private suspend fun getBookDetails(isbn: String, reserveDocument: DocumentSnapshot): Reserves {
+        return try {
+            val bookCollection = firestore.collection(BOOKS_COLLECTION)
+
+            val bookQuerySnapshot = bookCollection.whereEqualTo(ISBN, isbn).get().await()
+
+            for (bookDocument in bookQuerySnapshot) {
+                val title = bookDocument.getString(TITLE) ?: ""
+                val author = bookDocument.getString(AUTHOR) ?: ""
+                val dateReserve = reserveDocument.getTimestamp(START_DATE) ?: Timestamp(Date())
+                val status = reserveDocument.getString(STATUS) ?: ""
+
+                Log.d(TAG, "dateReserve $dateReserve")
+
+                return Reserves(isbn, title, author, dateReserve, status)
+            }
+
+            // Handle the case where no book details are found
+            Reserves(isbn, "", "", Timestamp(Date()), "")
+        } catch (e: Exception) {
+            // Handle exceptions
+            Log.e(TAG, "Error getting book details", e)
+            Reserves(isbn, "", "", Timestamp(Date()), "")
+        }
+    }
+
+    override suspend fun reserveBook(
+        isbn: String,
+        userEmail: String,
+    ): Result<ReservationResult> {
+        return try {
+            val book = fetchBook(isbn) ?: return Result.Error("Libro no encontrado")
+
+            val currentQuantity = checkAvailability(book)
+
+            if (currentQuantity <= 0) {
+                return Result.Error("Alguien fue más rápido! No hay disponibilidad...")
+            }
+
+            updateQuantity(book, currentQuantity - 1)
+
+            Result.Success(ReservationResult(userEmail, isbn))
         } catch (e: Exception) {
             Result.Error("Error reserving book: ${e.message}")
         }
     }
 
-//    override suspend fun reserveBook(
-//        isbn: String,
-//        userEmail: String,
-//        quantity: Int
-//    ): Result<ReservationResult> {
-//        return try {
-//            return if (quantity > 0) {
-//
-//
-//                val result = suspendCoroutine { continuation ->
-//                    val booksCollection = firestore.collection(BOOKS_COLLECTION)
-//                    val book = booksCollection.document(isbn)
-//
-//                    book.update(AVAILABLE_QUANTITY, quantity - 1)
-//                        .addOnSuccessListener {
-//                            Log.d(TAG, "update ok")
-//                            // Call continuation.resume with the Result.Success
-//                            continuation.resume(Result.Success(ReservationResult(userEmail, isbn)))
-//                        }
-//                        .addOnFailureListener {
-//                            Log.d(TAG, "error en update $it")
-//                            // Call continuation.resume with the Result.Error
-//                            continuation.resume(Result.Error("Error reserving book: ${it.message}"))
-//                        }
-//                }
-//
-//                result
-//            } else {
-//                Result.Error("Error. No hay disponibilidad")
-//            }
-//        } catch (e: Exception) {
-//            Result.Error("Error reserving book: ${e.message}")
-//        }
-//    }
+    private suspend fun fetchBook(isbn: String): DocumentSnapshot? {
+        return suspendCoroutine { continuation ->
+            val booksCollection = firestore.collection(BOOKS_COLLECTION)
+            val book = booksCollection.document(isbn)
 
-    private val client = ClientSearch(
-        applicationID = ApplicationID(""),
-        apiKey = APIKey("")
-    )
+            book.get().addOnSuccessListener { documentSnapshot ->
+                continuation.resume(documentSnapshot)
+            }.addOnFailureListener {
+                continuation.resume(null)
+            }
+        }
+    }
 
-    private val indexName = IndexName("libros")
-   // private lateinit var index: Index
+    private fun checkAvailability(book: DocumentSnapshot?): Int {
+        val currentQuantityLong = book?.getLong(AVAILABLE_QUANTITY) ?: 0
+        return currentQuantityLong.toInt()
+    }
+
+    private suspend fun updateQuantity(book: DocumentSnapshot?, newQuantity: Int) {
+        book?.let {
+            suspendCoroutine { continuation ->
+                it.reference.update(AVAILABLE_QUANTITY, newQuantity)
+                    .addOnSuccessListener {
+                        continuation.resume(Unit)
+                    }.addOnFailureListener {
+                        continuation.resumeWithException(Exception("Error al reservar"))
+                    }
+            }
+        }
+    }
 
     private suspend fun getBooksFromFirestoreByTitle(title: String): List<BookFirestore> {
-
-        //index = algoliaClient.initIndex(indexName)
-        val index = client.initIndex(IndexName("libros"))
+        val index = algoliaClient.initIndex(IndexName(BOOKS_COLLECTION))
         var libros: List<BookFirestore> = emptyList()
 
         try {
@@ -203,47 +227,19 @@ class BooksRepositoryImpl @Inject constructor(
         return libros
     }
 
-    //    override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
-//        return try {
-//            val books = mutableListOf<Book>()
-//
-//            val booksFirestore = withContext(Dispatchers.IO) {
-//                getBooksFromFirestoreByTitle(title)
-//                //getBooksFromFirestoreByTitle2(title)
-//            }
-//            val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
-//
-//            if (booksFirestore.size != booksGoogle.size) {
-//                throw IllegalArgumentException("Input lists must have the same size")
-//            }
-//            for (i in booksFirestore.indices) {
-//                val bookFirestore = booksFirestore[i]
-//                val bookGoogle = booksGoogle[i]
-//                val book = createBookFromRemoteData(bookFirestore, bookGoogle)
-//                Log.d(TAG, "Viendo mi book final $book")
-//                books.add(book)
-//            }
-//            Result.Success(books)
-//        } catch (e: Exception) {
-//            Result.Error(e.message.toString())
-//        }
-//    }
     override suspend fun getBooksByTitle(title: String): Result<List<Book>> {
         return try {
             val books = mutableListOf<Book>()
 
             val booksFirestore = withContext(Dispatchers.IO) {
                 getBooksFromFirestoreByTitle(title)
-                //getBooksFromFirestoreByTitle2(title)
             }
 
             Log.d(TAG, "booksFirestore $booksFirestore")
             val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
 
             if (booksFirestore.size != booksGoogle.size) {
-                throw IllegalArgumentException("Input lists must have the same size") //Revisar
-                //En general siempre van a ser iguales la lista de firestore y gbooks porque el isbn es uno
-                //Pero contemplar un caso donde esta excepción sea un problema, o al menos sea controlada
+                throw IllegalArgumentException("Input lists must have the same size")
             }
 
             for (i in booksFirestore.indices) {
@@ -258,7 +254,6 @@ class BooksRepositoryImpl @Inject constructor(
             Result.Error(e.message.toString())
         }
     }
-
 
     private fun createBookFromRemoteData(
         bookFirestore: BookFirestore,

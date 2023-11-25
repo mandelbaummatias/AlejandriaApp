@@ -19,7 +19,6 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
@@ -27,13 +26,11 @@ import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
-
+import com.matiasmandelbaum.alejandriaapp.domain.model.userinput.UserDataInput
 import com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation.PasswordConfirmationFragment
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
 import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.model.UserProfile2
 import dagger.hilt.android.AndroidEntryPoint
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfile
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -49,13 +46,10 @@ private const val TAG = "UserProfileFragment"
 class UserProfileFragment : Fragment(), DialogClickListener {
 
     private var isInEditMode = false
-    private var userDocumentReference: DocumentReference? = null
     private lateinit var datePicker: MaterialDatePicker<Long>
-
-    //  private var previousEmail: String? = null
-    lateinit var previousEmail: String
-    lateinit var previousDate: String
-    lateinit var newEmail: String
+    private lateinit var previousEmail: String
+    private lateinit var previousDate: String
+    private lateinit var newEmail: String
     private val viewModel: UserProfileViewModel by viewModels()
 
     private lateinit var binding: UserProfileBinding
@@ -71,10 +65,38 @@ class UserProfileFragment : Fragment(), DialogClickListener {
 
             if (userEmail != null) {
                 viewModel.getUserByEmail(userEmail)
-            } // Notify ViewModel about the user's email
+            }
         } else {
             Log.d(TAG, "User is null")
         }
+    }
+
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = UserProfileBinding.inflate(inflater, container, false)
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.viewState.collect {
+                    onErrorProfileUpdateUI(it)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.emailViewState.collect {
+                    onErrorEmailUpdateUI(it)
+                }
+            }
+        }
+        setupDatePicker()
+        return binding.root
     }
 
 
@@ -121,20 +143,11 @@ class UserProfileFragment : Fragment(), DialogClickListener {
 
         binding.editFab.setOnClickListener {
             if (!isInEditMode) {
-                Log.d(TAG, "in edit mode from click listener")
-                // Enter edit mode
                 enterEditMode()
-                //it.dismissKeyboard()
             } else {
                 Log.d(TAG, "PREVIOUS EMAIL $previousEmail")
-//                viewModel.onSaveProfileSelected(
-//                    binding.editNombre.text.toString(),
-//                    binding.editApellido.text.toString(),
-//                    previousEmail,
-//                    binding.editDate.text.toString()
-//                )
                 if (viewModel.onSaveProfileSelected(
-                        UserProfile(
+                        UserDataInput(
                             binding.editNombre.text.toString(),
                             binding.editApellido.text.toString(),
                             previousEmail,
@@ -150,8 +163,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 viewModel.onSaveUserEmailSelected(
                     binding.editEmail.text.toString(), previousEmail
                 )
-                // exitEditMode()
-
             }
         }
     }
@@ -162,14 +173,11 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 is Result.Success -> {
                     handleLoading(false)
                     val user = result.data
-                    // Update UI with user data
                     updateUI(user)
-                    userDocumentReference = result.data.documentReference
                 }
 
                 is Result.Error -> {
                     handleLoading(false)
-                    // Handle error
                     Log.e(TAG, "Error retrieving user data: ${result.message}")
                 }
 
@@ -186,13 +194,12 @@ class UserProfileFragment : Fragment(), DialogClickListener {
 
         viewModel.showErrorDialog.observe(viewLifecycleOwner) {
             if (it.showErrorDialog) {
-                Log.d(TAG, "HAY UN ERROR CON EL LOGIN ")
+                showOnLoginErrorMessage()
             }
         }
 
         viewModel.showPasswordRequiredDialog.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
-                //  showChangeEmailVerification()
                 showChangeEmailVerification()
             }
         }
@@ -202,6 +209,13 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 showProfileUpdateSuccessMessage()
             }
         }
+    }
+
+    private fun showOnLoginErrorMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.error_en_login), Snackbar.LENGTH_SHORT
+        ).show()
     }
 
     private fun showProfileUpdateSuccessMessage() {
@@ -226,16 +240,13 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 )
                 profileImage.setImageResource(resourceId)
             } else {
-                // Default image
                 profileImage.setImageResource(R.drawable.alejandria_logo)
             }
         }
     }
 
     private fun onErrorProfileUpdateUI(viewState: UserProfileViewState) {
-        Log.d(TAG, "onErrorProfileUpdateUI")
         with(binding) {
-            //pbLoading.isVisible = viewState.isLoading
             editNombreLayout.error =
                 if (viewState.isValidName) null else getString(R.string.nombre_invalido)
             editApellidoLayout.error =
@@ -246,7 +257,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     }
 
     private fun onErrorEmailUpdateUI(viewState: UserEmailViewState) {
-        Log.d(TAG, "onErrorEmailUpdateUI")
         with(binding) {
             editEmailLayout.error =
                 if (viewState.isValidEmail) null else getString(R.string.email_invalido)
@@ -263,33 +273,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         AuthManager.removeAuthStateListener(authStateListener)
     }
 
-    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = UserProfileBinding.inflate(inflater, container, false)
-
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.viewState.collect {
-                    onErrorProfileUpdateUI(it)
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.emailViewState.collect {
-                    onErrorEmailUpdateUI(it)
-                }
-            }
-        }
-        setupDatePicker()
-        return binding.root
-    }
 
     private fun enterEditMode() {
         isInEditMode = true
@@ -330,7 +313,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     private fun onFieldChanged(hasFocus: Boolean = false) {
         if (!hasFocus) {
             viewModel.onFieldsChanged(
-                UserProfile(
+                UserDataInput(
                     name = binding.editNombre.text.toString(),
                     lastName = binding.editApellido.text.toString(),
                     birthDate = binding.editDate.text.toString()
@@ -366,7 +349,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             showEmailUpdateSuccesfulMessage()
             binding.editEmail.setText(newEmail)
         } else {
-            binding.editEmail.setText(previousEmail) //handle loading?
+            binding.editEmail.setText(previousEmail)
             showEmailUpdateUnsuccessfulMessage()
         }
     }
@@ -381,22 +364,19 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     private fun showEmailUpdateUnsuccessfulMessage() {
         Snackbar.make(
             requireView(),
-            getString(R.string.email_no_fue_actualizado), // Assuming you have a string resource for the message
+            getString(R.string.email_no_fue_actualizado),
             Snackbar.LENGTH_SHORT
         ).show()
     }
 
     private fun setupDatePicker() {
-
         val calendarMin = Calendar.getInstance()
         calendarMin.add(Calendar.YEAR, -18)
-
 
         val cal = Calendar.getInstance()
         cal.add(Calendar.YEAR, -18)
         val minDateInMillis = cal.timeInMillis
 
-// Define date validator
         val dateValidatorMin: CalendarConstraints.DateValidator =
             DateValidatorPointBackward.before(minDateInMillis)
 
@@ -429,7 +409,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             val format2 = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             val formattedDate = selectedLocalDate.format(format2)
 
-            // Convert the String to Editable
             val editableText = Editable.Factory.getInstance().newEditable(formattedDate)
 
             binding.editDate.text = editableText
@@ -442,20 +421,15 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         datePicker.addOnNegativeButtonClickListener {
             Log.d(TAG, "en negative viendo hasSelectedDate: $hasSelectedDate")
             //  datePicker.selection?.let {
-            //      it.let {
             if (hasSelectedDate) {
                 binding.editDate.text = Editable.Factory.getInstance().newEditable(
                     finalSelectedDate
                 )
             } else {
                 Log.d(TAG, "doesn't have selected date")
-//                binding.editDate.text =
-//                    Editable.Factory.getInstance().newEditable(" ")
                 binding.editDate.setText(previousDate)
                 binding.editDate.requestFocus()
                 binding.editDate.text?.let { binding.editDate.setSelection(it.length) }
-                //        Log.d(TAG, "pasandole null en negative?")
-                //viewModel.isValidDate(null)
             }
 
         }

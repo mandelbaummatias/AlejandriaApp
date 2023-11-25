@@ -15,7 +15,7 @@ import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.util.subscriptionstatus.SubscriptionStatus
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSubscriptionListBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
-import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "SubscriptionListFragment"
@@ -24,15 +24,11 @@ private const val TAG = "SubscriptionListFragment"
 class SubscriptionListFragment : Fragment() {
 
     private lateinit var binding: FragmentSubscriptionListBinding
-    //private val viewModel: SubscriptionListViewModel by activityViewModels()
-
-    //tampoco influye que sea shared vm
 
     private val viewModel: SubscriptionListViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //   viewModel.resetUser()
     }
 
     override fun onCreateView(
@@ -49,22 +45,18 @@ class SubscriptionListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // initObservers()
         setupObservers()
         setupListeners()
         AuthManager.authStateLiveData.observe(viewLifecycleOwner) { handleAuthState(it) }
-        Log.d(TAG, "ViewModel hash code: ${viewModel.hashCode()}")
     }
 
 
     private fun setupObservers() {
-        Log.d(TAG, "setupObservers()")
         with(viewModel) {
             subscription.observe(viewLifecycleOwner) { handleSubscriptionResult(it) }
             subscriptionExists.observe(viewLifecycleOwner) {
                 when (it) {
                     is Result.Success -> {
-                        Log.d(TAG, "subExists SUCC: $it")
                         handleSubscriptionExistsResult(it)
                     }
 
@@ -73,7 +65,7 @@ class SubscriptionListFragment : Fragment() {
 
                 }
             }
-            user.observe(viewLifecycleOwner) {
+            subscriptionUser.observe(viewLifecycleOwner) {
                 it?.let { handleUserResult(it) }
             }
         }
@@ -128,7 +120,7 @@ class SubscriptionListFragment : Fragment() {
         ).show()
     }
 
-    private fun handleUserResult(result: Result<User>) {
+    private fun handleUserResult(result: Result<SubscriptionUser>) {
         Log.d(TAG, "handleUserResult")
         when (result) {
             is Result.Success -> {
@@ -160,28 +152,5 @@ class SubscriptionListFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        //  viewModel.resetUser() //esto no es
-    }
-
-    private fun handleLoading(isLoading: Boolean) {
-        Log.d(TAG, "HANDLE loading")
-        with(binding) {
-            if (isLoading) {
-                basicPlanButton.visibility = View.GONE
-                progressBar.visibility = View.VISIBLE
-            } else {
-                basicPlanButton.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-            }
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.resetUser()
     }
 }

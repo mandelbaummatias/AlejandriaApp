@@ -1,6 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.model
 
-data class UserProfile2(
+data class UserEmailAndPasswordConfirmation(
     val email: String = "",
     val password: String = "",
     val showErrorDialog: Boolean = false
