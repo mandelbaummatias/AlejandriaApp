@@ -124,8 +124,7 @@
     <string name="newPw">Nueva contraseña</string>
     <string name="newPwConfirmation">Confirme nueva contraseña</string>
     <string name="actualPassword">Contraseña actual</string>
-    <string name="mercadopago_api_key">
-</string>
+    <string name="mercadopago_api_key"></string>
     <string name="mercadopago_api_base_url">https://api.mercadopago.com/</string>
     <string name="solicitud_iniciar_sesion">Iniciar sesión para suscribirse!</string>
 
@@ -220,5 +219,10 @@
     <string name="repita_su_contrasenia">Repita su contraseña</string>
     <string name="registrarse">Registrarse</string>
     <string name="ya_tengo_una_cuenta">Ya tengo una cuenta</string>
+    <string name="error_en_login">Error en login</string>
+    <string name="suscripcion_requerida">Suscripción requerida</string>
+    <string name="para_reservar_primero_debe_suscribirse">Para reservar, primero debe suscribirse</string>
+    <string name="quiza_despues">Quizá después</string>
+    <string name="error_en_cambio_de_imagen">Error en cambio de imagen\n</string>
 
 </resources>

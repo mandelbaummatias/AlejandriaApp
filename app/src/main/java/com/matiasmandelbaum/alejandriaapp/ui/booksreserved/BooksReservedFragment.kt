@@ -15,6 +15,7 @@ import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentBooksReservedBinding
+import com.matiasmandelbaum.alejandriaapp.domain.model.reserve.Reserves
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.ReserveAdapter
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -9,7 +9,6 @@ class ReserveBookUseCase @Inject constructor(private val booksRepository: BooksR
     suspend operator fun invoke(isbn: String, userEmail: String): Result<ReservationResult> {
         return try {
             booksRepository.reserveBook(isbn, userEmail)
-           // Result.Success(ReservationResult(userEmail, isbn))
         } catch (e: Exception) {
             Result.Error("Error reserving book: ${e.message}")
         }

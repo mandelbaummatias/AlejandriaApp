@@ -152,12 +152,6 @@ class SignInFragment : Fragment() {
             }
         }
 
-        viewModel.navigateToVerifyEmail.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                goToVerifyEmail()
-            }
-        }
-
         viewModel.navigateToLogin.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 goToLogin()
@@ -171,11 +165,6 @@ class SignInFragment : Fragment() {
             getString(R.string.registro_exitoso), Snackbar.LENGTH_SHORT
         )
         snackbar.show()
-    }
-
-    private fun goToVerifyEmail() {
-        val action = SignInFragmentDirections.actionSignInFragmentToVerificationFragment()
-        findNavController().navigate(action)
     }
 
     private fun showEmailAlreadyRegistered() {
@@ -202,17 +191,17 @@ class SignInFragment : Fragment() {
     private fun updateUI(viewState: SignInViewState) {
         with(binding) {
             //pbLoading.isVisible = viewState.isLoading
-            binding.textInputLayoutNombre.error =
+            textInputLayoutNombre.error =
                 if (viewState.isValidName) null else getString(R.string.signin_error_realname)
-            binding.textInputLayoutApellido.error =
+            textInputLayoutApellido.error =
                 if (viewState.isValidLastName) null else getString(R.string.signin_error_nickname)
-            binding.textInputLayoutEmail.error =
+            textInputLayoutEmail.error =
                 if (viewState.isValidEmail) null else getString(R.string.signin_error_mail)
-            binding.textInputLayoutFechaNacimiento.error =
+            textInputLayoutFechaNacimiento.error =
                 if (viewState.isValidDate) null else getString(R.string.signin_error_date)
-            binding.textInputLayoutContrasenia.error =
+            textInputLayoutContrasenia.error =
                 if (viewState.isValidPassword) null else getString(R.string.signin_error_password)
-            binding.textInputLayoutRepetirContrasenia.error =
+            textInputLayoutRepetirContrasenia.error =
                 if (viewState.isValidPassword) null else getString(R.string.signin_error_password)
         }
     }

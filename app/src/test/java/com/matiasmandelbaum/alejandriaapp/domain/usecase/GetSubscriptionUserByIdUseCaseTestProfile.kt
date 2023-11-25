@@ -9,7 +9,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-class GetUserByIdUseCaseTestProfile {
+class GetSubscriptionUserByIdUseCaseTestProfile {
 
     @RelaxedMockK
     private lateinit var usersRepository: UsersRepository
@@ -26,8 +26,8 @@ class GetUserByIdUseCaseTestProfile {
     fun `when repository returns user then get user by id`() = runBlocking {
         // Given
         val userId = "user123"
-        val user = com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User("123", false)
-        coEvery { usersRepository.getUserById(userId) } returns Result.Success(user)
+        val subscriptionUser = com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser("123", false)
+        coEvery { usersRepository.getUserById(userId) } returns Result.Success(subscriptionUser)
 
         // When
         val result = getUserByIdUseCase(userId)
@@ -35,7 +35,7 @@ class GetUserByIdUseCaseTestProfile {
         // Then
         assert(result is Result.Success)
         val returnedUser = (result as Result.Success).data
-        assertEquals(user, returnedUser)
+        assertEquals(subscriptionUser, returnedUser)
     }
 
     @Test

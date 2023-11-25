@@ -25,12 +25,10 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
-import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.ActivityMainBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
@@ -41,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), DialogClickListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -98,7 +96,6 @@ class MainActivity : AppCompatActivity(), DialogClickListener {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-       // val drawerLayout: DrawerLayout = binding.drawerLayout
         drawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
 
@@ -107,7 +104,6 @@ class MainActivity : AppCompatActivity(), DialogClickListener {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        // val navController = navHostFragment.navController
         navController = navHostFragment.navController
 
         appBarConfiguration = AppBarConfiguration(
@@ -135,9 +131,7 @@ class MainActivity : AppCompatActivity(), DialogClickListener {
         navController.addOnDestinationChangedListener { _, nd: NavDestination, _ ->
             if (nd.id == navController.graph.startDestinationId) {
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-                Log.d("addOnDestinationChangedListener", "En start")
             } else {
-                Log.d("addOnDestinationChangedListener", "Fuera de start")
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             }
         }
@@ -153,7 +147,6 @@ class MainActivity : AppCompatActivity(), DialogClickListener {
                 R.id.logout -> {
                     val dialog = SignOutDialogFragment()
                     dialog.show(supportFragmentManager, "SignOutDialogFragment")
-                 //   drawerLayout.closeDrawers()
                 }
 
                 R.id.profile -> {
@@ -163,7 +156,6 @@ class MainActivity : AppCompatActivity(), DialogClickListener {
                         navController.navigate(R.id.loginFragment)
                     }
                 }
-
                 else -> {
                     NavigationUI.onNavDestinationSelected(it, navController)
                     drawerLayout.closeDrawers()
@@ -205,7 +197,6 @@ class MainActivity : AppCompatActivity(), DialogClickListener {
     }
 
     private fun handleSubscriptionSuccess(subscription: Subscription) {
-        Log.d(TAG, "SUCCESS SUBS $subscription")
         val url = subscription.initPoint
         viewModel.addSubscriptionIdToUser(
             subscription.id,
@@ -217,24 +208,13 @@ class MainActivity : AppCompatActivity(), DialogClickListener {
     }
 
     private fun handleSubscriptionError(errorMessage: String?) {
-        Log.d(TAG, "error...$errorMessage")
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        Log.d(TAG, "onSupportNavigateUp")
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-    override fun onFinishClickDialog(clickValue: Boolean) {
-        Log.d(TAG, "onFinishClickDialog")
-        if (clickValue) {
-            Log.d(TAG, "onFinishClickDialog click! $clickValue")
-           // viewModel.reserveBook(AuthManager.getCurrentUser()?.email!!)
-            drawerLayout.closeDrawers()
-        }
     }
 }

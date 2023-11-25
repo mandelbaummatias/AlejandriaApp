@@ -6,5 +6,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.repository.UsersRepository
 import javax.inject.Inject
 
 class GetUserByEmailUseCase @Inject constructor(private val usersRepository: UsersRepository) {
-    suspend operator fun invoke(email: String): Result<UserProfile> = usersRepository.getUserByEmail(email)
+    suspend operator fun invoke(email: String): Result<UserProfile> =
+        usersRepository.getUserByEmail(email)
 }

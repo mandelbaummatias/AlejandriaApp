@@ -26,8 +26,8 @@ import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.R
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.reservas.ReservationsConstants.USER_EMAIL
 import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
+import com.matiasmandelbaum.alejandriaapp.domain.model.reserve.Reserves
 import com.matiasmandelbaum.alejandriaapp.domain.repository.BooksRepository
-import com.matiasmandelbaum.alejandriaapp.ui.booksreserved.Reserves
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -239,9 +239,7 @@ class BooksRepositoryImpl @Inject constructor(
             val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
 
             if (booksFirestore.size != booksGoogle.size) {
-                throw IllegalArgumentException("Input lists must have the same size") //Revisar
-                //En general siempre van a ser iguales la lista de firestore y gbooks porque el isbn es uno
-                //Pero contemplar un caso donde esta excepción sea un problema, o al menos sea controlada
+                throw IllegalArgumentException("Input lists must have the same size")
             }
 
             for (i in booksFirestore.indices) {

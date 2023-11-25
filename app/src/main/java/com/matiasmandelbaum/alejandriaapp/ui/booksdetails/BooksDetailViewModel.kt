@@ -15,7 +15,7 @@ import com.matiasmandelbaum.alejandriaapp.domain.usecase.FetchSubscriptionUseCas
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByIdUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.ReserveBookUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.UpdateUserReservationStateUseCase
-import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,8 +38,8 @@ class BooksDetailViewModel @Inject constructor(
     private val _subscriptionExists: MutableLiveData<Boolean> = MutableLiveData()
     val subscriptionExists: LiveData<Boolean> = _subscriptionExists
 
-    private val _user: MutableLiveData<Result<User>?> = MutableLiveData()
-    val user: LiveData<Result<User>?> = _user
+    private val _Subscription_user: MutableLiveData<Result<SubscriptionUser>?> = MutableLiveData()
+    val subscriptionUser: LiveData<Result<SubscriptionUser>?> = _Subscription_user
 
     private val _isEnabledToReserve = MutableLiveData<Boolean>()
     val isEnabledToReserve: LiveData<Boolean> = _isEnabledToReserve
@@ -95,38 +95,38 @@ class BooksDetailViewModel @Inject constructor(
 
     fun getUserById(userId: String) {
         Log.d(TAG, "book $book")
-        _user.value = Result.Loading
+        _Subscription_user.value = Result.Loading
         viewModelScope.launch {
             val result = getUserByIdUseCase(userId)
             handleUserResult(result)
         }
     }
 
-    private fun handleUserResult(result: Result<User>) {
+    private fun handleUserResult(result: Result<SubscriptionUser>) {
         when (result) {
             is Result.Success -> handleSuccess(result.data)
-            else -> _user.value = result
+            else -> _Subscription_user.value = result
         }
     }
 
-    private fun handleSuccess(user: User) {
-        if (user.hasReservedBook != false) {
-            _isEnabledToReserve.postValue(!user.hasReservedBook!!)
+    private fun handleSuccess(subscriptionUser: SubscriptionUser) {
+        if (subscriptionUser.hasReservedBook != false) {
+            _isEnabledToReserve.postValue(!subscriptionUser.hasReservedBook!!)
         } else {
             _isEnabledToReserve.postValue(true)
         }
 
-        val subscriptionId = user.subscriptionId
+        val subscriptionId = subscriptionUser.subscriptionId
 
         if (subscriptionId.isNotBlank()) {
             fetchSubscription(subscriptionId)
         } else {
             _subscriptionExists.postValue(false)
         }
-        _user.value = Result.Success(user)
+        _Subscription_user.value = Result.Success(subscriptionUser)
     }
 
     fun resetUser() {
-        _user.value = null
+        _Subscription_user.value = null
     }
 }

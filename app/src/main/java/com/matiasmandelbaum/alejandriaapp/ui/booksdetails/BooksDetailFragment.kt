@@ -22,7 +22,7 @@ import com.matiasmandelbaum.alejandriaapp.data.util.subscriptionstatus.Subscript
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentBooksDetailsBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
-import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User
+import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "BooksDetailFragment"
@@ -67,7 +67,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                 handleSubscriptionState(result)
             }
 
-            user.observe(viewLifecycleOwner) { result ->
+            subscriptionUser.observe(viewLifecycleOwner) { result ->
                 if (result != null) {
                     handleUserState(result)
                 }
@@ -122,7 +122,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         }
     }
 
-    private fun handleUserState(result: Result<User>) {
+    private fun handleUserState(result: Result<SubscriptionUser>) {
         when (result) {
             is Result.Success -> {
                 Log.d(TAG, "user success")

@@ -1,16 +1,13 @@
 package com.matiasmandelbaum.alejandriaapp.domain.repository
 
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
-import com.matiasmandelbaum.alejandriaapp.domain.model.user.User
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
 
 
 interface UsersRepository {
 
-    suspend fun getUserById(userId: String): Result<com.matiasmandelbaum.alejandriaapp.ui.subscription.model.User>
+    suspend fun getUserById(userId: String): Result<com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser>
     suspend fun getUserByEmail(email: String): Result<UserProfile>
-
-    suspend fun getAllUsers(): Result<List<User>>
 
     suspend fun updateUserReservationState(userEmail: String): Result<Unit>
 
@@ -25,5 +22,5 @@ interface UsersRepository {
 
     suspend fun addSubscriptionId(subscriptionId: String, userId: String): Boolean
 
-
+    suspend fun changeImageForUser(newImage: String): Result<Unit>
 }

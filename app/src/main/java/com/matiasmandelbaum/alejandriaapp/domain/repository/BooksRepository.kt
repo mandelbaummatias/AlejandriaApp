@@ -3,7 +3,7 @@ package com.matiasmandelbaum.alejandriaapp.domain.repository
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
-import com.matiasmandelbaum.alejandriaapp.ui.booksreserved.Reserves
+import com.matiasmandelbaum.alejandriaapp.domain.model.reserve.Reserves
 import kotlinx.coroutines.flow.Flow
 
 interface BooksRepository {
