@@ -97,6 +97,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                 showErrorOnReservationMessage(result.message)
                 binding.bookReserveButton.visibility = View.INVISIBLE
             }
+
             else -> {}
         }
     }
