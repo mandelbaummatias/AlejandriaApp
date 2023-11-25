@@ -5,5 +5,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.repository.UsersRepository
 import javax.inject.Inject
 
 class UpdateUserReservationStateUseCase @Inject constructor(private val usersRepository: UsersRepository) {
-    suspend operator fun invoke(userEmail: String) : Result<Unit> = usersRepository.updateUserReservationState(userEmail)
+    suspend operator fun invoke(userEmail: String): Result<Unit> =
+        usersRepository.updateUserReservationState(userEmail)
 }

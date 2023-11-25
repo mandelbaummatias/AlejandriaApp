@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val booksRepository: BooksRepository) :
+class HomeViewModel @Inject constructor(booksRepository: BooksRepository) :
     ViewModel() {
     val bookListState: StateFlow<Result<List<Book>>> = booksRepository.getAllBooks()
         .stateIn(

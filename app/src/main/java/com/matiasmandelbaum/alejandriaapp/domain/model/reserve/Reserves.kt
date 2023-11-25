@@ -1,4 +1,4 @@
-package com.matiasmandelbaum.alejandriaapp.ui.booksreserved
+package com.matiasmandelbaum.alejandriaapp.domain.model.reserve
 
 import com.google.firebase.Timestamp
 
