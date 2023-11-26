@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/subscription_margin_top"
             android:gravity="center"
-            android:text="@string/plansTitle"
+            android:text="@string/plans_title"
             android:textColor="?attr/colorPrimary"
             android:textSize="@dimen/plan_title_text_size"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +57,7 @@
                             android:layout_marginTop="@dimen/subscription_card_margin_top"
                             android:layout_marginBottom="@dimen/subscription_card_margin_bottom"
                             android:gravity="center"
-                            android:text="@string/basicPlanTitle"
+                            android:text="@string/basic_plan_title"
                             android:textColor="?attr/colorPrimary"
                             android:textSize="@dimen/subscription_card_plan_title_text_size"
                             android:textStyle="bold" />
@@ -75,7 +75,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/subscription_card_margin_bottom_larger"
-                            android:text="@string/basicPlanFeatures"
+                            android:text="@string/basic_plan_features"
                             android:textSize="@dimen/subscription_card_features_text_size" />
 
                         <TextView
@@ -84,7 +84,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/subscription_card_margin_bottom_larger"
                             android:gravity="center"
-                            android:text="@string/basicPlanPrice"
+                            android:text="@string/basic_plan_price"
                             android:textSize="@dimen/subscription_card_price_text_size"
                             android:textStyle="bold" />
 
@@ -93,7 +93,7 @@
                             android:layout_width="@dimen/subscription_card_button_width"
                             android:layout_height="@dimen/subscription_card_button_height"
                             android:backgroundTint="?attr/colorPrimary"
-                            android:text="@string/subscribeBtn"
+                            android:text="@string/subscribe_button"
                             android:textSize="@dimen/subscription_card_button_text_size" />
 
                         <ProgressBar
@@ -127,7 +127,7 @@
                             android:layout_marginTop="@dimen/subscription_card_margin_top"
                             android:layout_marginBottom="@dimen/subscription_card_margin_bottom"
                             android:gravity="center"
-                            android:text="@string/advancedPlanTitle"
+                            android:text="@string/advanced_plan_title"
                             android:textColor="?attr/colorPrimary"
                             android:textSize="@dimen/subscription_card_plan_title_text_size"
                             android:textStyle="bold"/>
@@ -145,7 +145,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/subscription_card_margin_bottom_larger"
-                            android:text="@string/advancedPlanFeatures"
+                            android:text="@string/advanced_plan_features"
                             android:textSize="@dimen/subscription_card_features_text_size" />
 
                         <TextView
@@ -154,7 +154,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/subscription_card_margin_bottom_larger"
                             android:gravity="center"
-                            android:text="@string/advancedPlanPrice"
+                            android:text="@string/advanced_plan_price"
                             android:textSize="@dimen/subscription_card_price_text_size"
                             android:textStyle="bold" />
 
@@ -163,7 +163,7 @@
                             android:layout_width="@dimen/subscription_card_button_width"
                             android:layout_height="@dimen/subscription_card_button_height"
                             android:enabled="false"
-                            android:text="@string/soonBtn"
+                            android:text="@string/soon_button"
                             android:textSize="@dimen/subscription_card_button_text_size" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
