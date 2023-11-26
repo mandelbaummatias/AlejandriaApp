@@ -78,8 +78,23 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = UserProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initUI()
+    }
+
+    private fun initUI() {
+        initCollectors()
+        initListeners()
+        initObservers()
+        setupDatePicker()
+    }
+
+    private fun initCollectors() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.viewState.collect {
@@ -95,118 +110,109 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 }
             }
         }
-        setupDatePicker()
-        return binding.root
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.profileImage.setOnClickListener {
-            findNavController().navigate(R.id.changeProfileImageFragment)
-        }
-
-        initListeners()
-        initObservers()
     }
 
     private fun initListeners() {
-        binding.editNombre.apply {
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            onTextChanged { onFieldChanged() }
-        }.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+        with(binding) {
+            editNombre.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                onTextChanged { onFieldChanged() }
+            }.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
 
+            editApellido.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+                onTextChanged { onFieldChanged() }
+            }
 
-        binding.editApellido.apply {
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-            onTextChanged { onFieldChanged() }
-        }
+            editEmail.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onEmailChanged(hasFocus) }
+                onTextChanged { onEmailChanged() }
+            }
 
-        binding.editEmail.apply {
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onEmailChanged(hasFocus) }
-            onTextChanged { onEmailChanged() }
-        }
-
-        binding.editDate.apply {
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-            onTextChanged { onFieldChanged() }
-        }
-
-        binding.editDate.setOnClickListener {
-            previousDate = binding.editDate.text.toString()
-            showDatePicker()
-        }
-
-        binding.editFab.setOnClickListener {
-            if (!isInEditMode) {
-                enterEditMode()
-            } else {
-                Log.d(TAG, "PREVIOUS EMAIL $previousEmail")
-                if (viewModel.onSaveProfileSelected(
-                        UserDataInput(
-                            binding.editNombre.text.toString(),
-                            binding.editApellido.text.toString(),
-                            previousEmail,
-                            binding.editDate.text.toString()
-                        )
-                    )
-                ) {
-                    exitEditMode()
+            editDate.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+                onTextChanged { onFieldChanged() }
+                setOnClickListener {
+                    previousDate = editDate.text.toString()
+                    showDatePicker()
                 }
+            }
 
-                newEmail = binding.editEmail.text.toString()
+            editFab.setOnClickListener {
+                if (!isInEditMode) {
+                    enterEditMode()
+                } else {
+                    Log.d(TAG, "PREVIOUS EMAIL $previousEmail")
+                    if (viewModel.onSaveProfileSelected(
+                            UserDataInput(
+                                editNombre.text.toString(),
+                                editApellido.text.toString(),
+                                previousEmail,
+                                editDate.text.toString()
+                            )
+                        )
+                    ) {
+                        exitEditMode()
+                    }
 
-                viewModel.onSaveUserEmailSelected(
-                    binding.editEmail.text.toString(), previousEmail
-                )
+                    newEmail = editEmail.text.toString()
+
+                    viewModel.onSaveUserEmailSelected(
+                        editEmail.text.toString(), previousEmail
+                    )
+                }
+            }
+
+            profileImage.setOnClickListener {
+                findNavController().navigate(R.id.changeProfileImageFragment)
             }
         }
     }
 
     private fun initObservers() {
-        viewModel.userProfile.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Success -> {
-                    handleLoading(false)
-                    val user = result.data
-                    updateUI(user)
-                }
+        with(viewModel) {
+            userProfile.observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is Result.Success -> {
+                        handleLoading(false)
+                        val user = result.data
+                        updateUI(user)
+                    }
 
-                is Result.Error -> {
-                    handleLoading(false)
-                    Log.e(TAG, "Error retrieving user data: ${result.message}")
-                }
+                    is Result.Error -> {
+                        handleLoading(false)
+                        Log.e(TAG, "Error retrieving user data: ${result.message}")
+                    }
 
-                is Result.Loading -> {
-                    handleLoading(true)
-                }
+                    is Result.Loading -> {
+                        handleLoading(true)
+                    }
 
-                else -> {
-                    Unit
+                    else -> {
+                        Unit
+                    }
                 }
             }
-        }
 
-
-        viewModel.showErrorDialog.observe(viewLifecycleOwner) {
-            if (it.showErrorDialog) {
-                showOnLoginErrorMessage()
+            showErrorDialog.observe(viewLifecycleOwner) {
+                if (it.showErrorDialog) {
+                    showOnLoginErrorMessage()
+                }
             }
-        }
 
-        viewModel.showPasswordRequiredDialog.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                showChangeEmailVerification()
+            showPasswordRequiredDialog.observe(viewLifecycleOwner) {
+                it.getContentIfNotHandled()?.let {
+                    showChangeEmailVerification()
+                }
             }
-        }
 
-        viewModel.showOnSuccessfulSavedDataMessage.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                showProfileUpdateSuccessMessage()
+            showOnSuccessfulSavedDataMessage.observe(viewLifecycleOwner) {
+                it.getContentIfNotHandled()?.let {
+                    showProfileUpdateSuccessMessage()
+                }
             }
         }
     }
