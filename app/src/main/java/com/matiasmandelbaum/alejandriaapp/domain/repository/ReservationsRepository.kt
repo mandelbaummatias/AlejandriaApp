@@ -9,4 +9,6 @@ interface ReservationsRepository {
 
     suspend fun createReservation(isbn: String, userEmail: String): Result<Unit>
 
+    suspend fun changeUserEmailInReserve(newEmail: String, oldEmail: String)
+
 }

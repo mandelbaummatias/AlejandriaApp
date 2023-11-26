@@ -277,7 +277,7 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
                 }
         }
 
-     suspend fun updateUserReservationState(userEmail: String): Result<Unit> =
+    suspend fun updateUserReservationState(userEmail: String): Result<Unit> =
         suspendCoroutine { continuation ->
             val usersCollection = firebase.db.collection(USERS_COLLECTION)
 
@@ -299,4 +299,23 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
                 }
         }
 
+    suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
+        suspendCoroutine { continuation ->
+            try {
+                if (email.isNotEmpty()) {
+                    firebase.auth.sendPasswordResetEmail(email)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                continuation.resume(Result.Success(Unit))
+                            } else {
+                                continuation.resume(Result.Error("Error on sending password reset email"))
+                            }
+                        }
+                } else {
+                    continuation.resume(Result.Error("Email is empty"))
+                }
+            } catch (e: Exception) {
+                continuation.resume(Result.Error("Exception: $e"))
+            }
+        }
 }
