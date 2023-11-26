@@ -116,7 +116,7 @@
                 android:layout_width="@dimen/book_reserve_button_size"
                 android:layout_height="@dimen/book_reserve_button_height"
                 android:layout_marginBottom="@dimen/book_reserve_margin_bottom"
-                android:text="@string/reserveBtn"
+                android:text="@string/reserve_button"
                 android:textSize="@dimen/book_reserve_button_size_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

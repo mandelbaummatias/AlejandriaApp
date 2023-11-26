@@ -58,10 +58,9 @@ class BooksRepositoryImpl @Inject constructor(
             .orderBy(
                 AVAILABLE_QUANTITY,
                 Query.Direction.ASCENDING
-            ) // Order by "cantidad_disponible" first
-            .orderBy(DATE, Query.Direction.DESCENDING) // Then order by "fecha_ingreso"
+            )
+            .orderBy(DATE, Query.Direction.DESCENDING)
             .whereGreaterThan(AVAILABLE_QUANTITY, 0)
-
 
         val subscription = itemsReference.addSnapshotListener { snapshot, error ->
             if (error != null) {
@@ -77,7 +76,6 @@ class BooksRepositoryImpl @Inject constructor(
 
                     val resultBooks = try {
                         coroutineScope {
-                            // Use async to perform Google Books search for each book concurrently
                             val deferredBooks = booksFirestore.map { bookFirestore ->
                                 async(Dispatchers.IO) {
                                     val bookGoogle = googleBooksService.searchBooksInGoogleBooks(
@@ -90,16 +88,11 @@ class BooksRepositoryImpl @Inject constructor(
                                 }
                             }
 
-                            // Await all deferred results
                             deferredBooks.awaitAll()
                         }
                     } catch (e: Exception) {
-                        // Handle exceptions that might occur during the asynchronous processing
-                        Log.e(TAG, "Error processing books", e)
                         emptyList()
                     }
-
-                    Log.d(TAG, "size ${resultBooks.size}")
                     trySend(Result.Success(resultBooks)).isSuccess
                 }
             }
@@ -122,8 +115,6 @@ class BooksRepositoryImpl @Inject constructor(
                 if (isbn != null) {
                     val book = getBookDetails(isbn, document)
                     resultBooks.add(book)
-                } else {
-                    Log.d(TAG, "isbn is null")
                 }
             }
 
@@ -145,16 +136,10 @@ class BooksRepositoryImpl @Inject constructor(
                 val dateReserve = reserveDocument.getTimestamp(START_DATE) ?: Timestamp(Date())
                 val status = reserveDocument.getString(STATUS) ?: ""
 
-                Log.d(TAG, "dateReserve $dateReserve")
-
                 return Reserves(isbn, title, author, dateReserve, status)
             }
-
-            // Handle the case where no book details are found
             Reserves(isbn, "", "", Timestamp(Date()), "")
         } catch (e: Exception) {
-            // Handle exceptions
-            Log.e(TAG, "Error getting book details", e)
             Reserves(isbn, "", "", Timestamp(Date()), "")
         }
     }
@@ -176,7 +161,7 @@ class BooksRepositoryImpl @Inject constructor(
 
             Result.Success(ReservationResult(userEmail, isbn))
         } catch (e: Exception) {
-            Result.Error("Error reserving book: ${e.message}")
+            Result.Error("Error reserving book")
         }
     }
 
@@ -235,7 +220,6 @@ class BooksRepositoryImpl @Inject constructor(
                 getBooksFromFirestoreByTitle(title)
             }
 
-            Log.d(TAG, "booksFirestore $booksFirestore")
             val booksGoogle = googleBooksService.searchBooksInGoogleBooks(booksFirestore)
 
             if (booksFirestore.size != booksGoogle.size) {

@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/user_profile_header_margin_top"
-        android:text="@string/personalInfo"
+        android:text="@string/personal_info"
         android:textColor="?attr/colorOnPrimaryContainer"
         android:textSize="@dimen/user_profile_header_text_size"
         app:layout_constraintEnd_toEndOf="parent"

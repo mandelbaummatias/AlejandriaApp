@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/item_reserve_padding"
-                android:text="@string/reservedBookIsbnLabel"
+                android:text="@string/reserved_book_isbn_label"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="@dimen/item_reserve_label_size"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -64,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/item_reserve_padding"
-                android:text="@string/reservedBookTitleLabel"
+                android:text="@string/reserved_book_title_label"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="@dimen/item_reserve_label_size"
                 app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_1" />
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/item_reserve_padding"
-                android:text="@string/reservedBookAuthorLabel"
+                android:text="@string/reserved_book_author_label"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="@dimen/item_reserve_label_size"
                 app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_2" />
@@ -100,7 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/item_reserve_padding"
-                android:text="@string/reservedBookDateLabel"
+                android:text="@string/reserved_book_date_label"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="@dimen/item_reserve_label_size"
                 app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_3" />
@@ -118,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/item_reserve_padding"
-                android:text="@string/reservedBookStatusLabel"
+                android:text="@string/reserved_book_status_label"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="@dimen/item_reserve_label_size"
                 app:layout_constraintTop_toTopOf="@+id/horizontal_guide_line_4" />

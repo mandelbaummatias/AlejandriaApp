@@ -16,13 +16,9 @@ class AuthenticationService @Inject constructor(private val firebase: FirebaseCl
         return firebase.auth.createUserWithEmailAndPassword(email, password).await()
     }
 
-    private fun Result<AuthResult>.toLoginResult() = when (val result = getOrNull()) {
+    private fun Result<AuthResult>.toLoginResult() = when (getOrNull()) {
         null -> LoginResult.Error
-        else -> {
-            val userId = result.user
-            checkNotNull(userId)
-            LoginResult.Success(result.user?.isEmailVerified ?: false)
-        }
+        else -> LoginResult.Success(true)
     }
 
 
