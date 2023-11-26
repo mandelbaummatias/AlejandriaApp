@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentHomeListBinding
@@ -52,45 +53,8 @@ class HomeListFragment : Fragment() {
             )
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
-
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.bookListState.collect {
-                    when (it) {
-                        is Result.Success -> {
-                            handleLoading(false)
-                            val data: List<Book> = it.data
-                            val adapter = binding.recyclerView.adapter as BookListAdapter
-                            //  if (adapter.currentList.size != data.size) {
-                            adapter.submitList(data)
-                            //}
-
-                        }
-
-                        Result.Loading -> handleLoading(true)
-                        is Result.Error -> {
-                            handleLoading(false)
-                            val errorMessage = it.message
-                            Log.d(
-                                TAG,
-                                "error! : $errorMessage"
-                            )// Get the error message from the Error Result
-                            // Handle the error message as needed
-                        }
-                    }
-                }
-            }
-        }
-
-
+        initCollectors()
         return binding.root
-    }
-
-
-    override fun onResume() {
-        Log.d(TAG, "onResume()")
-        super.onResume()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -132,4 +96,37 @@ class HomeListFragment : Fragment() {
             }
         }
     }
+
+    private fun showGetAllBooksErrorMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.error_al_traer_los_libros),
+            Snackbar.LENGTH_SHORT
+        )
+            .show()
+    }
+
+    private fun initCollectors() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.bookListState.collect {
+                    when (it) {
+                        is Result.Success -> {
+                            handleLoading(false)
+                            val data: List<Book> = it.data
+                            val adapter = binding.recyclerView.adapter as BookListAdapter
+                            adapter.submitList(data)
+                        }
+
+                        Result.Loading -> handleLoading(true)
+                        is Result.Error -> {
+                            handleLoading(false)
+                            showGetAllBooksErrorMessage()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

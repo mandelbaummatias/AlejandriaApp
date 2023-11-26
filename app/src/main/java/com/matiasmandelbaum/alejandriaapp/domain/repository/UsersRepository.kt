@@ -23,4 +23,6 @@ interface UsersRepository {
     suspend fun addSubscriptionId(subscriptionId: String, userId: String): Boolean
 
     suspend fun changeImageForUser(newImage: String): Result<Unit>
+
+    suspend fun sendPasswordResetEmail(email:String) : Result<Unit>
 }

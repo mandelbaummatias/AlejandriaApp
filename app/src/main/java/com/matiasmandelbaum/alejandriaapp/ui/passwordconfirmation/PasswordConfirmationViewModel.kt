@@ -30,7 +30,7 @@ class PasswordConfirmationViewModel @Inject constructor(private val changeUserEm
         }
     }
 
-    private fun changeUserEmailInReserves(newEmail: String,oldEmail: String) {
+    private fun changeUserEmailInReserves(newEmail: String,oldEmail: String) { //refactor
         val db = FirebaseFirestore.getInstance()
         val reservesCollection = db.collection("reservas_libros")
 

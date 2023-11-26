@@ -66,14 +66,10 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
                 }
 
                 is Result.Error -> {
-                    //listener?.onFinishClickDialog(false)
                     Log.d(TAG, "error ${it.message}")
                     binding.pwConfirmPasswordLabel.error = "La contraseña es incorrecta"
                 }
 
-//                is Result.Loading -> {
-//                    handleLoading(true)
-//                }
                 else -> {}
             }
         }
@@ -123,9 +119,6 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if(binding.pwConfirmPasswordLabel.error?.isNotEmpty() == true){
-            Log.d(TAG, "hubo un error, pero se está cerrando el dialog")
-        }
         listener?.onFinishClickDialog(false)
     }
 }
