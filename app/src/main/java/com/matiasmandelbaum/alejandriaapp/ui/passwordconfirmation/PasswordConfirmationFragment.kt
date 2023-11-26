@@ -14,7 +14,6 @@ import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentPwConfirmationBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-
 private const val TAG = "PasswordConfirmationFragment"
 
 @AndroidEntryPoint
@@ -35,7 +34,6 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
             args.putString(ARG_NEW_EMAIL, newEmail)
             args.putString(ARG_PREVIOUS_EMAIL, previousEmail)
             fragment.arguments = args
-            Log.d(TAG, "my args $args")
             return fragment
         }
     }
@@ -60,17 +58,17 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
             when (it) {
                 is Result.Success -> {
                     handleLoading(true)
-                    Log.d(TAG, "success $it")
                     this.dismiss()
                     listener?.onFinishClickDialog(true)
                 }
 
                 is Result.Error -> {
-                    Log.d(TAG, "error ${it.message}")
                     binding.pwConfirmPasswordLabel.error = "La contraseña es incorrecta"
                 }
 
-                else -> {}
+                else -> {
+                    Unit
+                }
             }
         }
     }

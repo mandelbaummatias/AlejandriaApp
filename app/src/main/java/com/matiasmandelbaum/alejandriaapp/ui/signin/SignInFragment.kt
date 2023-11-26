@@ -22,6 +22,7 @@ import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.ex.dismissKeyboard
 import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
+import com.matiasmandelbaum.alejandriaapp.data.util.time.TimeUtils.DAY_MONTH_YEAR
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentSigninBinding
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
 import dagger.hilt.android.AndroidEntryPoint
@@ -124,7 +125,7 @@ class SignInFragment : Fragment() {
 
             buttonRegistro.setOnClickListener {
                 it.dismissKeyboard()
-                viewModel!!.onSignInSelected(
+                viewModel.onSignInSelected(
                     UserSignIn(
                         name = editTextNombre.text.toString(),
                         lastName = editTextApellido.text.toString(),
@@ -192,7 +193,6 @@ class SignInFragment : Fragment() {
 
     private fun updateUI(viewState: SignInViewState) {
         with(binding) {
-            //pbLoading.isVisible = viewState.isLoading
             textInputLayoutNombre.error =
                 if (viewState.isValidName) null else getString(R.string.signin_error_realname)
             textInputLayoutApellido.error =
@@ -233,7 +233,6 @@ class SignInFragment : Fragment() {
         cal.add(Calendar.YEAR, -18)
         val minDateInMillis = cal.timeInMillis
 
-// Define date validator
         val dateValidatorMin: CalendarConstraints.DateValidator =
             DateValidatorPointBackward.before(minDateInMillis)
 
@@ -258,15 +257,17 @@ class SignInFragment : Fragment() {
 
 
         datePicker.addOnPositiveButtonClickListener {
-            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val format = SimpleDateFormat(DAY_MONTH_YEAR, Locale.getDefault())
             val selectedDateStr = format.format(Date(it))
             val selectedLocalDate =
-                LocalDate.parse(selectedDateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-            Log.d(TAG, "date: $selectedLocalDate")
-            val format2 = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-            val formattedDate = selectedLocalDate.format(format2)
+                LocalDate
+                    .parse(
+                        selectedDateStr,
+                        DateTimeFormatter.ofPattern(DAY_MONTH_YEAR)
+                    )
+            val format_second = DateTimeFormatter.ofPattern(DAY_MONTH_YEAR)
+            val formattedDate = selectedLocalDate.format(format_second)
 
-            // Convert the String to Editable
             val editableText = Editable.Factory.getInstance().newEditable(formattedDate)
 
             binding.editTextFechaNacimiento.text = editableText
@@ -275,15 +276,11 @@ class SignInFragment : Fragment() {
         }
 
         datePicker.addOnNegativeButtonClickListener {
-            Log.d(TAG, "en negative viendo hasSelectedDate: $hasSelectedDate")
-            //  datePicker.selection?.let {
-            //      it.let {
             if (hasSelectedDate) {
                 binding.editTextFechaNacimiento.text = Editable.Factory.getInstance().newEditable(
                     finalSelectedDate
                 )
             } else {
-                Log.d(TAG, "doesn't have selected date")
                 binding.editTextFechaNacimiento.text =
                     Editable.Factory.getInstance().newEditable(" ")
             }

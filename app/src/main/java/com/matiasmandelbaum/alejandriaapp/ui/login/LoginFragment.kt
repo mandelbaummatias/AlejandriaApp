@@ -22,7 +22,6 @@ import com.matiasmandelbaum.alejandriaapp.ui.passwordrecovery.PasswordRecoveryFr
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-private const val TAG = "LoginFragment"
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(), DialogClickListener {

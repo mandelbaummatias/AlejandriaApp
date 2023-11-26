@@ -1,5 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.signin
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -85,12 +86,12 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
         (password.length >= MIN_PASSWORD_LENGTH && password == passwordConfirmation) || password.isEmpty() || passwordConfirmation.isEmpty()
 
     private fun isValidName(name: String): Boolean {
-        return name.length >= MIN_NAME_LENGTH || name.isEmpty()
+        return name.length >= MIN_NAME_LENGTH
     }
 
 
     private fun isValidDate(date: String): Boolean {
-        return isUserAtLeast18YearsOld(date) && date.length >= MIN_DATE_LENGTH || date.isEmpty() //isValidDate(date)||
+        return isUserAtLeast18YearsOld(date) && date.length >= MIN_DATE_LENGTH || date.isEmpty()
     }
 
     private fun isUserAtLeast18YearsOld(date: String): Boolean {
@@ -106,7 +107,7 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
                 val age = ChronoUnit.YEARS.between(parsedDate, today)
                 return age >= 18
             } catch (e: DateTimeParseException) {
-                // Continue to the next format if parsing fails
+                Log.d(TAG, "Exception in parsing date")
             }
         }
         return false
