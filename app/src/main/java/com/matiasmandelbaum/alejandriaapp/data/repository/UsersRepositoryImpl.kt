@@ -1,7 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
 import android.util.Log
-import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
@@ -13,7 +12,6 @@ import javax.inject.Inject
 private const val TAG = "UsersRepositoryImpl"
 
 class UsersRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore,
     private val userService: UserService
 ) : UsersRepository {
 
@@ -29,6 +27,9 @@ class UsersRepositoryImpl @Inject constructor(
 
     override suspend fun changeImageForUser(newImage: String): Result<Unit> =
         userService.changeImageForUser(newImage)
+
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
+        userService.sendPasswordResetEmail(email)
 
 
     override suspend fun updateUserReservationState(userEmail: String): Result<Unit> =

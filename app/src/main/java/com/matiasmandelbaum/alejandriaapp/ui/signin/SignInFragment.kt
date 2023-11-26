@@ -53,9 +53,17 @@ class SignInFragment : Fragment() {
         binding = FragmentSigninBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         initUI()
+        return binding.root
+    }
+
+    private fun initUI() {
+        initCollectors()
+        initListeners()
+        initObservers()
         setupDatePicker()
+    }
 
-
+    private fun initCollectors(){
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.viewState.collect { viewState ->
@@ -63,13 +71,6 @@ class SignInFragment : Fragment() {
                 }
             }
         }
-
-        return binding.root
-    }
-
-    private fun initUI() {
-        initListeners()
-        initObservers()
     }
 
     private fun initListeners() {
@@ -223,8 +224,6 @@ class SignInFragment : Fragment() {
 
 
     private fun setupDatePicker() {
-
-
         val calendarMin = Calendar.getInstance()
         calendarMin.add(Calendar.YEAR, -18)
 
@@ -286,15 +285,12 @@ class SignInFragment : Fragment() {
                 Log.d(TAG, "doesn't have selected date")
                 binding.editTextFechaNacimiento.text =
                     Editable.Factory.getInstance().newEditable(" ")
-                //        Log.d(TAG, "pasandole null en negative?")
-                //viewModel.isValidDate(null)
             }
 
         }
     }
 
-    fun showDatePicker() {
-        Log.d(TAG, "showDatePicker()")
+    private fun showDatePicker() {
         datePicker.show(parentFragmentManager, "datePicker")
     }
 }

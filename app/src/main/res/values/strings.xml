@@ -224,5 +224,8 @@
     <string name="para_reservar_primero_debe_suscribirse">Para reservar, primero debe suscribirse</string>
     <string name="quiza_despues">Quizá después</string>
     <string name="error_en_cambio_de_imagen">Error en cambio de imagen\n</string>
+    <string name="bienvenido_a_alejandriaapp">Bienvenido a AlejandriaApp!</string>
+    <string name="el_mail_no_puede_estar_vacio">El mail no puede estar vacio</string>
+    <string name="error_al_traer_los_libros">Error al traer los libros...</string>
 
 </resources>

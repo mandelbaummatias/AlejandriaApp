@@ -54,7 +54,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
 
     private lateinit var binding: UserProfileBinding
 
-    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+    private val authStateListener = FirebaseAuth.AuthStateListener { auth -> //auth manager?
         val user = auth.currentUser
         if (user != null) {
             val userEmail = user.email
@@ -419,14 +419,11 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         }
 
         datePicker.addOnNegativeButtonClickListener {
-            Log.d(TAG, "en negative viendo hasSelectedDate: $hasSelectedDate")
-            //  datePicker.selection?.let {
             if (hasSelectedDate) {
                 binding.editDate.text = Editable.Factory.getInstance().newEditable(
                     finalSelectedDate
                 )
             } else {
-                Log.d(TAG, "doesn't have selected date")
                 binding.editDate.setText(previousDate)
                 binding.editDate.requestFocus()
                 binding.editDate.text?.let { binding.editDate.setSelection(it.length) }
@@ -435,7 +432,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
         }
     }
 
-    fun showDatePicker() {
+    private fun showDatePicker() {
         Log.d(TAG, "showDatePicker()")
         datePicker.show(parentFragmentManager, "datePicker")
     }

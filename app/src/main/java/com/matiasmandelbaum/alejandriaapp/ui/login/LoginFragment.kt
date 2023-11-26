@@ -1,37 +1,31 @@
 package com.matiasmandelbaum.alejandriaapp.ui.login
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.FirebaseAuth
 import com.matiasmandelbaum.alejandriaapp.R
-import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager.addAuthStateListener
-import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager.removeAuthStateListener
+import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.ex.dismissKeyboard
 import com.matiasmandelbaum.alejandriaapp.common.ex.loseFocusAfterAction
 import com.matiasmandelbaum.alejandriaapp.common.ex.onTextChanged
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentLoginBinding
+import com.matiasmandelbaum.alejandriaapp.ui.passwordrecovery.PasswordRecoveryFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 private const val TAG = "LoginFragment"
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(), DialogClickListener {
 
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: LoginViewModel by viewModels()
@@ -43,15 +37,17 @@ class LoginFragment : Fragment() {
     ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-
-        binding.textViewRecuperarCuenta.setOnClickListener {
-            showPasswordRecovery()
-        }
-
-
-
         initUI()
+        return binding.root
+    }
 
+    private fun initUI() {
+        initCollectors()
+        initListeners()
+        initObservers()
+    }
+
+    private fun initCollectors() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.viewState.collect {
@@ -59,50 +55,6 @@ class LoginFragment : Fragment() {
                 }
             }
         }
-
-        return binding.root
-    }
-
-    // private val authManager = AuthManager.instance // Use the AuthManager instance
-
-    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-        val user = auth.currentUser
-        if (user != null) {
-            Log.d(TAG, "Mi user logueado $user")
-        } else {
-            Log.d(TAG, "user is null")
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        addAuthStateListener(authStateListener)
-        //  authManager.addAuthStateListener(authStateListener)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        removeAuthStateListener(authStateListener)
-        // authManager.removeAuthStateListener(authStateListener)
-    }
-
-//    override fun onResume() {
-//        super.onResume()
-//        val user = FirebaseAuth.getInstance().currentUser
-//        if (user != null) {
-//            Log.d(TAG, "Mi usuario está logueado $user")
-//        } else {
-//            Log.d(TAG, "No hay usuario loguedo")
-//        }
-//    }
-
-    private fun initUI() {
-        initListeners()
-        initObservers()
-//        binding.viewBottom.tvFooter.text = span(
-//            getString(R.string.login_footer_unselected),
-//            getString(R.string.login_footer_selected)
-//        )
     }
 
     private fun initListeners() {
@@ -122,10 +74,6 @@ class LoginFragment : Fragment() {
             viewModel.onSignInSelected()
         }
 
-//        binding.tvForgotPassword.setOnClickListener { viewModel.onForgotPasswordSelected() }
-//
-//        binding.viewBottom.tvFooter.setOnClickListener { viewModel.onSignInSelected() }
-
         with(binding) {
             btnIngreso.setOnClickListener {
                 it.dismissKeyboard()
@@ -133,6 +81,9 @@ class LoginFragment : Fragment() {
                     binding.editTextEmail.text.toString(),
                     binding.editTextContraseniaLogin.text.toString()
                 )
+            }
+            textViewRecuperarCuenta.setOnClickListener {
+                showPasswordRecovery()
             }
         }
     }
@@ -144,32 +95,18 @@ class LoginFragment : Fragment() {
                 showWelcomeMessage()
             }
         }
-//
+
         viewModel.navigateToSignIn.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 goToSignIn()
             }
         }
-//
-//        viewModel.navigateToForgotPassword.observe(this) {
-//            it.getContentIfNotHandled()?.let {
-//                goToForgotPassword()
-//            }
-//        }
-//
-//        viewModel.navigateToVerifyAccount.observe(this) {
-//            it.getContentIfNotHandled()?.let {
-//                goToVerify()
-//            }
-//        }
 
         viewModel.showErrorDialog.observe(viewLifecycleOwner) { userLogin ->
             if (userLogin.showErrorDialog) {
                 showLoginError()
             }
         }
-
-
     }
 
     private fun showLoginError() {
@@ -182,7 +119,6 @@ class LoginFragment : Fragment() {
 
     private fun updateUI(viewState: LoginViewState) {
         with(binding) {
-            //pbLoading.isVisible = viewState.isLoading
             textInputEmail.error =
                 if (viewState.isValidEmail) null else getString(R.string.login_error_mail)
             textInputLayoutContraseniaLogin.error =
@@ -199,11 +135,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-
-    //    private fun goToForgotPassword() {
-//        toast(getString(R.string.feature_not_allowed))
-//    }
-//
     private fun goToSignIn() {
         val action = LoginFragmentDirections.actionLoginFragmentToSignInFragment()
         findNavController().navigate(action)
@@ -217,65 +148,20 @@ class LoginFragment : Fragment() {
     private fun showWelcomeMessage() {
         Snackbar.make(
             requireView(),
-            "Bienvenido a AlejandriaApp!", Snackbar.LENGTH_SHORT
+            getString(R.string.bienvenido_a_alejandriaapp), Snackbar.LENGTH_SHORT
         ).show()
     }
-//
-//    private fun goToDetail() {
-//        LoginSuccessDialog.create().show(dialogLauncher, this)
-//    }
-//
-//    private fun goToVerify() {
-//        startActivity(VerificationActivity.create(this))
-//    }
 
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        val view = inflater.inflate(R.layout.fragment_login, container, false)
-//
-//        passwordRecovery = view.findViewById(R.id.textViewRecuperarCuenta)
-//        passwordRecovery.setOnClickListener {
-//            showPasswordRecovery()
-//        }
-//        return view
-//    }
 
-    @SuppressLint("MissingInflatedId")
     private fun showPasswordRecovery() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        val view = layoutInflater.inflate(R.layout.fragment_password_recovery, null)
-        val btnPasswordRecovery = view.findViewById<Button>(R.id.pw_recovery_send_button)
-        val email = view.findViewById<TextInputEditText>(R.id.pw_recovery_email)
-
-        bottomSheetDialog.setContentView(view)
-        bottomSheetDialog.show()
-        btnPasswordRecovery.setOnClickListener {
-            val emailText = email.text.toString()
-
-            if (emailText.isNotEmpty()) {
-                try {
-                    FirebaseAuth.getInstance().sendPasswordResetEmail(emailText)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                bottomSheetDialog.dismiss()
-                                showLinkForPasswordRecoverySentMessage()
-                            } else {
-                                showOnErrorLinkSentMessage()
-                            }
-                        }
-                } catch (e: Exception) {
-                    Log.d(TAG, "exception $e")
-                }
-
-            }
-        }
+        val passwordRecoveryFragment = PasswordRecoveryFragment()
+        passwordRecoveryFragment.setDialogClickListener(this@LoginFragment)
+        passwordRecoveryFragment.show(childFragmentManager, passwordRecoveryFragment.tag)
     }
 
     private fun showLinkForPasswordRecoverySentMessage() {
         Snackbar.make(
-            requireView(),  // Use requireView() to get the root view of the fragment/activity
+            requireView(),
             getString(R.string.enlace_reestablecer_contrasenia),
             Snackbar.LENGTH_LONG
         ).show();
@@ -283,10 +169,18 @@ class LoginFragment : Fragment() {
 
     private fun showOnErrorLinkSentMessage() {
         Snackbar.make(
-            requireView(),  // Use requireView() to get the root view of the fragment/activity
+            requireView(),
             getString(R.string.error_correo_recuperacion),
             Snackbar.LENGTH_LONG
         ).show();
+    }
+
+    override fun onFinishClickDialog(clickValue: Boolean) {
+        if (clickValue) {
+            showLinkForPasswordRecoverySentMessage()
+        } else {
+            showOnErrorLinkSentMessage()
+        }
     }
 }
 
