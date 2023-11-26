@@ -63,7 +63,7 @@ class SignInFragment : Fragment() {
         setupDatePicker()
     }
 
-    private fun initCollectors(){
+    private fun initCollectors() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.viewState.collect { viewState ->
@@ -74,65 +74,64 @@ class SignInFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.editTextNombre.apply {
-            //   Log.d(TAG, "editNombre focus methods")
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-            onTextChanged { onFieldChanged() }
-        }
-
-        binding.editTextApellido.apply {
-            //   Log.d(TAG, "editApellido focus methods")
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-            onTextChanged { onFieldChanged() }
-        }
-
-        binding.editTextEmail.apply {
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-            onTextChanged { onFieldChanged() }
-        }
-
-        binding.editTextContrasenia.apply {
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-            onTextChanged { onFieldChanged() }
-        }
-
-        binding.editTextFechaNacimiento.apply {
-
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-            onTextChanged { onFieldChanged() }
-        }
-
-        binding.editTextRepetirContrasenia.apply {
-            loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
-            onTextChanged { onFieldChanged() }
-        }
-
-        binding.editTextFechaNacimiento.setOnClickListener {
-            showDatePicker()
-        }
-
-        binding.alreadyHaveAccount.setOnClickListener {
-            viewModel.onLoginSelected()
-        }
-
-
         with(binding) {
+            editTextNombre.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+                onTextChanged { onFieldChanged() }
+            }
+
+            editTextApellido.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+                onTextChanged { onFieldChanged() }
+            }
+
+            editTextEmail.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+                onTextChanged { onFieldChanged() }
+            }
+
+            editTextContrasenia.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+                onTextChanged { onFieldChanged() }
+            }
+
+            editTextFechaNacimiento.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+                onTextChanged { onFieldChanged() }
+                setOnClickListener {
+                    showDatePicker()
+                }
+            }
+
+            editTextRepetirContrasenia.apply {
+                loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+                setOnFocusChangeListener { _, hasFocus -> onFieldChanged(hasFocus) }
+                onTextChanged { onFieldChanged() }
+            }
+
+            editTextFechaNacimiento.setOnClickListener {
+                showDatePicker()
+            }
+
+            alreadyHaveAccount.setOnClickListener {
+                viewModel.onLoginSelected()
+            }
+
             buttonRegistro.setOnClickListener {
                 it.dismissKeyboard()
                 viewModel!!.onSignInSelected(
                     UserSignIn(
-                        name = binding.editTextNombre.text.toString(),
-                        lastName = binding.editTextApellido.text.toString(),
-                        email = binding.editTextEmail.text.toString(),
-                        birthDate = binding.editTextFechaNacimiento.text.toString(),
-                        password = binding.editTextContrasenia.text.toString(),
-                        passwordConfirmation = binding.editTextRepetirContrasenia.text.toString()
+                        name = editTextNombre.text.toString(),
+                        lastName = editTextApellido.text.toString(),
+                        email = editTextEmail.text.toString(),
+                        birthDate = editTextFechaNacimiento.text.toString(),
+                        password = editTextContrasenia.text.toString(),
+                        passwordConfirmation = editTextRepetirContrasenia.text.toString()
                     )
                 )
             }
@@ -140,22 +139,24 @@ class SignInFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.navigateToHome.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                goToHome()
-                showSignInSucessful()
+        with(viewModel) {
+            navigateToHome.observe(viewLifecycleOwner) {
+                it.getContentIfNotHandled()?.let {
+                    goToHome()
+                    showSignInSucessful()
+                }
             }
-        }
 
-        viewModel.showErrorDialog.observe(viewLifecycleOwner) { showError ->
-            if (showError) {
-                showEmailAlreadyRegistered()
+            showErrorDialog.observe(viewLifecycleOwner) { showError ->
+                if (showError) {
+                    showEmailAlreadyRegistered()
+                }
             }
-        }
 
-        viewModel.navigateToLogin.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                goToLogin()
+            navigateToLogin.observe(viewLifecycleOwner) {
+                it.getContentIfNotHandled()?.let {
+                    goToLogin()
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
+import android.content.ContentValues
 import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -60,6 +61,27 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
                     continuation.resume(Result.Error("Reservation failed: ${e.message}"))
                 }
         }
+
+    override suspend fun changeUserEmailInReserve(newEmail: String, oldEmail: String) {
+        reservationsCollection.whereEqualTo(USER_EMAIL, oldEmail)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    for (document in querySnapshot.documents) {
+                        val reserveDocument = document.reference
+                        reserveDocument.update(USER_EMAIL, newEmail)
+                            .addOnSuccessListener {
+                                Log.d(ContentValues.TAG, "Actualización exitosa")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e(ContentValues.TAG, "Error al actualizar")
+                            }
+                    }
+                } else {
+                    Log.d(ContentValues.TAG, "No hay reservas para actualizar.")
+                }
+            }
+    }
 
 
     override suspend fun createReservation(reservation: Reservation): Boolean {
