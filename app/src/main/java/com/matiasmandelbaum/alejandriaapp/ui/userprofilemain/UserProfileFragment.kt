@@ -301,7 +301,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             editEmail.isEnabled = false
             editDate.isEnabled = false
             editFab.setImageResource(R.drawable.ic_edit)
-            userMailHeader.text = getString(R.string.personalInfo)
+            userMailHeader.text = getString(R.string.personal_info)
 
         }
         isInEditMode = false

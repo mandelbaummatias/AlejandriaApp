@@ -69,7 +69,7 @@ class BooksReservedFragment : Fragment() {
                         adapter.notifyDataSetChanged()
                     } else {
                         with(binding) {
-                            reserveListEmpty.text = getString(R.string.noReservedBooksMsg)
+                            reserveListEmpty.text = getString(R.string.no_reserved_books_message)
                             reserveListEmpty.visibility = View.VISIBLE
                         }
                     }
@@ -93,7 +93,7 @@ class BooksReservedFragment : Fragment() {
                 viewModel.getReservesForCurrentUser(user.email!!)
             } ?: run {
                 Log.d(TAG, "user null")
-                reserveListEmpty.text = getString(R.string.notLogedReservedBooksMsg)
+                reserveListEmpty.text = getString(R.string.not_logged_reserved_books_message)
                 reserveListEmpty.visibility = View.VISIBLE
             }
         }
