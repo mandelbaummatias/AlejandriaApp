@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
-import android.util.Log
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.MercadoPagoSubscription
 import com.matiasmandelbaum.alejandriaapp.data.mercadopago.remote.MercadoPagoService
@@ -16,13 +15,11 @@ class MercadoPagoRepositoryImpl @Inject constructor(
     private val subscriptionResponseMapperToDomain: SubscriptionResponseMapperToDomain
 ) : MercadoPagoRepository {
     override suspend fun createSubscription(payerEmail: String): Result<Subscription> {
-        Log.d(TAG, "payerEmail $payerEmail")
         return try {
             val response =
                 remote.createSubscription(MercadoPagoSubscription.createSubscription(payerEmail))
             val subscriptionResponse =
                 response ?: return Result.Error("Response is null")
-
 
             Result.Success(subscriptionResponseMapperToDomain.mapFrom(subscriptionResponse))
         } catch (e: Exception) {
@@ -34,12 +31,9 @@ class MercadoPagoRepositoryImpl @Inject constructor(
         return try {
             val response = remote.fetchSubscription(id)
             val subscriptionResponse = response ?: return Result.Error("Response is null")
-            Log.d(TAG, "result ok")
-
             Result.Success(subscriptionResponseMapperToDomain.mapFrom(subscriptionResponse))
 
         } catch (e: Exception) {
-            Log.d(TAG, "result error")
             Result.Error(e.message.toString())
         }
     }
