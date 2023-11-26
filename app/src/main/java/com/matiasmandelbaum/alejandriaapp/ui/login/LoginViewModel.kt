@@ -50,20 +50,20 @@ class LoginViewModel @Inject constructor(val loginUseCase: LoginUseCase) : ViewM
 
     private fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            _viewState.value = LoginViewState(isLoading = true)
-            when (val result = loginUseCase(email, password)) {
+            _viewState.value = LoginViewState()
+            when (loginUseCase(email, password)) {
                 LoginResult.Error -> {
                     Log.d(TAG, "LoginResultError")
                     _showErrorDialog.value =
                         UserLogin(email = email, password = password, showErrorDialog = true)
-                    _viewState.value = LoginViewState(isLoading = false)
+                    _viewState.value = LoginViewState()
                 }
                 is LoginResult.Success -> {
                     Log.d(TAG, "LoginResult.Success")
                     _navigateToHome.value = Event(true)
                 }
             }
-            _viewState.value = LoginViewState(isLoading = false)
+            _viewState.value = LoginViewState()
         }
     }
 

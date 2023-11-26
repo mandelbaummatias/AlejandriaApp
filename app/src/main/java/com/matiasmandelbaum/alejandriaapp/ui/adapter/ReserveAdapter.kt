@@ -39,7 +39,7 @@ class ReserveAdapter(private val reserveList: ArrayList<Reserves>) :
             reservedBookDate.text = sdf.format(reserve.reserveDate.toDate())
 
             reservedBookStatus.text = if (reserve.status == PENDING_STATUS) {
-                itemView.context.getString(R.string.reservedBookStatusNotRetired)
+                itemView.context.getString(R.string.reserved_book_status_not_retired)
             } else {
                 reserve.status
             }

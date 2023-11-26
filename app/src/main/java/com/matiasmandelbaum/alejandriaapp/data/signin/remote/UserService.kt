@@ -1,13 +1,10 @@
 package com.matiasmandelbaum.alejandriaapp.data.signin.remote
 
-import android.util.Log
-import androidx.navigation.NavOptions
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants
 import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.users.UsersConstants.DATE_OF_BIRTH
@@ -24,8 +21,6 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
-private const val TAG = "UserService"
 
 class UserService @Inject constructor(private val firebase: FirebaseClient) {
 
@@ -57,12 +52,9 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
         val updates = hashMapOf(
             SUBSCRIPTION_ID to subscriptionId,
         )
-
         try {
             userToUpdate.update(updates as Map<String, Any>).await()
-            Log.d(TAG, "update MP ok")
         } catch (e: Exception) {
-            Log.d(TAG, "failure on update MP ${e.message}")
             throw e
         }
     }
@@ -78,28 +70,17 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
                 val suscripcionMpId = userData?.get(SUBSCRIPTION_ID) as? String
 
                 return if (suscripcionMpId.isNullOrEmpty()) {
-                    // User does not have the desired subscription or it is empty
-                    Log.d(TAG, "User does not have the desired subscription or it is empty")
-                    // You can add code for handling this case
                     Result.Success(SubscriptionUser())
                 } else {
-                    // User has the desired subscription
-                    Log.d(TAG, "User has subscription $suscripcionMpId")
                     val isEnabled = userData[HAS_RESERVED_BOOK] as? Boolean
                     Result.Success(SubscriptionUser(suscripcionMpId, isEnabled))
-                    // You can add code for any success handling here
-                    // For example, you can access other user properties like userData["nombre"], userData["email"], etc.
                 }
             } else {
-                // Handle the case where the user doesn't exist
                 Result.Error("User not found")
             }
 
         } catch (e: Exception) {
-            Log.d(TAG, "Failure in getting user data: ${e.message}")
             Result.Error(e.message ?: "Unknown error")
-            // Handle the error
-            // You can add code to handle the error here
         }
     }
 
@@ -110,16 +91,13 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
         pass: String
     ): Result<Unit> = suspendCoroutine { continuation ->
         val user = firebase.auth.currentUser
-        val usersCollection = firebase.db.collection(UsersConstants.USERS_COLLECTION)
+        val usersCollection = firebase.db.collection(USERS_COLLECTION)
         val credential = EmailAuthProvider.getCredential(user?.email!!, pass)
 
-        Log.d(TAG, "CREDENCIALES $newEmail, $previousEmail , $pass")
 
         user.reauthenticate(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "reauthenticate is successful")
-
                     user.updateEmail(newEmail).addOnCompleteListener { updateEmailTask ->
                         if (updateEmailTask.isSuccessful) {
                             usersCollection
@@ -137,35 +115,23 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
                                                 )
                                             ).addOnCompleteListener { updateDocumentTask ->
                                                 if (updateDocumentTask.isSuccessful) {
-                                                    Log.d(TAG, "Email updated successfully")
                                                     continuation.resume(Result.Success(Unit))
                                                 } else {
-                                                    Log.d(TAG, "Error updating user document")
                                                     continuation.resume(Result.Error("Error updating user document"))
                                                 }
                                             }
                                         } else {
-                                            Log.d(TAG, "User not found")
                                             continuation.resume(Result.Error("User not found"))
                                         }
                                     } else {
-                                        Log.d(
-                                            TAG,
-                                            "User query or update failed",
-                                            userDocumentsTask.exception
-                                        )
                                         continuation.resume(Result.Error("User query or update failed"))
                                     }
                                 }
                         } else {
-                            Log.d(TAG, "Update email failed", updateEmailTask.exception)
                             continuation.resume(Result.Error("Update email failed"))
                         }
                     }
                 } else {
-
-                    Log.d(TAG, "Reauthentication failed")
-                    Log.d(TAG, "veo credenciales fallidas $newEmail, $previousEmail, $pass")
                     continuation.resume(Result.Error("Reauthentication failed"))
                 }
             }
@@ -186,21 +152,13 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
                             val userDocument = querySnapshot.documents[0].reference
                             userDocument.update("image", newImage)
                                 .addOnSuccessListener {
-                                    Log.d(TAG, "ok")
-                                    // showImageUpdatedMessage()
-                                    val navOptions = NavOptions.Builder()
-                                        .setPopUpTo(R.id.userProfileFragment, true)
-                                        .build()
-                                    // findNavController().navigate(R.id.userProfileFragment, null, navOptions)
                                     continuation.resume(Result.Success(Unit))
                                 }
                                 .addOnFailureListener { exception ->
-                                    Log.d(TAG, "Image update failed", exception)
                                     continuation.resume(Result.Error("Image update failed"))
                                 }
                         }
                         .addOnFailureListener { exception ->
-                            Log.d(TAG, "User query failed", exception)
                             continuation.resume(Result.Error("User query failed"))
                         }
                 }

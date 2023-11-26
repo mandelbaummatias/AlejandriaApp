@@ -22,10 +22,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-
-private const val TAG = "ReservationsRepositoryImpl"
-
-class ReservationsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore) :
+class ReservationsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore) :
     ReservationsRepository {
 
     private val db = firestore
@@ -33,10 +30,8 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
 
     override suspend fun createReservation(isbn: String, userEmail: String): Result<Unit> =
         suspendCoroutine { continuation ->
-            // Create a reservation document
             val reservationsCollection = db.collection(RESERVATIONS_COLLECTION)
 
-            // Get the current date
             val currentDate = LocalDate.now()
 
             val fechaInicio = currentDate
@@ -54,10 +49,8 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
 
             reservationsCollection.add(reservationData)
                 .addOnSuccessListener {
-                    Log.d(TAG, "Reservation added successfully")
                     continuation.resume(Result.Success(Unit))
                 }.addOnFailureListener { e ->
-                    Log.d(TAG, "Reservation failed! $e")
                     continuation.resume(Result.Error("Reservation failed: ${e.message}"))
                 }
         }
@@ -89,10 +82,7 @@ class ReservationsRepositoryImpl @Inject constructor(private val firestore: Fire
             reservationsCollection.add(reservation).await()
             true
         } catch (e: Exception) {
-            Log.e(TAG, "error al crear la reserva: ${e.message}")
             false
         }
     }
-
-
 }

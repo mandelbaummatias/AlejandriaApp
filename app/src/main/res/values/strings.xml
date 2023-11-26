@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Alejandría</string>
     <string name="drawer_layout_behavior">androidx.drawerlayout.widget.DrawerLayout$DrawerLayoutCompat</string>
+    <string name="bienvenido_a_alejandriaapp">Bienvenido a AlejandriaApp!</string>
 
     <string name="globalAccept">Aceptar</string>
 
@@ -17,25 +18,23 @@
     <string name="search_hint">Buscá por libro o autor...</string>
 
     <!-- Buttons strings -->
-    <string name="soonBtn">Proximamente</string>
-    <string name="subscribeBtn">Suscribirme</string>
-    <string name="reserveBtn">Reservar</string>
+    <string name="soon_button">Proximamente</string>
+    <string name="subscribe_button">Suscribirme</string>
+    <string name="reserve_button">Reservar</string>
 
     <!-- Subscription strings -->
-    <string name="plansTitle">Planes</string>
-    <string name="basicPlanTitle">Plan básico</string>
-    <string name="basicPlanPrice">$500,00 / mes</string>
-    <string name="basicPlanFeatures">- Reservar un libro al mes\n- Participar del club de lectura</string>
-    <string name="advancedPlanTitle">Plan avanzado</string>
-    <string name="advancedPlanPrice">TBD</string>
-    <string name="advancedPlanFeatures">- Beneficios del plan básico\n- TBD</string>
-
-    <string name="bookListTitle">Libros</string>
-    <string name="availableBooks">Libros disponibles</string>
+    <string name="plans_title">Planes</string>
+    <string name="basic_plan_title">Plan básico</string>
+    <string name="basic_plan_price">$500,00 / mes</string>
+    <string name="basic_plan_features">- Reservar un libro al mes\n- Participar del club de lectura</string>
+    <string name="advanced_plan_title">Plan avanzado</string>
+    <string name="advanced_plan_price">TBD</string>
+    <string name="advanced_plan_features">- Beneficios del plan básico\n- TBD</string>
+    <string name="book_list_title">Libros</string>
+    <string name="available_books">Libros disponibles</string>
 
     <!--GBooks Config-->
     <string name="google_books_api_base_url">https://www.googleapis.com/books/v1/volumes/</string>
-
 
 
     <!--Sign in -->
@@ -61,19 +60,8 @@
 
 
     <!--Login-->
-    <string name="login_subtitle"><![CDATA[Empoyering tech amazing individuals to shine trough hackathons, talks & challenges]]></string>
-    <string name="login_sign_in">¿Todavía no tienes cuenta? Regístrate</string>
-    <string name="login_button_loggin">INICIAR SESIÓN</string>
-    <string name="login_hint_password">Contraseña</string>
-    <string name="login_hint_user">Usuario o correo</string>
     <string name="login_error_mail">El email no es válido</string>
     <string name="login_error_password">Debe contener al menos 6 caracteres</string>
-    <string name="login_footer_unselected">¿Todavía no tienes cuenta?</string>
-    <string name="login_footer_selected">Regístrate</string>
-    <string name="login_error_dialog_title">No hemos encontrado el usuario</string>
-    <string name="login_error_dialog_body">Verifique los datos o vuelva a intentarlo</string>
-    <string name="login_error_dialog_negative_action">Cancelar</string>
-    <string name="login_error_dialog_positive_action">Reintentar</string>
     <string name="error_login">El usuario o la contraseña son incorrectos</string>
     <string name="confirmacion">¿Está seguro de que desea cerrar sesión?</string>
     <string name="titulo_logout">¿Desea cerrar sesión?</string>
@@ -95,10 +83,10 @@
     <string name="pw_confirm_btn">Confirmar</string>
 
     <!--User profile-->
-    <string name="personalInfo">Información personal</string>
+    <string name="personal_info">Información personal</string>
     <string name="domicilio">Domicilio</string>
 
-    <string name="realName">Nombre(s)</string>
+    <string name="real_name">Nombre(s)</string>
     <string name="surname">Apellido(s)</string>
     <string name="email">Email</string>
 
@@ -107,40 +95,51 @@
     <string name="pc">Código Postal</string>
     <string name="address">Dirección</string>
 
-    <string name="userPfpText">Foto de perfil del usuario</string>
 
-    <string name="settingsButtonInfo">Botón que lleva a la vista de ajustes de usuario</string>
+    <!-- UserProfile -->
+    <string name="user_profile_text">Foto de perfil del usuario</string>
+    <string name="settings_button_info">Botón que lleva a la vista de ajustes de usuario</string>
+    <string name="up_main_settings_header">Ajustes de usuario</string>
+    <string name="upms_email_settings">Cambio de correo electrónico</string>
+    <string name="upms_password_settings">Cambio de contraseña</string>
 
-    <string name="UPMainSettingsHeader">Ajustes de usuario</string>
-    <string name="UPMSEmailSettings">Cambio de correo electrónico</string>
-    <string name="UPMSPwSettings">Cambio de contraseña</string>
+    <string name="email_settings_title">Cambio de correo electrónico</string>
+    <string name="new_email">Nuevo correo electrónico</string>
+    <string name="new_email_confirmation">Confirme nuevo correo electrónico</string>
+    <string name="new_email_password_confirmation">Contraseña</string>
 
-    <string name="emailSettingsTitle">Cambio de correo electrónico</string>
-    <string name="newEmail">Nuevo correo electrónico</string>
-    <string name="newEmailConfirmation">Confirme nuevo correo electrónico</string>
-    <string name="newEmailPwConfirmation">Contraseña</string>
+    <string name="password_settings_title">Cambio de contraseña</string>
+    <string name="new_password">Nueva contraseña</string>
+    <string name="new_password_confirmation">Confirme nueva contraseña</string>
+    <string name="cambio_de_imagen">Cambio de Imagen</string>
+    <string name="Perfil">Perfil</string>
+    <string name="registro">Registro</string>
+    <string name="nombre_invalido">El nombre no es valido</string>
+    <string name="apellido_invalido">El apellido no es valido</string>
+    <string name="email_invalido">El mail no es valido</string>
+    <string name="fecha_invalida">La fecha no es válida</string>
+    <string name="datos_actualizados_con_exito">Datos personales actualizados!</string>
+    <string name="email_actualizado_con_exito">Mail actualizado con éxito!</string>
+    <string name="email_no_fue_actualizado">El mail no fue actualizado</string>
+    <string name="modificar_datos">Modificar datos</string>
+    <string name="current_password">Contraseña actual</string>
 
-    <string name="pwSettingsTitle">Cambio de contraseña</string>
-    <string name="newPw">Nueva contraseña</string>
-    <string name="newPwConfirmation">Confirme nueva contraseña</string>
-    <string name="actualPassword">Contraseña actual</string>
-    <string name="mercadopago_api_key"></string>
-    <string name="mercadopago_api_base_url">https://api.mercadopago.com/</string>
-    <string name="solicitud_iniciar_sesion">Iniciar sesión para suscribirse!</string>
-
+    <!--Dark mode-->
     <string name="generales">Generales</string>
     <string name="modo_oscuro">Modo oscuro</string>
 
     <!--Reserved Book Card Item-->
-    <string name="notLogedReservedBooksMsg">Debes ingresar para ver tus reservas</string>
-    <string name="noReservedBooksMsg">Todavia no tienes ninguna reserva</string>
-    <string name="reservedBookIsbnLabel">ISBN</string>
-    <string name="reservedBookTitleLabel">Titulo del Libro</string>
-    <string name="reservedBookAuthorLabel">Autor del Libro</string>
-    <string name="reservedBookDateLabel">Fecha de la reserva</string>
-    <string name="reservedBookStatusLabel">Estado</string>
-    <string name="reservedBookStatusNotRetired">Retirar en Yatay 240 de 9:00 a 20:00 hs</string>
+    <string name="not_logged_reserved_books_message">Debes ingresar para ver tus reservas</string>
+    <string name="no_reserved_books_message">Todavia no tienes ninguna reserva</string>
+    <string name="reserved_book_isbn_label">ISBN</string>
+    <string name="reserved_book_title_label">Titulo del Libro</string>
+    <string name="reserved_book_author_label">Autor del Libro</string>
+    <string name="reserved_book_date_label">Fecha de la reserva</string>
+    <string name="reserved_book_status_label">Estado</string>
+    <string name="reserved_book_status_not_retired">Retirar en Yatay 240 de 9:00 a 20:00 hs</string>
 
+
+    <!-- Suscription and Books -->
     <string name="un_libro_para_leer">Un libro para leer</string>
     <string name="un_autor">Un autor</string>
     <string name="sinopsis">La sinopsis de un libro es un resumen breve que proporciona una descripción general de la trama, los personajes principales y el tema de la obra. Su propósito es dar a los lectores una idea general de qué trata el libro sin revelar demasiados detalles o spoilers. La sinopsis suele encontrarse en la contraportada del libro o en la solapa interior de la cubierta, y también se utiliza en las descripciones de libros en línea y catálogos de librerías.</string>
@@ -166,51 +165,6 @@
     <string name="ingrese_su_apellido">Ingrese su apellido</string>
     <string name="fecha_de_nacimiento">Fecha de Nacimiento (dd/MM/yyyy)</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="cambio_de_imagen">Cambio de Imagen</string>
-    <string name="Perfil">Perfil</string>
-    <string name="registro">Registro</string>
-    <string name="nombre_invalido">El nombre no es valido\n</string>
-    <string name="apellido_invalido">El apellido no es valido</string>
-    <string name="email_invalido">El mail no es valido</string>
-    <string name="fecha_invalida">La fecha no es válida</string>
-    <string name="datos_actualizados_con_exito">Datos personales actualizados!</string>
-    <string name="email_actualizado_con_exito">Mail actualizado con éxito!</string>
-    <string name="email_no_fue_actualizado">El mail no fue actualizado</string>
-    <string name="modificar_datos">Modificar datos</string>
-
-    <!--confirmation-->
-    <string name="confirmar_contrasenia">Confirmar contraseña</string>
-    <string name="ingrese_contrasenia">Ingresa tu contraseña actual para confirmar</string>
-    <string name="hint_contrasenia">Contraseña</string>
-    <string name="confirmar_cambio_contrasenia">Confirmar</string>
-
-    <!--profile picture-->
-    <string name="elige_imagen">Elige una imagen</string>
-
-    <!--search-->
-    <string name="texto_imagen">Descubrí un sin fin de libros</string>
-    <string name="enlace_reestablecer_contrasenia">Se envió un enlace para restablecer tu contraseña</string>
-    <string name="error_correo_recuperacion">Error al enviar el correo de recuperación</string>
-    <string name="imagen_de_perfil_actualizada">Imagen de perfil actualizada</string>
-
-
-    <!--Algolia-->
-    <string name="algolia_application_id"></string>
-    <string name="algolia_api_key"></string>
     <string name="ingrese_su_fecha_de_nacimiento">Ingrese su fecha de nacimiento</string>
     <string name="ingrese_direccion_correo">Ingrese su dirección de correo electrónico</string>
     <string name="pwd">Contraseña</string>
@@ -223,9 +177,34 @@
     <string name="suscripcion_requerida">Suscripción requerida</string>
     <string name="para_reservar_primero_debe_suscribirse">Para reservar, primero debe suscribirse</string>
     <string name="quiza_despues">Quizá después</string>
-    <string name="error_en_cambio_de_imagen">Error en cambio de imagen\n</string>
-    <string name="bienvenido_a_alejandriaapp">Bienvenido a AlejandriaApp!</string>
+    <string name="error_en_cambio_de_imagen">Error en cambio de imagen</string>
     <string name="el_mail_no_puede_estar_vacio">El mail no puede estar vacio</string>
     <string name="error_al_traer_los_libros">Error al traer los libros...</string>
+    <string name="solicitud_iniciar_sesion">Iniciar sesión para suscribirse!</string>
+
+    <!--Confirmation-->
+    <string name="confirmar_contrasenia">Confirmar contraseña</string>
+    <string name="ingrese_contrasenia">Ingresa tu contraseña actual para confirmar</string>
+    <string name="hint_contrasenia">Contraseña</string>
+    <string name="confirmar_cambio_contrasenia">Confirmar</string>
+
+    <!--Profile picture-->
+    <string name="elige_imagen">Elige una imagen</string>
+
+    <!--Search-->
+    <string name="texto_imagen">Descubrí un sin fin de libros</string>
+    <string name="enlace_reestablecer_contrasenia">Se envió un enlace para restablecer tu contraseña</string>
+    <string name="error_correo_recuperacion">Error al enviar el correo de recuperación</string>
+    <string name="imagen_de_perfil_actualizada">Imagen de perfil actualizada</string>
+
+
+    <!--Algolia-->
+    <string name="algolia_application_id"></string>
+    <string name="algolia_api_key"></string>
+
+    <!-- MercadoPago -->
+    <string name="mercadopago_api_key"></string>
+    <string name="mercadopago_api_base_url">https://api.mercadopago.com/</string>
+
 
 </resources>

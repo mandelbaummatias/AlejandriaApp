@@ -1,15 +1,11 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
-import android.util.Log
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
 import com.matiasmandelbaum.alejandriaapp.domain.repository.UsersRepository
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser
 import javax.inject.Inject
-
-
-private const val TAG = "UsersRepositoryImpl"
 
 class UsersRepositoryImpl @Inject constructor(
     private val userService: UserService
@@ -20,7 +16,6 @@ class UsersRepositoryImpl @Inject constructor(
             userService.addSubscriptionId(subscriptionId, userId)
             true
         } catch (e: Exception) {
-            Log.d(TAG, "failure on update MP ${e.message}")
             false
         }
     }
