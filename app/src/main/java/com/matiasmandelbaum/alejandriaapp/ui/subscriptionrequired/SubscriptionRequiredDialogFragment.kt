@@ -2,7 +2,6 @@ package com.matiasmandelbaum.alejandriaapp.ui.subscriptionrequired
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -11,10 +10,7 @@ import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListenerProvider
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListViewModel
-
 import dagger.hilt.android.AndroidEntryPoint
-
-private const val TAG = "SubscriptionRequiredDialogFragment"
 
 @AndroidEntryPoint
 class SubscriptionRequiredDialogFragment : DialogFragment(), DialogClickListenerProvider {
@@ -23,7 +19,7 @@ class SubscriptionRequiredDialogFragment : DialogFragment(), DialogClickListener
     private val viewModel: SubscriptionListViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val subscriptionId = arguments?.getString("subscriptionId")
+        val subscriptionId = arguments?.getString(getString(R.string.sub_id))
         return AlertDialog.Builder(requireContext())
 
             .setTitle(getString(R.string.suscripcion_requerida))
@@ -35,7 +31,6 @@ class SubscriptionRequiredDialogFragment : DialogFragment(), DialogClickListener
                 dismiss()
                 if (subscriptionId != null) {
                     viewModel.continueSubscription(subscriptionId)
-                    Log.d(TAG, "Ok!")
                 } else {
                     viewModel.createSubscription(AuthManager.getCurrentUser()?.email!!)
                 }

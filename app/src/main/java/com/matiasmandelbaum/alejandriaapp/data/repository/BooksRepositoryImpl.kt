@@ -203,8 +203,6 @@ class BooksRepositoryImpl @Inject constructor(
         try {
             val response = index.search(Query(title))
             libros = response.hits.deserialize(BookFirestore.serializer())
-            Log.d(TAG, "mi response $response")
-            Log.d(TAG, "mis libros $libros")
         } catch (e: Exception) {
             Log.e(TAG, "Error during Algolia search $e")
         }
@@ -230,10 +228,9 @@ class BooksRepositoryImpl @Inject constructor(
                 val bookFirestore = booksFirestore[i]
                 val bookGoogle = booksGoogle[i]
                 val book = createBookFromRemoteData(bookFirestore, bookGoogle)
-                Log.d(TAG, "Viendo mi book final $book")
                 books.add(book)
             }
-            Result.Success(books) // Return the list of books
+            Result.Success(books)
         } catch (e: Exception) {
             Result.Error(e.message.toString())
         }

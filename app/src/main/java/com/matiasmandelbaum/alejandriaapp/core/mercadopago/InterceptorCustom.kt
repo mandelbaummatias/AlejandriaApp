@@ -16,13 +16,3 @@ object InterceptorCustom : Interceptor {
         return chain.proceed(request)
     }
 }
-
-class CustomResponseInterceptor : Interceptor {
-    private var lastResponse: Response? = null
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val response = chain.proceed(chain.request())
-        lastResponse = response
-        return response
-    }
-}

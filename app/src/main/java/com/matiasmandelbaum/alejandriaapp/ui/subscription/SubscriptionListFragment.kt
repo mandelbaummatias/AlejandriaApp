@@ -1,7 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.subscription
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,18 +17,12 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val TAG = "SubscriptionListFragment"
-
 @AndroidEntryPoint
 class SubscriptionListFragment : Fragment() {
 
     private lateinit var binding: FragmentSubscriptionListBinding
 
     private val viewModel: SubscriptionListViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,14 +37,18 @@ class SubscriptionListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUI()
+    }
 
+    private fun initUI() {
         setupObservers()
         setupListeners()
-        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { handleAuthState(it) }
     }
 
 
     private fun setupObservers() {
+        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { handleAuthState(it) }
+
         with(viewModel) {
             subscription.observe(viewLifecycleOwner) { handleSubscriptionResult(it) }
             subscriptionExists.observe(viewLifecycleOwner) {
@@ -60,8 +57,8 @@ class SubscriptionListFragment : Fragment() {
                         handleSubscriptionExistsResult(it)
                     }
 
-                    is Result.Error -> Log.d(TAG, "subExists ERR $it")
-                    is Result.Loading -> Log.d(TAG, "subExists LOAD $it")
+                    is Result.Error -> showErrorOnGettingSubscriptionMessage()
+                    is Result.Loading -> Unit
 
                 }
             }
@@ -87,7 +84,6 @@ class SubscriptionListFragment : Fragment() {
     }
 
     private fun handleSubscriptionExistsResult(result: Result<Subscription>) {
-        Log.d(TAG, "handleSubscriptionExistsResult")
         with(binding) {
             (result as? Result.Success)?.let { successResult ->
                 when (successResult.data.status) {
@@ -104,7 +100,6 @@ class SubscriptionListFragment : Fragment() {
     }
 
     private fun handleAuthorizedSubscription() {
-        Log.d(TAG, "handleAuthorizedSubscription")
         with(binding) {
             basicPlanButton.visibility = View.GONE
             showSuccessfulSubscriptionSnackbar()
@@ -112,7 +107,6 @@ class SubscriptionListFragment : Fragment() {
     }
 
     private fun showSuccessfulSubscriptionSnackbar() {
-        Log.d(TAG, "showSuccessfulSubscriptionSnackbar")
         Snackbar.make(
             requireView(),
             getString(R.string.suscripcion_exitosa),
@@ -121,27 +115,23 @@ class SubscriptionListFragment : Fragment() {
     }
 
     private fun handleUserResult(result: Result<SubscriptionUser>) {
-        Log.d(TAG, "handleUserResult")
         when (result) {
             is Result.Success -> {
-                Log.d(TAG, "handleUser Success")
                 result.data.takeIf { it.subscriptionId.isNotBlank() }?.let {
                     viewModel.fetchSubscription(it.subscriptionId)
                 }
-            } // ?: Unit
-            is Result.Error -> Log.d(TAG, "error ${result.message}")
-            is Result.Loading -> Log.d(TAG, "handleUser Loading")
-            else -> Unit
+            }
+
+            is Result.Error -> showErrorOnGettingUserMessage()
+            is Result.Loading -> Unit
         }
     }
 
     private fun handleAuthState(user: FirebaseUser?) {
-        Log.d(TAG, "handleAuthState")
         with(binding.basicPlanButton) {
             user?.let {
                 viewModel.getUserById(it.uid)
             } ?: run {
-                Log.d(TAG, "user not logged: button visible")
                 visibility = View.VISIBLE
                 setOnClickListener {
                     Snackbar.make(
@@ -153,4 +143,19 @@ class SubscriptionListFragment : Fragment() {
             }
         }
     }
+
+    private fun showErrorOnGettingSubscriptionMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.error_al_traer_suscription), Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun showErrorOnGettingUserMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.error_al_traer_usuario), Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
 }

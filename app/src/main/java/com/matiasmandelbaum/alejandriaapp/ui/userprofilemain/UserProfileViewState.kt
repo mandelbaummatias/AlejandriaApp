@@ -1,4 +1,4 @@
-package com.matiasmandelbaum.alejandriaapp.ui.userprofilemail
+package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
 
 data class UserProfileViewState(
     val isLoading: Boolean = false,

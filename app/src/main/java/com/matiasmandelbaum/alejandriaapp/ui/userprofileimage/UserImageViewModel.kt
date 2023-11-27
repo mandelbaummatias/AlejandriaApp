@@ -11,11 +11,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserImageViewModel @Inject constructor(private val changeImageForUserUseCase: ChangeImageForUserUseCase):ViewModel() {
+class UserImageViewModel @Inject constructor(private val changeImageForUserUseCase: ChangeImageForUserUseCase) :
+    ViewModel() {
 
     private val _changeResult = MutableLiveData<Result<Unit>>()
-    val changeResult : LiveData<Result<Unit>> = _changeResult
-    fun changeImageForUser(newImage: String){
+    val changeResult: LiveData<Result<Unit>> = _changeResult
+    fun changeImageForUser(newImage: String) {
         viewModelScope.launch {
             val result = changeImageForUserUseCase(newImage)
             _changeResult.postValue(result)

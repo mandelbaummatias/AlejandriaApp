@@ -2,7 +2,6 @@ package com.matiasmandelbaum.alejandriaapp.ui.signin
 
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,9 +33,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-
-private const val TAG = "SignUpFragment"
-
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
 
@@ -50,7 +46,6 @@ class SignInFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreate")
         binding = FragmentSigninBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         initUI()
