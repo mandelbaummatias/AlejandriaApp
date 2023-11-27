@@ -3,7 +3,6 @@ package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
@@ -28,8 +27,6 @@ import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.userinput.UserDataInput
 import com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation.PasswordConfirmationFragment
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -39,8 +36,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-
-private const val TAG = "UserProfileFragment"
 
 @AndroidEntryPoint
 class UserProfileFragment : Fragment(), DialogClickListener {
@@ -53,23 +48,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     private val viewModel: UserProfileViewModel by viewModels()
 
     private lateinit var binding: UserProfileBinding
-
-    private val authStateListener = FirebaseAuth.AuthStateListener { auth -> //auth manager?
-        val user = auth.currentUser
-        if (user != null) {
-            val userEmail = user.email
-            if (userEmail != null) {
-                previousEmail = userEmail
-            }
-            Log.d(TAG, "Email of the logged-in user: $userEmail")
-
-            if (userEmail != null) {
-                viewModel.getUserByEmail(userEmail)
-            }
-        } else {
-            Log.d(TAG, "User is null")
-        }
-    }
 
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onCreateView(
@@ -145,7 +123,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 if (!isInEditMode) {
                     enterEditMode()
                 } else {
-                    Log.d(TAG, "PREVIOUS EMAIL $previousEmail")
                     if (viewModel.onSaveProfileSelected(
                             UserDataInput(
                                 editNombre.text.toString(),
@@ -173,6 +150,8 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     }
 
     private fun initObservers() {
+        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { handleAuthState(it) }
+
         with(viewModel) {
             userProfile.observe(viewLifecycleOwner) { result ->
                 when (result) {
@@ -184,7 +163,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
 
                     is Result.Error -> {
                         handleLoading(false)
-                        Log.e(TAG, "Error retrieving user data: ${result.message}")
                     }
 
                     is Result.Loading -> {
@@ -214,6 +192,13 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                     showProfileUpdateSuccessMessage()
                 }
             }
+        }
+    }
+
+    private fun handleAuthState(user: FirebaseUser?) {
+        user?.email?.let {
+            previousEmail = it
+            viewModel.getUserByEmail(it)
         }
     }
 
@@ -268,17 +253,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
                 if (viewState.isValidEmail) null else getString(R.string.email_invalido)
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        AuthManager.addAuthStateListener(authStateListener)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        AuthManager.removeAuthStateListener(authStateListener)
-    }
-
 
     private fun enterEditMode() {
         isInEditMode = true
@@ -411,7 +385,6 @@ class UserProfileFragment : Fragment(), DialogClickListener {
             val selectedDateStr = format.format(Date(it))
             val selectedLocalDate =
                 LocalDate.parse(selectedDateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-            Log.d(TAG, "date: $selectedLocalDate")
             val format2 = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             val formattedDate = selectedLocalDate.format(format2)
 
@@ -439,10 +412,7 @@ class UserProfileFragment : Fragment(), DialogClickListener {
     }
 
     private fun showDatePicker() {
-        Log.d(TAG, "showDatePicker()")
         datePicker.show(parentFragmentManager, "datePicker")
     }
-
-
 }
 

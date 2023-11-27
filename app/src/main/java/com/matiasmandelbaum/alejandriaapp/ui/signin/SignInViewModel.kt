@@ -34,16 +34,13 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
     }
 
     private val _navigateToLogin = MutableLiveData<Event<Boolean>>()
-    val navigateToLogin: LiveData<Event<Boolean>>
-        get() = _navigateToLogin
+    val navigateToLogin: LiveData<Event<Boolean>> = _navigateToLogin
 
     private val _navigateToHome = MutableLiveData<Event<Boolean>>()
-    val navigateToHome: LiveData<Event<Boolean>>
-        get() = _navigateToHome
+    val navigateToHome: LiveData<Event<Boolean>> = _navigateToHome
 
     private val _viewState = MutableStateFlow(SignInViewState())
-    val viewState: StateFlow<SignInViewState>
-        get() = _viewState
+    val viewState: StateFlow<SignInViewState> = _viewState
 
     private var _showErrorDialog = MutableLiveData(false)
     val showErrorDialog: LiveData<Boolean> = _showErrorDialog
@@ -86,7 +83,7 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
         (password.length >= MIN_PASSWORD_LENGTH && password == passwordConfirmation) || password.isEmpty() || passwordConfirmation.isEmpty()
 
     private fun isValidName(name: String): Boolean {
-        return name.length >= MIN_NAME_LENGTH
+        return name.length >= MIN_NAME_LENGTH || name.isEmpty()
     }
 
 

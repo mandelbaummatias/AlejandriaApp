@@ -14,8 +14,6 @@ import com.matiasmandelbaum.alejandriaapp.databinding.FragmentPasswordRecoveryBi
 import dagger.hilt.android.AndroidEntryPoint
 
 
-private const val TAG = "PasswordRecoveryFragment"
-
 @AndroidEntryPoint
 class PasswordRecoveryFragment : BottomSheetDialogFragment(), DialogClickListenerProvider {
 

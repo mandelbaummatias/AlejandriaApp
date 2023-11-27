@@ -9,8 +9,6 @@ import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClick
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListenerProvider
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val TAG = "ConfirmBookReservationDialogFragment"
-
 @AndroidEntryPoint
 class ConfirmBookReservationDialogFragment : DialogFragment(), DialogClickListenerProvider {
     private var listener: DialogClickListener? = null

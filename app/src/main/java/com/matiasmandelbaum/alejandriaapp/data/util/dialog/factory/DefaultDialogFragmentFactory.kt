@@ -15,7 +15,7 @@ class DefaultDialogFragmentFactory : DialogFragmentFactory {
             is DialogType.RESERVATION -> ConfirmBookReservationDialogFragment()
             is DialogType.SUBSCRIPTION -> SubscriptionRequiredDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString("subscriptionId", subscriptionId)
+                    putString("subscription_id", subscriptionId)
                 }
             }
         }

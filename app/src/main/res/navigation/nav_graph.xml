@@ -21,7 +21,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.search.SearchFragment"
-        tools:layout="Búsqueda">
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_searchResultListFragment"
             app:destination="@id/searchResultListFragment"
@@ -32,7 +32,8 @@
     <fragment
         android:id="@+id/searchResultListFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.searchresult.SearchResultListFragment"
-        android:label="Resultado">
+        android:label="Resultado"
+        tools:layout="@layout/fragment_search_result_list">
 
         <argument
             android:name="titulo"
@@ -74,7 +75,8 @@
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.signin.SignInFragment"
-        android:label="@string/registro">
+        android:label="@string/registro"
+        tools:layout="@layout/fragment_signin">
         <action
             android:id="@+id/action_signInFragment_to_homeListFragment"
             app:destination="@id/homeListFragment" />
@@ -86,7 +88,8 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.login.LoginFragment"
-        android:label="Login">
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_homeListFragment"
             app:destination="@id/homeListFragment" />
@@ -97,7 +100,8 @@
     <dialog
         android:id="@+id/passwordRecoveryFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.passwordrecovery.PasswordRecoveryFragment"
-        android:label="PasswordRecoveryFragment">
+        android:label="PasswordRecoveryFragment"
+        tools:layout="@layout/fragment_password_recovery">
         <action
             android:id="@+id/action_passwordRecoveryFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -106,7 +110,8 @@
     <dialog
         android:id="@+id/signOutDialogFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.signout.SignOutDialogFragment"
-        android:label="SignoutDialogFragment">
+        android:label="SignoutDialogFragment"
+        tools:layout="@layout/activity_main">
         <action
             android:id="@+id/action_signOutDialogFragment_pop2"
             app:popUpTo="@id/signOutDialogFragment"
@@ -115,7 +120,8 @@
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.UserProfileFragment"
-        android:label="@string/Perfil" />
+        android:label="@string/Perfil"
+        tools:layout="@layout/user_profile"/>
 
     <fragment
         android:id="@+id/changeProfileImageFragment"
@@ -126,5 +132,6 @@
     <fragment
         android:id="@+id/settings"
         android:name="com.matiasmandelbaum.alejandriaapp.ui.settings.SettingsFragment"
-        android:label="@string/configuracion" />
+        android:label="@string/configuracion"
+        tools:layout="@layout/settings_activity"/>
 </navigation>

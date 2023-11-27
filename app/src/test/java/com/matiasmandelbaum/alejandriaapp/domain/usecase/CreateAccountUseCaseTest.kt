@@ -34,8 +34,6 @@ class CreateAccountUseCaseTest {
     fun onBefore() {
         MockKAnnotations.init(this)
         createAccountUseCase = CreateAccountUseCase(authenticationService, userService)
-
-        // Mock Firebase authentication behavior
         mockkStatic(FirebaseAuth::class)
         every { FirebaseAuth.getInstance() } returns mockk(relaxed = true)
     }

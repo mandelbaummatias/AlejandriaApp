@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.userprofilemain
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,9 +13,7 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.userinput.UserDataInput
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.ChangeUserProfileUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByEmailUseCase
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.model.UserEmailAndPasswordConfirmation
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.model.UserEmailAndPasswordConfirmation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,8 +24,6 @@ import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-private const val TAG = "UserProfileViewModel"
-
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
     private val getUserByEmailUseCase: GetUserByEmailUseCase,
@@ -37,7 +32,7 @@ class UserProfileViewModel @Inject constructor(
     ViewModel() {
 
     private val _userProfile = MutableLiveData<Result<UserProfile>?>()
-    val userProfile: MutableLiveData<Result<UserProfile>?> get() = _userProfile
+    val userProfile: MutableLiveData<Result<UserProfile>?> = _userProfile
 
     private companion object {
         const val MIN_NAME_LENGTH = 2
@@ -54,26 +49,24 @@ class UserProfileViewModel @Inject constructor(
 
     private val _showPasswordRequiredDialog = MutableLiveData<Event<Boolean>>()
     val showPasswordRequiredDialog: LiveData<Event<Boolean>>
-        get() = _showPasswordRequiredDialog
+         = _showPasswordRequiredDialog
 
     private val _showOnSuccessfulSavedDataMessage = MutableLiveData<Event<Boolean>>()
-    val showOnSuccessfulSavedDataMessage: LiveData<Event<Boolean>>
-        get() = _showOnSuccessfulSavedDataMessage
+    val showOnSuccessfulSavedDataMessage: LiveData<Event<Boolean>> =
+        _showOnSuccessfulSavedDataMessage
 
     private val _viewState = MutableStateFlow(UserProfileViewState())
-    val viewState: StateFlow<UserProfileViewState>
-        get() = _viewState
+    val viewState: StateFlow<UserProfileViewState> = _viewState
 
     private val _emailViewState = MutableStateFlow(UserEmailViewState())
     val emailViewState: StateFlow<UserEmailViewState>
-        get() = _emailViewState
+         = _emailViewState
 
     private var _showErrorDialog = MutableLiveData(UserEmailAndPasswordConfirmation())
     val showErrorDialog: LiveData<UserEmailAndPasswordConfirmation>
-        get() = _showErrorDialog
+         = _showErrorDialog
 
     fun onSaveProfileSelected(userDataInput: UserDataInput): Boolean {
-        Log.d(TAG, "onSaveProfileSelected")
         val viewState = userDataInput.toUserProfileViewState()
         return if (viewState.userValidated() && userDataInput.isNotEmpty()) {
             saveUserProfile(userDataInput)
@@ -85,7 +78,6 @@ class UserProfileViewModel @Inject constructor(
     }
 
     fun onSaveUserEmailSelected(email: String, previousEmail: String) {
-        Log.d(TAG, " onSaveUserEmailSelected")
         if (isValidOrEmptyEmail(email)) {
             saveUserEmail(email, previousEmail)
         } else {
@@ -97,11 +89,7 @@ class UserProfileViewModel @Inject constructor(
         viewModelScope.launch {
             _emailViewState.value = UserEmailViewState()
             if (email != previousEmail) {
-                Log.d(TAG, "son diferentes: $email y $previousEmail")
                 _showPasswordRequiredDialog.value = Event(true)
-            } else {
-                Log.d(TAG, "no son dif los emails")
-                //dismiss?
             }
         }
     }
@@ -111,19 +99,17 @@ class UserProfileViewModel @Inject constructor(
             _viewState.value = UserProfileViewState(isLoading = true)
             when (changeUserProfileUseCase(userDataInput)) {
                 is Result.Error -> {
-                    Log.d(TAG, "Chang Error")
                     _showErrorDialog.value =
                         UserEmailAndPasswordConfirmation(
                             email = userDataInput.name,
                             password = userDataInput.lastName,
                             showErrorDialog = true
-                        ) //pasarlo a true?
+                        )
                     _viewState.value = UserProfileViewState(isLoading = false)
                 }
 
                 is Result.Success -> {
                     _showOnSuccessfulSavedDataMessage.value = Event(true)
-                    Log.d(TAG, "Change ok")
                 }
 
                 else -> {
@@ -155,7 +141,6 @@ class UserProfileViewModel @Inject constructor(
         Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty()
 
     private fun isValidDate(date: String): Boolean {
-        Log.d(TAG, "mi date al principio isValid -> $date")
         return isUserAtLeast18YearsOld(date) && date.length >= MIN_DATE_LENGTH || date.isEmpty() //isValidDate(date)||
     }
 
@@ -171,14 +156,11 @@ class UserProfileViewModel @Inject constructor(
                 val today = LocalDate.now()
                 val age = ChronoUnit.YEARS.between(parsedDate, today)
                 return age >= 18
-            } catch (e: DateTimeParseException) {
+            } catch (_: DateTimeParseException) {
             }
         }
-
-        Log.d(TAG, "Invalid date format: $date")
         return false
     }
-
 
     private fun UserDataInput.toUserProfileViewState(): UserProfileViewState {
         return UserProfileViewState(
