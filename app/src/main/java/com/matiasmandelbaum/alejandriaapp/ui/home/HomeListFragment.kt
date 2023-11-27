@@ -28,8 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
-private const val TAG = "HomeListFragment"
-
 @AndroidEntryPoint
 class HomeListFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()

@@ -230,7 +230,7 @@ class BooksRepositoryImpl @Inject constructor(
                 val book = createBookFromRemoteData(bookFirestore, bookGoogle)
                 books.add(book)
             }
-            Result.Success(books) // Return the list of books
+            Result.Success(books)
         } catch (e: Exception) {
             Result.Error(e.message.toString())
         }

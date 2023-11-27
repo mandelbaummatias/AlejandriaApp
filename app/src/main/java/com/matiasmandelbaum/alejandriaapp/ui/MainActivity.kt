@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -25,7 +24,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.auth.AuthManager
@@ -35,8 +33,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
 import com.matiasmandelbaum.alejandriaapp.ui.signout.SignOutDialogFragment
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.SubscriptionListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
-private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -50,23 +46,14 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: SubscriptionListViewModel by viewModels()
 
-    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-        updateAuthState(auth.currentUser)
-    }
-
     override fun onStart() {
         super.onStart()
-        setupAuthStateListener()
-        val userUid = AuthManager.getCurrentUser()?.uid
-        userUid?.let {
-            viewModel.getUserById(userUid)
+        AuthManager.authStateLiveData.observe(this) {
+            it?.let {
+                viewModel.getUserById(it.uid)
+            }
+            updateAuthState(it)
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        AuthManager.removeAuthStateListener(authStateListener)
-        Log.d(TAG, "onStop")
     }
 
     private fun updateMenuItemVisibility(itemId: Int, isVisible: Boolean) {
@@ -99,8 +86,6 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
 
-        Log.d(TAG, "ViewModel hash code: ${viewModel.hashCode()}")
-
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
@@ -121,7 +106,6 @@ class MainActivity : AppCompatActivity() {
         setupDestinationChangedListener()
         setupNavigationItemSelectedListener(navController, binding.drawerLayout)
         setupMenuProvider()
-        setupAuthStateListener()
         observeSubscriptionResult()
     }
 
@@ -156,6 +140,7 @@ class MainActivity : AppCompatActivity() {
                         navController.navigate(R.id.loginFragment)
                     }
                 }
+
                 else -> {
                     NavigationUI.onNavDestinationSelected(it, navController)
                     drawerLayout.closeDrawers()
@@ -181,11 +166,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
-    private fun setupAuthStateListener() {
-        AuthManager.addAuthStateListener(authStateListener)
-    }
-
     private fun observeSubscriptionResult() {
         viewModel.subscription.observe(this) {
             when (it) {

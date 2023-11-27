@@ -58,12 +58,6 @@ object NetworkModule {
             .build()
     }
 
-//    @Singleton
-//    @Provides
-//    fun provideCustomResponseInterceptor(): CustomResponseInterceptor {
-//        return CustomResponseInterceptor()
-//    }
-
     @Singleton
     @Provides
     @Named("MercadoPago")
@@ -97,7 +91,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideMercadoPagoApiClient(@Named("MercadoPago")retrofit: Retrofit): MercadoPagoApiClient {
+    fun provideMercadoPagoApiClient(@Named("MercadoPago") retrofit: Retrofit): MercadoPagoApiClient {
         return retrofit.create(MercadoPagoApiClient::class.java)
     }
 

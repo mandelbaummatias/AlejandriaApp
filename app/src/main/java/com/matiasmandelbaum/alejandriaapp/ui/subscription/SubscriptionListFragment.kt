@@ -17,8 +17,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val TAG = "SubscriptionListFragment"
-
 @AndroidEntryPoint
 class SubscriptionListFragment : Fragment() {
 
@@ -39,14 +37,18 @@ class SubscriptionListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUI()
+    }
 
+    private fun initUI() {
         setupObservers()
         setupListeners()
-        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { handleAuthState(it) }
     }
 
 
     private fun setupObservers() {
+        AuthManager.authStateLiveData.observe(viewLifecycleOwner) { handleAuthState(it) }
+
         with(viewModel) {
             subscription.observe(viewLifecycleOwner) { handleSubscriptionResult(it) }
             subscriptionExists.observe(viewLifecycleOwner) {
@@ -119,6 +121,7 @@ class SubscriptionListFragment : Fragment() {
                     viewModel.fetchSubscription(it.subscriptionId)
                 }
             }
+
             is Result.Error -> showErrorOnGettingUserMessage()
             is Result.Loading -> Unit
         }

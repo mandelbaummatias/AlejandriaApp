@@ -24,8 +24,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
 import com.matiasmandelbaum.alejandriaapp.ui.subscription.model.SubscriptionUser
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val TAG = "BooksDetailFragment"
-
 @AndroidEntryPoint
 class BooksDetailFragment : Fragment(), DialogClickListener {
 

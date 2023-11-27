@@ -1,7 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.data.repository
 
-import android.content.ContentValues
-import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
@@ -63,15 +61,7 @@ class ReservationsRepositoryImpl @Inject constructor(firestore: FirebaseFirestor
                     for (document in querySnapshot.documents) {
                         val reserveDocument = document.reference
                         reserveDocument.update(USER_EMAIL, newEmail)
-                            .addOnSuccessListener {
-                                Log.d(ContentValues.TAG, "Actualización exitosa")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e(ContentValues.TAG, "Error al actualizar")
-                            }
                     }
-                } else {
-                    Log.d(ContentValues.TAG, "No hay reservas para actualizar.")
                 }
             }
     }

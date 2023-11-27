@@ -16,14 +16,6 @@ object AuthManager {
         }
     }
 
-    fun addAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
-        auth.addAuthStateListener(listener)
-    }
-
-    fun removeAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
-        auth.removeAuthStateListener(listener)
-    }
-
     fun signOut() {
         auth.signOut()
         _authStateLiveData.postValue(null)

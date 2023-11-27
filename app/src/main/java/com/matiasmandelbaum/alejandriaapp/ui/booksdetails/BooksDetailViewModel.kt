@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
+import com.matiasmandelbaum.alejandriaapp.data.util.firebaseconstants.libros.LibrosConstants.BOOK
 import com.matiasmandelbaum.alejandriaapp.domain.model.ReservationResult
 import com.matiasmandelbaum.alejandriaapp.domain.model.book.Book
 import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
@@ -48,7 +49,7 @@ class BooksDetailViewModel @Inject constructor(
     val onFailedReservation: LiveData<Result<ReservationResult>?> = _onFailedReservation
 
 
-    val book: Book = savedStateHandle["book"]!!
+    val book: Book = savedStateHandle[BOOK]!!
 
     fun reserveBook(userEmail: String) {
         viewModelScope.launch {

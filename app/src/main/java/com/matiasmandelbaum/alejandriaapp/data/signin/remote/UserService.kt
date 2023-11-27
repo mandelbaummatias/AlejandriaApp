@@ -40,7 +40,7 @@ class UserService @Inject constructor(private val firebase: FirebaseClient) {
 
         firebase.db
             .collection(USER_COLLECTION)
-            .document(uid) // Specify the custom document ID here
+            .document(uid)
             .set(user)
             .await()
     }.isSuccess

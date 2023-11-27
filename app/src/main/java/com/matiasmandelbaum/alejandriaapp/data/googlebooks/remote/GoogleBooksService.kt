@@ -36,6 +36,5 @@ class GoogleBooksService @Inject constructor(private val googleBooksApiClient: G
 
     companion object {
         private const val MAX_RETRY_COUNT = 5
-        private const val TAG = "GoogleBooksService"
     }
 }
