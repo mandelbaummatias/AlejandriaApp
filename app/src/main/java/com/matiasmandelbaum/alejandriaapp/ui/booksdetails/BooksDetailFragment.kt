@@ -1,7 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksdetails
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -98,18 +97,18 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
                 binding.bookReserveButton.visibility = View.INVISIBLE
             }
 
-            else -> {}
+            else -> {
+                Unit
+            }
         }
     }
 
     private fun handleAuthState(user: FirebaseUser?) {
         if (user != null) {
-            Log.d(TAG, "user logged $user")
             user.uid.let {
                 viewModel.getUserById(it)
             }
         } else {
-            Log.d(TAG, "user not logged")
             binding.bookReserveButton.isEnabled = false
         }
     }
@@ -117,36 +116,35 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     private fun handleSubscriptionState(result: Result<Subscription>) {
         when (result) {
             is Result.Success -> handleSuccessResult(result.data)
-            is Result.Error -> Log.d(TAG, "error en fetchSub ${result.message}")
+            is Result.Error -> handleFetchError(result.message)
             else -> Unit
         }
+    }
+
+    private fun handleFetchError(result: String) {
+        Snackbar.make(requireView(), "Fetch error: $result", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun handleUserState(result: Result<SubscriptionUser>) {
         when (result) {
             is Result.Success -> {
-                Log.d(TAG, "user success")
                 handleLoading(false)
             }
 
             is Result.Error -> {
-                Log.d(TAG, "user error")
                 handleUserError(result.message)
                 handleLoading(false)
             }
 
             is Result.Loading -> {
-                Log.d(TAG, "user loading")
                 handleLoading(true)
             }
 
-            else -> Unit
         }
     }
 
     private fun handleSubscriptionExists(subscriptionExists: Boolean) {
         if (!subscriptionExists) {
-            Log.d(TAG, " subs is blank")
             handleBlankSubscriptionId()
         }
     }
@@ -158,12 +156,10 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     private fun handleReservationResult(result: Result<ReservationResult>?) {
         when (result) {
             is Result.Success -> {
-                Log.d(TAG, "mi ReservationResult $result")
                 showSuccessfulReservationMessage()
             }
 
             is Result.Error -> {
-                Log.d(tag, "MI ERROR ${result.message}")
                 showErrorOnReservationMessage(result.message)
             }
 
@@ -184,7 +180,6 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     }
 
     private fun handleSuccessResult(subscription: Subscription) {
-        Log.d(TAG, "handleSuccessResult()")
         if (viewModel.book.cantidadDisponible <= 0) {
             handleNoBooksAvailable()
             return
@@ -212,9 +207,7 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
     }
 
     private fun handleAuthorizedStatus() {
-        Log.d(TAG, "authorized from subscriptionExists")
         if (viewModel.isEnabledToReserve.value != false) {
-            Log.d(TAG, "hay mas de 1")
             handleButtonClick(DialogType.RESERVATION)
         } else {
             showBookAlreadyReservedMessage()
@@ -232,18 +225,14 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
 
     private fun handleBlankSubscriptionId() {
-        Log.d(TAG, "handleBlankSubscriptionId()")
         handleButtonClick(DialogType.SUBSCRIPTION)
     }
 
     private fun handlePendingStatus(subscriptionId: String) {
-        Log.d(TAG, "subscription pending...")
-        // handleButtonClick(subscriptionId)
         handleButtonClick(DialogType.SUBSCRIPTION, subscriptionId)
     }
 
     private fun handleButtonClick(type: DialogType, subscriptionId: String? = null) {
-        Log.d(TAG, "handling button click...")
         binding.bookReserveButton.setOnClickListener {
             val dialogProvider = dialogFragmentFactory.createDialogFragment(type, subscriptionId)
             dialogProvider.setDialogClickListener(this@BooksDetailFragment)
@@ -255,25 +244,20 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
         }
     }
 
-
     private fun handleOtherStatus() {
-        Log.d(TAG, "handleOtherStatus()")
         binding.bookReserveButton.isEnabled = false
     }
 
 
     private fun handleUserError(errorMessage: String) {
-        Log.d(TAG, "error $errorMessage")
+        Snackbar.make(requireView(), "Error: $errorMessage", Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume")
         if (!isInitialized) {
-            Log.d(TAG, ("isInitialized false. Setting to true..."))
             isInitialized = true
         } else {
-            Log.d(TAG, ("isInitialized true!"))
             val userUid = AuthManager.getCurrentUser()?.uid
             userUid?.let {
                 viewModel.getUserById(userUid)
@@ -283,7 +267,6 @@ class BooksDetailFragment : Fragment(), DialogClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "onDestroy")
         viewModel.resetUser()
     }
 

@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.login
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "LoginViewModel"
 @HiltViewModel
 class LoginViewModel @Inject constructor(val loginUseCase: LoginUseCase) : ViewModel() {
 
@@ -25,20 +23,16 @@ class LoginViewModel @Inject constructor(val loginUseCase: LoginUseCase) : ViewM
     }
 
     private val _navigateToHome = MutableLiveData<Event<Boolean>>()
-    val navigateToHome: LiveData<Event<Boolean>>
-        get() = _navigateToHome
+    val navigateToHome: LiveData<Event<Boolean>> = _navigateToHome
 
     private val _navigateToSignIn = MutableLiveData<Event<Boolean>>()
-    val navigateToSignIn: LiveData<Event<Boolean>>
-        get() = _navigateToSignIn
+    val navigateToSignIn: LiveData<Event<Boolean>> = _navigateToSignIn
 
     private val _viewState = MutableStateFlow(LoginViewState())
-    val viewState: StateFlow<LoginViewState>
-        get() = _viewState
+    val viewState: StateFlow<LoginViewState> = _viewState
 
     private var _showErrorDialog = MutableLiveData(UserLogin())
-    val showErrorDialog: LiveData<UserLogin>
-        get() = _showErrorDialog
+    val showErrorDialog: LiveData<UserLogin> = _showErrorDialog
 
     fun onLoginSelected(email: String, password: String) {
         if (isValidEmail(email) && isValidPassword(password)) {
@@ -53,13 +47,12 @@ class LoginViewModel @Inject constructor(val loginUseCase: LoginUseCase) : ViewM
             _viewState.value = LoginViewState()
             when (loginUseCase(email, password)) {
                 LoginResult.Error -> {
-                    Log.d(TAG, "LoginResultError")
                     _showErrorDialog.value =
                         UserLogin(email = email, password = password, showErrorDialog = true)
                     _viewState.value = LoginViewState()
                 }
+
                 is LoginResult.Success -> {
-                    Log.d(TAG, "LoginResult.Success")
                     _navigateToHome.value = Event(true)
                 }
             }

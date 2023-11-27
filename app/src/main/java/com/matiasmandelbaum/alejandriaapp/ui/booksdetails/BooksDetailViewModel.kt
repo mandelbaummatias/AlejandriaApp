@@ -1,6 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksdetails
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -20,8 +19,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "BooksDetailViewModel"
-
 @HiltViewModel
 class BooksDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -38,8 +35,8 @@ class BooksDetailViewModel @Inject constructor(
     private val _subscriptionExists: MutableLiveData<Boolean> = MutableLiveData()
     val subscriptionExists: LiveData<Boolean> = _subscriptionExists
 
-    private val _Subscription_user: MutableLiveData<Result<SubscriptionUser>?> = MutableLiveData()
-    val subscriptionUser: LiveData<Result<SubscriptionUser>?> = _Subscription_user
+    private val _subscriptionUser: MutableLiveData<Result<SubscriptionUser>?> = MutableLiveData()
+    val subscriptionUser: LiveData<Result<SubscriptionUser>?> = _subscriptionUser
 
     private val _isEnabledToReserve = MutableLiveData<Boolean>()
     val isEnabledToReserve: LiveData<Boolean> = _isEnabledToReserve
@@ -57,18 +54,22 @@ class BooksDetailViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = reserveBookUseCase(book.isbn, userEmail)) {
                 is Result.Success -> {
-                    Log.d(TAG, "succcess!")
                     handleSuccessfulReservation(result, userEmail)
                 }
+
                 is Result.Error -> {
-                   postOnFailedReservation(result)
+                    postOnFailedReservation(result)
                 }
+
                 else -> Unit
             }
         }
     }
 
-    private fun handleSuccessfulReservation(result: Result.Success<ReservationResult>, userEmail: String) {
+    private fun handleSuccessfulReservation(
+        result: Result.Success<ReservationResult>,
+        userEmail: String
+    ) {
         viewModelScope.launch {
             postOnSuccessfulReservation(result)
             _isEnabledToReserve.postValue(false)
@@ -94,8 +95,7 @@ class BooksDetailViewModel @Inject constructor(
     }
 
     fun getUserById(userId: String) {
-        Log.d(TAG, "book $book")
-        _Subscription_user.value = Result.Loading
+        _subscriptionUser.value = Result.Loading
         viewModelScope.launch {
             val result = getUserByIdUseCase(userId)
             handleUserResult(result)
@@ -105,7 +105,7 @@ class BooksDetailViewModel @Inject constructor(
     private fun handleUserResult(result: Result<SubscriptionUser>) {
         when (result) {
             is Result.Success -> handleSuccess(result.data)
-            else -> _Subscription_user.value = result
+            else -> _subscriptionUser.value = result
         }
     }
 
@@ -123,10 +123,10 @@ class BooksDetailViewModel @Inject constructor(
         } else {
             _subscriptionExists.postValue(false)
         }
-        _Subscription_user.value = Result.Success(subscriptionUser)
+        _subscriptionUser.value = Result.Success(subscriptionUser)
     }
 
     fun resetUser() {
-        _Subscription_user.value = null
+        _subscriptionUser.value = null
     }
 }

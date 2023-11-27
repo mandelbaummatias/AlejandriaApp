@@ -1,6 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.domain.model.userinput
 
-data class UserDataInput( //input?
+data class UserDataInput(
     val name: String,
     val lastName: String,
     val email: String? = null,

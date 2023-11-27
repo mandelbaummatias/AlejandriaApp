@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="book"
             type="com.matiasmandelbaum.alejandriaapp.domain.model.book.Book" />
+
         <variable
             name="clickListener"
             type="com.matiasmandelbaum.alejandriaapp.ui.adapter.BookListener" />
@@ -25,9 +27,9 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="@{() -> clickListener.onClick(book)}"
-            app:cardPreventCornerOverlap="true"
             app:cardCornerRadius="@dimen/item_book_card_corner_radius"
-            app:cardElevation="@dimen/item_book_card_elevation">
+            app:cardElevation="@dimen/item_book_card_elevation"
+            app:cardPreventCornerOverlap="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -48,10 +50,12 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/vertical_guide_line_1"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/ic_menu_book"/>
 
                 <TextView
                     android:id="@+id/book_name_text_view"
+                    tools:text="@string/un_libro_para_leer"
                     android:layout_width="@dimen/item_book_text_width"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/item_book_margin_small_2"
@@ -76,6 +80,7 @@
                     android:singleLine="true"
                     android:textColor="?attr/colorSecondary"
                     android:textSize="@dimen/item_book_text_size_small"
+                    tools:text="@string/un_autor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/vertical_guide_line_1"
                     app:layout_constraintTop_toBottomOf="@+id/book_name_text_view" />

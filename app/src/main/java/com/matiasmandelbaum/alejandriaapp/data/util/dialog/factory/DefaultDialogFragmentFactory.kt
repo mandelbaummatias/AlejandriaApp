@@ -1,6 +1,7 @@
 package com.matiasmandelbaum.alejandriaapp.data.util.dialog.factory
 
 import android.os.Bundle
+import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListenerProvider
 import com.matiasmandelbaum.alejandriaapp.data.util.dialog.DialogType
 import com.matiasmandelbaum.alejandriaapp.ui.confirmbookreservation.ConfirmBookReservationDialogFragment
@@ -15,7 +16,7 @@ class DefaultDialogFragmentFactory : DialogFragmentFactory {
             is DialogType.RESERVATION -> ConfirmBookReservationDialogFragment()
             is DialogType.SUBSCRIPTION -> SubscriptionRequiredDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString("subscriptionId", subscriptionId)
+                    putString(getString(R.string.sub_id), subscriptionId)
                 }
             }
         }

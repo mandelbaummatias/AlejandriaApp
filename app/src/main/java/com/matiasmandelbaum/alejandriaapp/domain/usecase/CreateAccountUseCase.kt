@@ -1,14 +1,10 @@
 package com.matiasmandelbaum.alejandriaapp.domain.usecase
 
-import android.util.Log
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.AuthenticationService
 import com.matiasmandelbaum.alejandriaapp.data.signin.remote.UserService
 import com.matiasmandelbaum.alejandriaapp.ui.signin.model.UserSignIn
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import javax.inject.Inject
-
-
-private const val TAG = "CreateAccountUseCase"
 
 class CreateAccountUseCase @Inject constructor(
     private val authenticationService: AuthenticationService,
@@ -26,7 +22,6 @@ class CreateAccountUseCase @Inject constructor(
                 false
             }
         } catch (e: FirebaseAuthUserCollisionException) {
-            Log.d(TAG, "Exception $e")
             false
         }
     }

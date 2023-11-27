@@ -1,7 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -41,19 +40,18 @@ class HomeListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeListBinding.inflate(inflater, container, false)
-        binding.recyclerView.isVerticalScrollBarEnabled = false
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.recyclerView.adapter = BookListAdapter(BookListener {
-            Log.d(TAG, "click")
-            findNavController().navigate(
-                HomeListFragmentDirections.actionHomeListFragmentToBookDetailsFragment(
-                    it
+        binding = FragmentHomeListBinding.inflate(inflater, container, false).apply {
+            recyclerView.isVerticalScrollBarEnabled = false
+            lifecycleOwner = viewLifecycleOwner
+            recyclerView.adapter = BookListAdapter(BookListener {
+                findNavController().navigate(
+                    HomeListFragmentDirections.actionHomeListFragmentToBookDetailsFragment(it)
                 )
-            )
-        })
-        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
-        initCollectors()
+            })
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            initCollectors()
+        }
+
         return binding.root
     }
 

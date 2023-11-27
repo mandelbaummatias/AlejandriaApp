@@ -17,12 +17,12 @@ object InterceptorCustom : Interceptor {
     }
 }
 
-class CustomResponseInterceptor : Interceptor {
-    private var lastResponse: Response? = null
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val response = chain.proceed(chain.request())
-        lastResponse = response
-        return response
-    }
-}
+//class CustomResponseInterceptor : Interceptor {
+//    private var lastResponse: Response? = null
+//
+//    override fun intercept(chain: Interceptor.Chain): Response {
+//        val response = chain.proceed(chain.request())
+//        lastResponse = response
+//        return response
+//    }
+//}
