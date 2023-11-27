@@ -2,19 +2,18 @@ package com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
+import com.matiasmandelbaum.alejandriaapp.R
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListener
 import com.matiasmandelbaum.alejandriaapp.common.dialogclicklistener.DialogClickListenerProvider
 import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.FragmentPwConfirmationBinding
 import dagger.hilt.android.AndroidEntryPoint
-
-private const val TAG = "PasswordConfirmationFragment"
 
 @AndroidEntryPoint
 class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickListenerProvider {
@@ -88,7 +87,7 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
                             }
                         }
                     } catch (e: Exception) {
-                        Log.d(TAG, "exception $e")
+                       showOnChangeEmailErrorMessage()
                     }
                 } else {
                     pwConfirmPasswordLabel.error = "La contraseña no puede estar vacía"
@@ -111,6 +110,13 @@ class PasswordConfirmationFragment : BottomSheetDialogFragment(), DialogClickLis
                 pwConfirmProgressbar.visibility = View.GONE
             }
         }
+    }
+
+    private fun showOnChangeEmailErrorMessage() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.error_en_cambiar_el_mail_del_usuario), Snackbar.LENGTH_LONG
+        ).show()
     }
 
     override fun setDialogClickListener(listener: DialogClickListener) {

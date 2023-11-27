@@ -1,7 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.di
 
 import com.matiasmandelbaum.alejandriaapp.core.googlebooks.GoogleBooksConfig
-import com.matiasmandelbaum.alejandriaapp.core.mercadopago.CustomResponseInterceptor
 import com.matiasmandelbaum.alejandriaapp.core.mercadopago.InterceptorCustom
 import com.matiasmandelbaum.alejandriaapp.core.mercadopago.MercadoPagoConfig
 import com.matiasmandelbaum.alejandriaapp.data.googlebooks.remote.GoogleBooksApiClient
@@ -59,11 +58,11 @@ object NetworkModule {
             .build()
     }
 
-    @Singleton
-    @Provides
-    fun provideCustomResponseInterceptor(): CustomResponseInterceptor {
-        return CustomResponseInterceptor()
-    }
+//    @Singleton
+//    @Provides
+//    fun provideCustomResponseInterceptor(): CustomResponseInterceptor {
+//        return CustomResponseInterceptor()
+//    }
 
     @Singleton
     @Provides

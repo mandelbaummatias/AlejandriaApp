@@ -14,9 +14,7 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.userinput.UserDataInput
 import com.matiasmandelbaum.alejandriaapp.domain.model.userprofile.UserProfile
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.ChangeUserProfileUseCase
 import com.matiasmandelbaum.alejandriaapp.domain.usecase.GetUserByEmailUseCase
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.model.UserEmailAndPasswordConfirmation
+import com.matiasmandelbaum.alejandriaapp.ui.userprofilemain.model.UserEmailAndPasswordConfirmation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

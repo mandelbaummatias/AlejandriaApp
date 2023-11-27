@@ -8,6 +8,7 @@ import com.matiasmandelbaum.alejandriaapp.domain.usecase.SendPasswordResetEmailU
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class PasswordRecoveryViewModel @Inject constructor(private val sendPasswordResetEmailUseCase: SendPasswordResetEmailUseCase) :
     ViewModel() {

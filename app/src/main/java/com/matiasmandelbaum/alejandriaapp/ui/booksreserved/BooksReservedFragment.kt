@@ -1,7 +1,6 @@
 package com.matiasmandelbaum.alejandriaapp.ui.booksreserved
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +17,6 @@ import com.matiasmandelbaum.alejandriaapp.databinding.FragmentBooksReservedBindi
 import com.matiasmandelbaum.alejandriaapp.domain.model.reserve.Reserves
 import com.matiasmandelbaum.alejandriaapp.ui.adapter.ReserveAdapter
 import dagger.hilt.android.AndroidEntryPoint
-
-
-private const val TAG = "BooksReservedFragment"
 
 @AndroidEntryPoint
 class BooksReservedFragment : Fragment() {
@@ -89,10 +85,8 @@ class BooksReservedFragment : Fragment() {
     private fun handleAuthState(user: FirebaseUser?) {
         with(binding) {
             user?.let {
-                Log.d(TAG, "user not null")
                 viewModel.getReservesForCurrentUser(user.email!!)
             } ?: run {
-                Log.d(TAG, "user null")
                 reserveListEmpty.text = getString(R.string.not_logged_reserved_books_message)
                 reserveListEmpty.visibility = View.VISIBLE
             }

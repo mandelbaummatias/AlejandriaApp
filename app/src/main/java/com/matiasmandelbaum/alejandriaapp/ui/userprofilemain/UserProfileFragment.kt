@@ -28,8 +28,6 @@ import com.matiasmandelbaum.alejandriaapp.common.result.Result
 import com.matiasmandelbaum.alejandriaapp.databinding.UserProfileBinding
 import com.matiasmandelbaum.alejandriaapp.domain.model.userinput.UserDataInput
 import com.matiasmandelbaum.alejandriaapp.ui.passwordconfirmation.PasswordConfirmationFragment
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserEmailViewState
-import com.matiasmandelbaum.alejandriaapp.ui.userprofilemail.UserProfileViewState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat

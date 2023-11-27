@@ -8,8 +8,6 @@ import com.matiasmandelbaum.alejandriaapp.domain.model.subscription.Subscription
 import com.matiasmandelbaum.alejandriaapp.domain.repository.MercadoPagoRepository
 import javax.inject.Inject
 
-private const val TAG = "MercadoPagoRepositoryImpl"
-
 class MercadoPagoRepositoryImpl @Inject constructor(
     private val remote: MercadoPagoService,
     private val subscriptionResponseMapperToDomain: SubscriptionResponseMapperToDomain
