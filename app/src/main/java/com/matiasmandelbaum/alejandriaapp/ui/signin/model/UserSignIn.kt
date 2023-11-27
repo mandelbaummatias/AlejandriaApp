@@ -1,7 +1,5 @@
 package com.matiasmandelbaum.alejandriaapp.ui.signin.model
 
-import java.time.LocalDate
-
 data class UserSignIn(
     val name: String,
     val lastName: String,

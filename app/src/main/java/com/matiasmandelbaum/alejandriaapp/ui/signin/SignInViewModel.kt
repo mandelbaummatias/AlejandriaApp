@@ -83,7 +83,7 @@ class SignInViewModel @Inject constructor(val createAccountUseCase: CreateAccoun
         (password.length >= MIN_PASSWORD_LENGTH && password == passwordConfirmation) || password.isEmpty() || passwordConfirmation.isEmpty()
 
     private fun isValidName(name: String): Boolean {
-        return name.length >= MIN_NAME_LENGTH
+        return name.length >= MIN_NAME_LENGTH || name.isEmpty()
     }
 
 

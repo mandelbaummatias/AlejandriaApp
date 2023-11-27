@@ -6,5 +6,6 @@ object LibrosConstants {
     const val TITLE = "titulo"
     const val AUTHOR = "autor"
     const val DATE = "fecha_ingreso"
+    const val BOOK = "book"
 
 }

@@ -71,6 +71,6 @@ class AddSubscriptionIdToSubscriptionUserUseCaseTestProfile {
         val result = addSubscriptionIdToUserUseCase(subscriptionId, userId)
 
         // Then
-        assertEquals(false, result) // Expecting a Boolean result
+        assertEquals(false, result)
     }
 }

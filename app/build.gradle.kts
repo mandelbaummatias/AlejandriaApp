@@ -66,11 +66,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation ("io.mockk:mockk:1.13.3")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-    //Glide
-    implementation("com.github.bumptech.glide:glide:4.12.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
     //RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.2.1")
@@ -78,8 +73,7 @@ dependencies {
 
     //Activity-KTX
     implementation("androidx.activity:activity-ktx:1.7.2")
-    //  ML Kit
-    implementation("com.google.mlkit:barcode-scanning:17.0.2")
+
     ///Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
@@ -100,36 +94,19 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
-    //DataStore
-    implementation("androidx.datastore:datastore-preferences:1.1.0-alpha04")
-
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
-
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.44.2")
     kapt("com.google.dagger:hilt-compiler:2.44.2")
-
-
-    //Firebase Admin
-   // implementation ("com.google.firebase:firebase-admin:6.11.0")
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
     // Firestore
-    implementation("com.google.firebase:firebase-firestore:24.8.1")
-    implementation("com.google.firebase:firebase-auth:22.1.2")
     implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-storage-ktx:20.2.1")
     implementation ("com.google.firebase:firebase-analytics-ktx")
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation ("com.google.firebase:firebase-firestore-ktx")
 
-    // Picasso
-    implementation("com.squareup.picasso:picasso:2.71828")
-
-    // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     //Coil
@@ -137,15 +114,6 @@ dependencies {
 
     //Browser
     implementation ("androidx.browser:browser:1.6.0")
-
-    //Algolia
-    implementation ("com.algolia:instantsearch-android:3.+")
-    implementation ("com.algolia:instantsearch-android-paging3:3.+")
-
-    implementation ("com.algolia:algoliasearch-client-kotlin:1.8.0")
-    implementation("io.ktor:ktor-client-android:2.0.1")
-
-
 
     //Algolia
     implementation ("com.algolia:instantsearch-android:3.+")
