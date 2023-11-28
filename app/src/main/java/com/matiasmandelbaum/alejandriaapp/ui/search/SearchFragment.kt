@@ -55,7 +55,6 @@ class SearchFragment : Fragment() {
 
                 menuItem.expandActionView()
                 searchView.doOnLayout {
-                    //searchView.clearFocus()
                 }
 
                 menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
