@@ -54,8 +54,7 @@ class SearchFragment : Fragment() {
                 searchView.queryHint = getString(R.string.search_hint)
 
                 menuItem.expandActionView()
-                searchView.doOnLayout {
-                }
+
 
                 menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                     override fun onMenuItemActionExpand(item: MenuItem): Boolean {
