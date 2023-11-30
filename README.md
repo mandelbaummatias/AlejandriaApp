@@ -1,6 +1,6 @@
 # AlejandriaApp
 
-Alejandria is designed to connect publishers and readers. The app features a subscription system that integrates with the MercadoPago API, allowing users to create and manage monthly subscriptions across various plans. It utilizes MVVM (Model-View-ViewModel) architecture, integrates with MercadoPago and Google Books APIs, and incorporates Dagger/Hilt, Retrofit, Firebase, Flow, coroutines, LiveData, and more!
+Alejandria is designed to connect publishers and readers. The app features a subscription system that integrates with the MercadoPago API, allowing users to create and manage monthly subscriptions across various plans. It utilizes MVVM (Model-View-ViewModel) architecture, integrates with MercadoPago and Google Books APIs, and incorporates Dagger/Hilt, Retrofit, Firebase, Flow, Coroutines, LiveData, and more!
 
 ## Demo
 
